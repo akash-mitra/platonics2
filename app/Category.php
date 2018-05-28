@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Category for the articles
+ */
 class Category extends Model
 {
     /**
