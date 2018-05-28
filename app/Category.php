@@ -11,7 +11,7 @@ class Category extends Model
      */
     public function pages()
     {
-        return $this->hasMany(App\Page::class);
+        return $this->hasMany('App\Page');
     }
 
     /**
