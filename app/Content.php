@@ -14,4 +14,12 @@ class Content extends Model
     protected $fillable = [
         'page_id', 'body', 
     ];
+
+    /**
+     * Get page the content belongs to
+     */
+    public function pages()
+    {
+        return $this->belongsTo('App\Page', 'page_id', 'id');
+    }
 }

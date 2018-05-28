@@ -21,7 +21,7 @@ class Page extends Model
      */
     public function contents()
     {
-        return $this->hasOne(App\Content::class, 'id', 'page_id');
+        return $this->hasOne('App\Content', 'page_id', 'id');
     }
 
     /**
