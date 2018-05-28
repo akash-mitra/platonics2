@@ -20,7 +20,7 @@ class Category extends Model
      */
     public function pages()
     {
-        return $this->hasMany('App\Page');
+        return $this->hasMany('App\Page', 'page_id', 'id');
     }
 
     /**
