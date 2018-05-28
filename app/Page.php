@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'category_id', 'user_id', 'title', 'summary', 
+        'metakey', 'metadesc', 'media_url', 'access_level',
+    ];
+    
+    /**
      * Get content of the page
      */
     public function contents()

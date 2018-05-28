@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id', 'name', 'description', 
+    ];
+    
+    /**
      * Get all of the pages that are assigned this tag.
      */
     public function pages()
