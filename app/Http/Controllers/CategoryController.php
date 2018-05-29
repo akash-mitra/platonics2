@@ -8,14 +8,15 @@ use App\Category;
 
 class CategoryController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+
+    private function getRules($id=null) 
     {
-        //$this->middleware('auth');
+        return [
+            'name'          =>  'bail|required|unique:categories,name,' . $id . '|max:60',
+            'description'   =>  'nullable|max:255',
+            'parent_id'     =>  'nullable|integer',
+            'access_level'  =>  'in:F,M,P|max:1',
+        ];
     }
 
     /**
@@ -26,17 +27,11 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return response()->json($categories);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('category.create');
+        
+        return response()->json([
+            'length' => count($categories),
+            'data' => $categories
+        ]);
     }
 
     /**
@@ -48,13 +43,8 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         // validate
-        $rules = array(
-            'name'          =>  'bail|required|unique:categories|max:60',
-            'description'   =>  'nullable|max:255',
-            'parent_id'     =>  'nullable|integer',
-            'access_level'  =>  'in:F,M,P|max:1',
-        );
-        $request->validate($rules);
+        $request->validate($this->getRules());
+        //$this->validate($request, $this->getRules());
 
         $input = $request->input();
         $category = Category::create($input);
@@ -74,18 +64,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $category = Category::FindOrFail($id);
-        return view ('category.edit', compact('category'));
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -94,6 +72,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // validate
+        $request->validate($this->getRules($id));
+
         $input = $request->input();      
         $category = Category::FindOrFail($id);
         $category->fill($input)->save();

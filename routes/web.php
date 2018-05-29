@@ -19,8 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('categories', 'CategoryController')
-    ->only([ 'create', 'edit']);
 
-Route::resource('pages', 'PageController')
-    ->only([ 'create', 'edit']);
