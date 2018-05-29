@@ -17,16 +17,13 @@ class Category extends Model
     protected $fillable = [
         'parent_id', 'name', 'description', 'access_level',
     ];
-    
+
     /**
      * Get all of the pages under the category
      */
     public function pages()
     {
-<<<<<<< HEAD
-        return $this->hasMany('App\Page');
-=======
->>>>>>> 329ac9fc86a462719e703604b0632da70880f6d3
+        return $this->hasMany('App\Page', 'page_id', 'id');
     }
 
     /**
