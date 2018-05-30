@@ -123,7 +123,7 @@ class PageController extends Controller
 
             DB::table('contents')->where('page_id', $id)->update(['body' => $input['body']]);
         });
-        return response()->json($page, 201);
+        return response()->json($page, 200);
     }
 
     /**

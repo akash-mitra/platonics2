@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Tag;
-use App\Page;
-use App\Category;
 use Auth;
 use DB;
 
@@ -16,7 +14,7 @@ class TagController extends Controller
     {
         return [
             'user_id'       =>  'bail|required|integer',
-            'name'          =>  'required|unique:tags,name,' . $id . '|max:60',          
+            'name'          =>  'required|unique:tags,name,' . $id . '|max:60',
             'description'   =>  'required|max:255',
         ];
     }
@@ -105,7 +103,7 @@ class TagController extends Controller
         $input = $request->input();
         $tag = Tag::FindOrFail($id);
         $tag->fill($input)->save();
-        return response()->json($tag, 201);
+        return response()->json($tag, 200);
     }
 
     /**
@@ -119,5 +117,35 @@ class TagController extends Controller
         $tag = Tag::FindOrFail($id);
         $tag->delete();
         return response()->json(null, 204); 
+    }
+
+    /**
+     * Attach a taggable object to a tag.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function attach(Request $request)
+    {
+        // AUTH User Id
+        $user_id = Auth::id();
+        $input = $request->input();
+        $tag = Tag::FindOrFail($input['tag_id']);
+        $tag->taggables($input['taggable_type'])->attach([$input['taggable_id'] => ['user_id' => $user_id]]);
+        return response()->json($tag, 201);
+    }
+
+    /**
+     * Detach a taggable object from a tag.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function detach(Request $request)
+    {
+        $input = $request->input();
+        $tag = Tag::FindOrFail($input['tag_id']);
+        $tag->taggables($input['taggable_type'])->detach($input['taggable_id']);
+        return response()->json($tag, 200);
     }
 }
