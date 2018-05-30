@@ -7,14 +7,14 @@ use App\Category;
 
 class CategoryController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    private function getRules($id = null)
     {
-        //$this->middleware('auth');
+        return [
+            'name' => 'bail|required|unique:categories,name,' . $id . '|max:60',
+            'description' => 'nullable|max:255',
+            'parent_id' => 'nullable|integer',
+            'access_level' => 'in:F,M,P|max:1',
+        ];
     }
 
     /**
@@ -47,16 +47,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        // validate
-        $rules = [
-            'name' => 'bail|required|unique:categories|max:60',
-            'description' => 'nullable|max:255',
-            'parent_id' => 'nullable|integer',
-            'access_level' => 'in:F,M,P|max:1',
-        ];
-        $request->validate($rules);
+        $request->validate($this->getRules());
 
         $input = $request->input();
+
         $category = Category::create($input);
 
         return response()->json($category, 201);
@@ -84,8 +78,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // validate
+        $request->validate($this->getRules($id));
+
         $input = $request->input();
+
         $category = Category::FindOrFail($id);
+
         $category->fill($input)->save();
 
         return response()->json($category, 200);
@@ -100,8 +99,9 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::FindOrFail($id);
+
         $category->delete();
 
-        return response()->json(null, 204);
+        return response()->json($category->name, 204);
     }
 }

@@ -6,17 +6,26 @@ use Illuminate\Http\Request;
 
 use App\Page;
 use App\Content;
+use Auth;
+use DB;
 
 class PageController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+
+    private function getRules($id=null) 
     {
-        //$this->middleware('auth');
+        return [
+            'category_id'   =>  'nullable|integer',
+            'user_id'       =>  'bail|required|integer',
+            'title'         =>  'required|unique:pages,title,' . $id . '|max:100',
+            'summary'       =>  'nullable|max:1048',
+            'metakey'       =>  'nullable|max:255',
+            'metadesc'      =>  'nullable|max:255',
+            'media_url'     =>  'nullable|max:255',
+            'access_level'  =>  'in:F,M,P|max:1',
+
+            'body'          =>  'required',
+        ];
     }
 
     /**
@@ -27,7 +36,11 @@ class PageController extends Controller
     public function index()
     {
         $pages = Page::all();
-        return response()->json($pages);
+
+        return response()->json([
+            'length' => count($pages),
+            'data' => $pages
+        ]);
     }
 
     /**
@@ -48,27 +61,19 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
+        // AUTH User Id
+        $request->request->add(['user_id' => Auth::id()]);
         // validate
-        $rules = array(
-            'category_id'   =>  'nullable|integer',
-            'user_id'       =>  'bail|required|integer',
-            'title'         =>  'required|unique:pages|max:100',
-            'summary'       =>  'nullable|max:1048',
-            'metakey'       =>  'nullable|max:255',
-            'metadesc'      =>  'nullable|max:255',
-            'media_url'     =>  'nullable|max:255',
-            'access_level'  =>  'in:F,M,P|max:1',
+        $request->validate($this->getRules());
 
-            'body'          =>  'required',
-        );
-        $request->validate($rules);
+        $page = null;
+        DB::transaction(function() use ($request, &$page) {
+            $input = $request->input();
+            $page = Page::create($input);
 
-        $input = $request->input();
-        $page = Page::create($input);
-
-        $content = new Content($input);
-        $page->contents()->save($content);
-
+            $content = new Content($input);
+            $page->contents()->save($content);
+        });
         return response()->json($page, 201);
     }
 
@@ -80,7 +85,7 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        $page = Page::FindOrFail($id);
+        $page = Page::with('contents')->FindOrFail($id);
         return response()->json($page);
     }
 
@@ -92,7 +97,7 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        $page = Page::FindOrFail($id);
+        $page = Page::with('contents')->FindOrFail($id);
         return view ('page.edit', compact('page'));
     }
 
@@ -105,14 +110,19 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $input = $request->input();      
-        $page = Page::FindOrFail($id);
-        $page->fill($input)->save();
+        // AUTH User Id
+        $request->request->add(['user_id' => Auth::id()]);
+        // validate
+        $request->validate($this->getRules($id));
 
-        $content = $page->contents;
-        $content->fill($input);
-        $page->contents()->save($content);
+        $page = null;
+        DB::transaction(function() use ($request, $id, &$page) {
+            $input = $request->input();
+            $page = Page::FindOrFail($id);
+            $page->fill($input)->save();
 
+            DB::table('contents')->where('page_id', $id)->update(['body' => $input['body']]);
+        });
         return response()->json($page, 200);
     }
 
@@ -124,8 +134,12 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        $page = Page::FindOrFail($id);
-        $page->delete();
+        DB::transaction(function() use ($id) {
+            DB::table('contents')->where('page_id', $id)->delete();
+
+            $page = Page::FindOrFail($id);
+            $page->delete();
+        });
         return response()->json(null, 204); 
     }
 }

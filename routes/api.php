@@ -12,8 +12,22 @@
 |
 */
 
-Route::resource('categories', 'CategoryController')
-    ->except(['create', 'edit']);
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-Route::resource('pages', 'PageController')
-    ->except(['create', 'edit']);
+Route::resource('categories', 'CategoryController');
+
+Route::resource('pages', 'PageController');
+
+Route::resource('tags', 'TagController');
+
+Route::post('tags/attach', 'TagController@attach')->name('tags.attach');
+
+Route::post('tags/detach', 'TagController@detach')->name('tags.detach');
+
+Route::resource('comments', 'CommentController');
+
+// Route::get('/test', function() {
+//     return response()->json(Auth::guest());
+// });

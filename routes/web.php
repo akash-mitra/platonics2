@@ -18,6 +18,3 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('admin/categories', 'CategoryController@home')->name('admin-category');
-
-Route::resource('pages', 'PageController')
-    ->only(['create', 'edit']);
