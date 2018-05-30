@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Category;
 
 class CategoryController extends Controller
@@ -19,6 +18,16 @@ class CategoryController extends Controller
     }
 
     /**
+     * Display the Single Page Application view for category.
+     * This route is accessible via web, whereas all the
+     * other routes are only accessible via API.
+     */
+    public function home()
+    {
+        return view('admin.categories');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -26,17 +35,8 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return response()->json($categories);
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('category.create');
+        return response()->json($categories);
     }
 
     /**
@@ -48,68 +48,60 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         // validate
-        $rules = array(
-            'name'          =>  'bail|required|unique:categories|max:60',
-            'description'   =>  'nullable|max:255',
-            'parent_id'     =>  'nullable|integer',
-            'access_level'  =>  'in:F,M,P|max:1',
-        );
+        $rules = [
+            'name' => 'bail|required|unique:categories|max:60',
+            'description' => 'nullable|max:255',
+            'parent_id' => 'nullable|integer',
+            'access_level' => 'in:F,M,P|max:1',
+        ];
         $request->validate($rules);
 
         $input = $request->input();
         $category = Category::create($input);
+
         return response()->json($category, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int                       $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $category = Category::FindOrFail($id);
-        return response()->json($category);
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $category = Category::FindOrFail($id);
-        return view ('category.edit', compact('category'));
+        return response()->json($category);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int                       $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $input = $request->input();      
+        $input = $request->input();
         $category = Category::FindOrFail($id);
         $category->fill($input)->save();
+
         return response()->json($category, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int                       $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $category = Category::FindOrFail($id);
         $category->delete();
-        return response()->json(null, 204); 
+
+        return response()->json(null, 204);
     }
 }
