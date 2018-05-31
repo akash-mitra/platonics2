@@ -8,7 +8,7 @@
             <slot name="description"></slot>
         </div>
 
-        <div class="flex my-2 p-2 border bg-grey-lightest" v-for="(item, index) in flatten(categories)" :key="index" v-bind:style="{ marginLeft: 10 * (item.level - 1) + 'px'}">
+        <div class="flex my-2 p-2 border bg-grey-lightest" v-for="(item, index) in categories" :key="index" v-bind:style="{ marginLeft: 10 * (item.level - 1) + 'px'}">
 
             <div class="flex items-start py-2 w-1/3">
                 <span v-for="n in item.level - 1" :key="n">.</span>
@@ -41,9 +41,8 @@
             axios.get('/api/categories')
 
                 .then(response => {
-
-                    this.categories = this.flatten(response.data);
                     
+                    this.categories = this.flatten(response.data);
                 })
         },
 
@@ -59,7 +58,9 @@
             flatten: function (hierarchy_data) {
                 let flatten_tree = [];
 
-                hierarchy_data.forEach(function (element) {
+                for(let i=0; i<hierarchy_data.length; i++) {
+                    
+                    let element = hierarchy_data.data[i];
 
                     if (element.parent_id === null) {
                         element["level"] = 1;
@@ -76,7 +77,7 @@
                             }
                         }
                     }
-                });
+                };
                 return flatten_tree;
             }
         }

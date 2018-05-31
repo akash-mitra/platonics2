@@ -36,7 +36,10 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return response()->json($categories);
+        return response()->json([
+                'length' => count($categories),
+                'data' => $categories
+        ]);
     }
 
     /**
@@ -102,6 +105,6 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return response()->json($category->name, 204);
+        return response()->json($category->name);
     }
 }
