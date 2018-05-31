@@ -15,7 +15,7 @@ class CategoryController extends Controller
             'name'          =>  'bail|required|unique:categories,name,' . $id . '|max:60',
             'description'   =>  'nullable|max:255',
             'parent_id'     =>  'nullable|integer',
-            'access_level'  =>  'in:F,M,P|max:1',
+            'access_level'  =>  'required|in:F,M,P|max:1',
         ];
     }
 

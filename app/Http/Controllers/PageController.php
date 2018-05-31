@@ -22,7 +22,7 @@ class PageController extends Controller
             'metakey'       =>  'nullable|max:255',
             'metadesc'      =>  'nullable|max:255',
             'media_url'     =>  'nullable|max:255',
-            'access_level'  =>  'in:F,M,P|max:1',
+            'access_level'  =>  'required|in:F,M,P|max:1',
 
             'body'          =>  'required',
         ];

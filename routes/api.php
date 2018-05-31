@@ -29,6 +29,8 @@ Route::post('tags/detach', 'TagController@detach')->name('tags.detach');
 
 Route::resource('comments', 'CommentController');
 
+Route::resource('media', 'MediaController');
+
 /*
 Route::get('/test', function() {
     return response()->json(Auth::guest());

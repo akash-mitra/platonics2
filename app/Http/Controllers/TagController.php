@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 use App\Tag;
 use Auth;
-use DB;
 
 class TagController extends Controller
 {
