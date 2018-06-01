@@ -9,10 +9,6 @@ class TestDataSetup extends TestCase
 {
     use DatabaseTransactions;
 
-    protected $category1;
-    protected $category2;
-    protected $category3;
-
     public function setUp()
     {
         parent::setUp();
