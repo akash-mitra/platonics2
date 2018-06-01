@@ -8,7 +8,6 @@ use App\Comment;
 use App\Category;
 use App\Page;
 use Auth;
-use DB;
 
 class CommentController extends Controller
 {
