@@ -12,10 +12,20 @@ class TagController extends Controller
     private function getRules($id=null) 
     {
         return [
-            'user_id'       =>  'bail|required|integer',
+            'user_id'       =>  'bail|required|integer|exists:users,id',
             'name'          =>  'required|unique:tags,name,' . $id . '|max:60',
             'description'   =>  'required|max:255',
         ];
+    }
+
+    /**
+     * Display the Single Page Application view for tag.
+     * This route is accessible via web, whereas all the
+     * other routes are only accessible via API.
+     */
+    public function home()
+    {
+        return view('admin.tags');
     }
 
     /**
@@ -26,7 +36,6 @@ class TagController extends Controller
     public function index()
     {
         $tags = Tag::all();
-
         return response()->json([
             'length' => count($tags),
             'data' => $tags
@@ -115,7 +124,7 @@ class TagController extends Controller
     {
         $tag = Tag::FindOrFail($id);
         $tag->delete();
-        return response()->json(null, 204); 
+        return response()->json($tag->name);
     }
 
     /**
@@ -128,6 +137,7 @@ class TagController extends Controller
     {
         // AUTH User Id
         $user_id = Auth::id();
+
         $input = $request->input();
         $tag = Tag::FindOrFail($input['tag_id']);
         $tag->taggables($input['taggable_type'])->attach([$input['taggable_id'] => ['user_id' => $user_id]]);

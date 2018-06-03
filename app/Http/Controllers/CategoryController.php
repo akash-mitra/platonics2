@@ -35,7 +35,6 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-
         return response()->json([
                 'length' => count($categories),
                 'data' => $categories
@@ -50,12 +49,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // validate
         $request->validate($this->getRules());
 
         $input = $request->input();
-
         $category = Category::create($input);
-
         return response()->json($category, 201);
     }
 
@@ -68,7 +66,6 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = Category::FindOrFail($id);
-
         return response()->json($category);
     }
 
@@ -85,11 +82,8 @@ class CategoryController extends Controller
         $request->validate($this->getRules($id));
 
         $input = $request->input();
-
         $category = Category::FindOrFail($id);
-
         $category->fill($input)->save();
-
         return response()->json($category, 200);
     }
 
@@ -102,9 +96,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         $category = Category::FindOrFail($id);
-
         $category->delete();
-
         return response()->json($category->name);
     }
 }

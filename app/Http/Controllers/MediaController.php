@@ -23,14 +23,23 @@ class MediaController extends Controller
     }
 
     /**
+     * Display the Single Page Application view for media.
+     * This route is accessible via web, whereas all the
+     * other routes are only accessible via API.
+     */
+    public function home()
+    {
+        return view('admin.media');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $media = Media::all();
-        
+        $media = Media::all();       
         return response()->json([
             'length' => count($media),
             'data' => $media
@@ -99,6 +108,6 @@ class MediaController extends Controller
     {
         $media = Media::FindOrFail($id);
         $media->delete();
-        return response()->json(null, 204); 
+        return response()->json($media->name); 
     }
 }

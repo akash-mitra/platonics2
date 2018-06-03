@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Category;
 use Tests\TestDataSetup;
 
 class CategoriesTest extends TestDataSetup
@@ -36,8 +37,8 @@ class CategoriesTest extends TestDataSetup
 
     public function test_index_returns_expected_length()
     {
-        $content = $this->get('/api/categories')->decodeResponseJson();
-        $this->assertEquals($content['length'], count(\App\Category::all()));
+        $response = $this->get('/api/categories')->decodeResponseJson();
+        $this->assertEquals($response['length'], count(Category::all()));
     }
 
     public function test_show_returns_expected_structure()
@@ -71,35 +72,31 @@ class CategoriesTest extends TestDataSetup
     public function test_update_can_persist_data()
     {
         $category = [
-            'name' => 'test category',
-            'description' => 'test category desc',
-            'access_level' => 'F'
-        ];
-        $response = $this->post('/api/categories', $category)->decodeResponseJson();
-
-        $payload = [
             'name' => 'test category update',
             'description' => 'test category desc update',
             'access_level' => 'F'
         ];
-        $this->call('PUT', '/api/categories/' . $response['id'], $payload)
+
+        $this->put('/api/categories/' . $this->category1->id, $category)
                 ->assertStatus(200)
-                ->assertJsonFragment($payload);;
+                ->assertJsonFragment($category);;
     }
 
     public function test_destroy_can_delete_data()
     {
-        $this->call('DELETE', '/api/categories/1')
-                ->assertStatus(200);
+        $this->delete('/api/categories/1')
+                ->assertStatus(200)
+                ->assertJsonFragment([$this->category1->name]);
     }
 
+    
     /**
      * Negative Test Cases: 4
      */
 
     public function test_show_error_invalid_id()
     {
-        $this->get('/api/categories/4')
+        $this->get('/api/categories/108')
                 ->assertStatus(404);
     }
 
@@ -113,30 +110,24 @@ class CategoriesTest extends TestDataSetup
 
         $this->post('/api/categories', $category)
                 ->assertStatus(302);
-                //->assertJsonFragment(['message' => 'The given data was invalid']);
+                //->assertJsonFragment(['message' => 'The given data was invalid.']);
     }
 
     public function test_update_error_invalid_data()
     {
         $category = [
-            'name' => 'test category',
-            'description' => 'test category desc',
-            'access_level' => 'F'
-        ];
-        $response = $this->post('/api/categories', $category)->decodeResponseJson();
-
-        $payload = [
             'name' => 'test category update',
             'description' => 'test category desc update',
             'access_level' => 'X'
         ];
-        $this->call('PUT', '/api/categories/' . $response['id'], $payload)
+        
+        $this->put('/api/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
-        $this->call('DELETE', '/api/categories/4')
+        $this->delete('/api/categories/108')
                 ->assertStatus(404);
     }
 }
