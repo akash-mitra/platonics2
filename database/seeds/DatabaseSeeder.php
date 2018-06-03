@@ -6,6 +6,7 @@ use App\Category;
 use App\Page;
 use App\Comment;
 use App\Content;
+use App\Media;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -113,6 +114,11 @@ class DatabaseSeeder extends Seeder
             // end of each category
         });
         // end of each parent category
+
+        // create 30 random media
+        $media = factory(Media::class, 30)->create([
+            'user_id' => $authorIds[random_int(0, count($authorIds) - 1)]
+        ]); 
     }
 
     // end of run

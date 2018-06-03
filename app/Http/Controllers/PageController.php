@@ -16,7 +16,7 @@ class PageController extends Controller
     {
         return [
             'category_id'   =>  'nullable|integer',
-            'user_id'       =>  'bail|required|integer',
+            'user_id'       =>  'bail|required|integer|exists:users,id',
             'title'         =>  'required|unique:pages,title,' . $id . '|max:100',
             'summary'       =>  'nullable|max:1048',
             'metakey'       =>  'nullable|max:255',
@@ -29,6 +29,16 @@ class PageController extends Controller
     }
 
     /**
+     * Display the Single Page Application view for page.
+     * This route is accessible via web, whereas all the
+     * other routes are only accessible via API.
+     */
+    public function home()
+    {
+        return view('admin.pages');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -36,7 +46,6 @@ class PageController extends Controller
     public function index()
     {
         $pages = Page::all();
-
         return response()->json([
             'length' => count($pages),
             'data' => $pages
@@ -134,12 +143,13 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        DB::transaction(function() use ($id) {
+        $page = null;
+        DB::transaction(function() use ($id, &$page) {
             DB::table('contents')->where('page_id', $id)->delete();
 
             $page = Page::FindOrFail($id);
             $page->delete();
         });
-        return response()->json(null, 204); 
+        return response()->json($page->title);
     }
 }

@@ -18,3 +18,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('admin/categories', 'CategoryController@home')->name('admin-category');
+
+Route::get('admin/pages', 'PageController@home')->name('admin-page');
+
+Route::get('admin/tags', 'TagController@home')->name('admin-tag');
+
+Route::get('admin/media', 'MediaController@home')->name('admin-media');

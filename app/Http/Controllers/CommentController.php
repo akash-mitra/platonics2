@@ -8,7 +8,6 @@ use App\Comment;
 use App\Category;
 use App\Page;
 use Auth;
-use DB;
 
 class CommentController extends Controller
 {
@@ -33,7 +32,6 @@ class CommentController extends Controller
     public function index()
     {
         $comments = Comment::all();
-
         return response()->json([
             'length' => count($comments),
             'data' => $comments
@@ -128,6 +126,6 @@ class CommentController extends Controller
     {
         $comment = Comment::FindOrFail($id);
         $comment->delete();
-        return response()->json(null, 204); 
+        return response()->json($comment->id);
     }
 }
