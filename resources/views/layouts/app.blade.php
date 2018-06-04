@@ -176,7 +176,7 @@
                     
                 </header>
 
-                <main class="bg-white min-h-screen py-6 px-8 border-l">
+                <main class="bg-white min-h-screen border-l" style="background-color: #FAFAFA">
                 
                     
                     @yield('content')
