@@ -11,7 +11,19 @@ use DB;
 
 class PageController extends Controller
 {
-
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     *
+     */
+    public function __construct()
+    {
+        $this->middleware('permissions');
+    }
+    
     private function getRules($id=null) 
     {
         return [
@@ -45,7 +57,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::all();
+        $pages = Page::with('users')->get();
         return response()->json([
             'length' => count($pages),
             'data' => $pages
@@ -94,7 +106,7 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        $page = Page::with('contents')->FindOrFail($id);
+        $page = Page::with('contents','users')->FindOrFail($id);
         return response()->json($page);
     }
 
@@ -106,7 +118,7 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-        $page = Page::with('contents')->FindOrFail($id);
+        $page = Page::with('contents','users')->FindOrFail($id);
         return view ('page.edit', compact('page'));
     }
 

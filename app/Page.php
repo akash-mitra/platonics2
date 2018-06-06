@@ -39,4 +39,12 @@ class Page extends Model
     {
         return $this->morphMany('App\Comment', 'commentable');
     }
+
+    /**
+     * Get user 
+     */
+    public function users()
+    {
+        return $this->belongsTo('App\User', 'user_id', 'id');
+    }
 }
