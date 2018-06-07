@@ -57,7 +57,7 @@
                             
                         </li>
                         <li>
-                            <span class="hidden p-6 pb-2 xl:flex text-grey-dark font-bold text-xs uppercase">Content Management</span>
+                            <span class="hidden p-6 pb-2 xl:flex text-teal font-light text-xs uppercase">Content Management</span>
                         </li>
                         <li>
                             <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/categories">
@@ -75,7 +75,7 @@
                             </a>
                         </li>
                         <li>
-                            <span class="hidden p-6 pb-2 xl:flex text-grey-dark font-bold text-xs uppercase">User Management</span>
+                            <span class="hidden p-6 pb-2 xl:flex text-teal font-light text-xs uppercase">User Management</span>
                         </li>
                         <li>
                             <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline" href="#">
@@ -99,7 +99,7 @@
                         </li>
                         
                         <li>
-                            <span class="hidden p-6 pb-2 xl:flex text-grey-dark font-bold text-xs uppercase">Relationship</span>
+                            <span class="hidden p-6 pb-2 xl:flex text-teal font-light text-xs uppercase">Relationship</span>
                         </li>
                         <li>
                             <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline" href="#">
@@ -119,12 +119,12 @@
 
 
                         <li>
-                            <span class="hidden p-6 pb-2 xl:flex text-grey-dark font-bold text-xs uppercase">Analytics</span>
+                            <span class="hidden p-6 pb-2 xl:flex text-teal font-light text-xs uppercase">Analytics</span>
                         </li>
 
 
                         <li>
-                            <span class="hidden p-6 pb-2 xl:flex text-grey-dark font-bold text-xs uppercase">Server Management</span>
+                            <span class="hidden p-6 pb-2 xl:flex text-teal font-light text-xs uppercase">Server Management</span>
                         </li>
                         <li>
                             <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline" href="#">
@@ -176,7 +176,7 @@
                     
                 </header>
 
-                <main class="bg-white min-h-screen py-6 px-8 border-l">
+                <main class="min-h-screen border-l" style="background-color: #FAFAFA">
                 
                     
                     @yield('content')

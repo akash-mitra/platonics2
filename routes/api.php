@@ -21,9 +21,7 @@ Route::resource('categories', 'CategoryController');
 Route::resource('pages', 'PageController')->except('create');
 
 Route::resource('tags', 'TagController');
-
 Route::post('tags/attach', 'TagController@attach')->name('tags.attach');
-
 Route::post('tags/detach', 'TagController@detach')->name('tags.detach');
 
 Route::resource('comments', 'CommentController');
