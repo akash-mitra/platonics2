@@ -9,6 +9,19 @@ use Auth;
 
 class MediaController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     *
+     */
+    public function __construct()
+    {
+        $this->middleware('permissions');
+    }
+    
     private function getRules() 
     {
         return [

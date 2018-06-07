@@ -17,7 +17,8 @@ class MediaTest extends TestDataSetup
 
     public function test_index_returns_expected_structure()
     {
-        $this->get('/api/media')
+        $this->actingAs($this->admin1)
+                ->get('/api/media')
                 ->assertStatus(200)
                 ->assertJsonStructure([ 
                     'length',
@@ -40,13 +41,14 @@ class MediaTest extends TestDataSetup
 
     public function test_index_returns_expected_length()
     {
-        $response = $this->get('/api/media')->decodeResponseJson();
+        $response = $this->actingAs($this->admin1)->get('/api/media')->decodeResponseJson();
         $this->assertEquals($response['length'], count(Media::all()));
     }
 
     public function test_show_returns_expected_structure()
     {
-        $this->get('/api/media/' . $this->media1->id)
+        $this->actingAs($this->admin1)
+                ->get('/api/media/' . $this->media1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
@@ -71,7 +73,7 @@ class MediaTest extends TestDataSetup
             'type' => 'png'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->post('/api/media', $media)
                 ->assertStatus(201)
                 ->assertJsonFragment($media);
@@ -86,15 +88,16 @@ class MediaTest extends TestDataSetup
             'type' => 'bmp'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->put('/api/media/' . $this->media1->id, $media)
                 ->assertStatus(200)
-                ->assertJsonFragment($media);;
+                ->assertJsonFragment($media);
     }
 
     public function test_destroy_can_delete_data()
     {
-        $this->delete('/api/media/1')
+        $this->actingAs($this->admin1)
+                ->delete('/api/media/1')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->media1->name]);
     }
@@ -106,7 +109,8 @@ class MediaTest extends TestDataSetup
 
     public function test_show_error_invalid_id()
     {
-        $this->get('/api/media/108')
+        $this->actingAs($this->admin1)
+                ->get('/api/media/108')
                 ->assertStatus(404);
     }
 
@@ -118,7 +122,7 @@ class MediaTest extends TestDataSetup
             'name' => 'test filename'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->post('/api/media', $media)
                 ->assertStatus(302);
                 //->assertJsonFragment(['message' => 'The given data was invalid.']);
@@ -132,14 +136,15 @@ class MediaTest extends TestDataSetup
             'name' => 'test filename update'
         ];
         
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->put('/api/media/' . $this->media1->id, $media)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
-        $this->delete('/api/media/108')
+        $this->actingAs($this->admin1)
+                ->delete('/api/media/108')
                 ->assertStatus(404);
     }
 }

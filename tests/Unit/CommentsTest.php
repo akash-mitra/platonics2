@@ -17,7 +17,8 @@ class CommentsTest extends TestDataSetup
 
     public function test_index_returns_expected_structure()
     {
-        $this->get('/api/comments')
+        $this->actingAs($this->admin1)
+                ->get('/api/comments')
                 ->assertStatus(200)
                 ->assertJsonStructure([ 
                     'length',
@@ -40,13 +41,14 @@ class CommentsTest extends TestDataSetup
 
     public function test_index_returns_expected_length()
     {
-        $response = $this->get('/api/comments')->decodeResponseJson();
+        $response = $this->actingAs($this->admin1)->get('/api/comments')->decodeResponseJson();
         $this->assertEquals($response['length'], count(Comment::all()));
     }
 
     public function test_show_returns_expected_structure()
     {
-        $this->get('/api/comments/' . $this->comment1->id)
+        $this->actingAs($this->admin1)
+                ->get('/api/comments/' . $this->comment1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
@@ -70,7 +72,7 @@ class CommentsTest extends TestDataSetup
             'commentable_type' => 'App\Page'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->post('/api/comments', $comment)
                 ->assertStatus(201)
                 ->assertJsonFragment($comment);
@@ -84,10 +86,10 @@ class CommentsTest extends TestDataSetup
             'commentable_type' => 'App\Page'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->put('/api/comments/' . $this->comment1->id, $comment)
                 ->assertStatus(200)
-                ->assertJsonFragment($comment);;
+                ->assertJsonFragment($comment);
     }
 
     public function test_store_can_persist_category_data()
@@ -98,7 +100,7 @@ class CommentsTest extends TestDataSetup
             'commentable_type' => 'App\Category'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->post('/api/comments', $comment)
                 ->assertStatus(201)
                 ->assertJsonFragment($comment);
@@ -112,7 +114,7 @@ class CommentsTest extends TestDataSetup
             'commentable_type' => 'App\Category'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->put('/api/comments/' . $this->comment2->id, $comment)
                 ->assertStatus(200)
                 ->assertJsonFragment($comment);;
@@ -120,7 +122,8 @@ class CommentsTest extends TestDataSetup
 
     public function test_destroy_can_delete_data()
     {
-        $this->delete('/api/comments/1')
+        $this->actingAs($this->admin1)
+                ->delete('/api/comments/1')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->comment1->id]);
     }
@@ -132,7 +135,8 @@ class CommentsTest extends TestDataSetup
 
     public function test_show_error_invalid_id()
     {
-        $this->get('/api/comments/108')
+        $this->actingAs($this->admin1)
+                ->get('/api/comments/108')
                 ->assertStatus(404);
     }
 
@@ -143,7 +147,7 @@ class CommentsTest extends TestDataSetup
             'commentable_type' => 'App\Page'
         ];
 
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->post('/api/comments', $comment)
                 ->assertStatus(302);
                 //->assertJsonFragment(['message' => 'The given data was invalid.']);
@@ -156,14 +160,15 @@ class CommentsTest extends TestDataSetup
             'commentable_type' => 'App\Page'
         ];
         
-        $this->actingAs($this->author1)
+        $this->actingAs($this->admin1)
                 ->put('/api/comments/' . $this->comment1->id, $comment)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
-        $this->delete('/api/comments/108')
+        $this->actingAs($this->admin1)
+                ->delete('/api/comments/108')
                 ->assertStatus(404);
     }
 }
