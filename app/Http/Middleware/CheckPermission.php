@@ -26,8 +26,8 @@ class CheckPermission
     public function handle($request, Closure $next)
     {
         $method = explode(".", Route::currentRouteName());
-        $this->resource = $method[0] == 'admin' ? $method[1] : $method[0];
-        $this->action = $method[0] == 'admin' ? $method[0] : $method[1];
+        $this->resource = $method[0];
+        $this->action = $method[1];
         $this->type = Auth::guest() ? 'Visitor' : Auth::user()->type; 
         
         if($this->checkAcl())

@@ -219,10 +219,10 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'show' ] );
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'update' ] );
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'admin', 'action' => 'categories' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'admin', 'action' => 'media' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'admin', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'admin', 'action' => 'tags' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'home' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'home' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'home' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'home' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'store' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'create' ] );

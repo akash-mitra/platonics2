@@ -26,4 +26,26 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * returns all available social login
+     * providers for the user
+     */
+    public function providers($provider = null)
+    {
+        if (empty($provider)) {
+            return $this->hasMany('App\LoginProvider', 'user_id', 'id');
+        } else {
+            return $this->hasMany('App\LoginProvider', 'user_id', 'id')->where('provider', $provider);
+        }
+    }
+
+    /**
+     * Current logic simply returns any of the available providers
+     */
+    public function defaultProvider()
+    {
+        return $this->providers[0];
+    }
+
 }

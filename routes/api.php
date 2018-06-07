@@ -18,7 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('categories', 'CategoryController');
 
-Route::resource('pages', 'PageController');
+Route::resource('pages', 'PageController')->except('create');
 
 Route::resource('tags', 'TagController');
 
