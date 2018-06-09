@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Page;
 use App\Content;
+use App\Comment;
 use Auth;
 use DB;
 
@@ -55,7 +56,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::with('users')->get();
+        $pages = Page::with('users','categories','tags')->get();
 
         return response()->json([
             'length' => count($pages),
@@ -167,5 +168,35 @@ class PageController extends Controller
         });
 
         return response()->json($page->title);
+    }
+
+    /**
+     * Toggle update the publish status of a page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function publish(Request $request, $id)
+    {
+        $input = $request->input();
+        $page = Page::FindOrFail($id);
+        $input['publish'] = $page['publish'] == 'Y' ? 'N' : 'Y';
+        $page->fill($input)->save();
+
+        return response()->json($page, 200);
+    }
+
+    /**
+     * Show the comments for a page.
+     *
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function comments($id)
+    {
+        $comments = Comment::where([['commentable_type', 'App\Page'],['commentable_id', $id]])->get();
+
+        return response()->json($comments);
     }
 }

@@ -12,13 +12,15 @@
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 
 Route::resource('categories', 'CategoryController');
 
 Route::resource('pages', 'PageController')->except('create');
+Route::put('pages/{page}/publish', 'PageController@publish')->name('pages.publish');
+Route::get('pages/{page}/comments', 'PageController@comments')->name('pages.comments');
 
 Route::resource('tags', 'TagController');
 Route::post('tags/attach', 'TagController@attach')->name('tags.attach');

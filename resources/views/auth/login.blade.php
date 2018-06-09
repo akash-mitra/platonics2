@@ -45,8 +45,13 @@
                     </div>
                 </form>
             </div>
+            <div class="flex items-center p-3">
+                <a class="link link-grey w-full text-center no-underline hover:underline" href="/login/google">Google</a>
+                <a class="link link-grey w-full text-center no-underline hover:underline" href="/login/facebook">Facebook</a>
+                <a class="link link-grey w-full text-center no-underline hover:underline" href="/login/twitter">Twitter</a>
+                <a class="link link-grey w-full text-center no-underline hover:underline" href="/login/github">Github</a>
+            </div>
         </div>
     </div>
 </div>
-<a href="/login/github"  class="btn btn-default btn-md">Log in with Github</a>
 @endsection

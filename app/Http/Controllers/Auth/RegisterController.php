@@ -33,7 +33,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * list of social drivers enabled for Social Auth
@@ -79,6 +79,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'type' => 'Regular',
         ]);
     }
 
@@ -143,9 +144,11 @@ class RegisterController extends Controller
             ]);
             // do not update the name and type if already there
             $user->name   = empty($user->name)? $providerUser->getName(): $user->name;
-            $user->type   = empty($user->type)? 'Registered': $user->type;
+            $user->type   = empty($user->type)? 'Regular': $user->type;
             // refresh the avatar everytime
             $user->avatar = $providerUser->getAvatar();
+            $user->slug   = uniqid(mt_rand(), true);
+            
             // persist the record to database
             $user->save();
             // create the login provider
@@ -158,6 +161,6 @@ class RegisterController extends Controller
 
         // finally log the user in
         Auth::login($user, true);
-        return redirect()->route('/');
+        return redirect('/');
     }
 }

@@ -172,8 +172,17 @@
 
                     <div class="text-grey-darker w-1/3 p-6 text-right">
                         Akash
-                    </div>
                     
+                    @if (Auth::guest())
+                        <a href="{{ url('/login') }}">Login</a>
+                    @else
+                        <a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                            {{ csrf_field() }}
+                        </form>
+                    @endif
+                    
+                    </div>
                 </header>
 
                 <main class="min-h-screen border-l" style="background-color: #FAFAFA">

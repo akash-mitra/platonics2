@@ -50,18 +50,21 @@ class TestDataSetup extends TestCase
         // create 3 pages for test
         $this->page1 = factory(Page::class)->create([
             'access_level' => 'F',
+            'publish' => 'Y',
             'user_id' => $this->author1->id,
             'category_id' => $this->category1->id,
         ]);
 
         $this->page2 = factory(Page::class)->create([
             'access_level' => 'M',
+            'publish' => 'Y',
             'user_id' => $this->author1->id,
             'category_id' => $this->category1->id,
         ]);
 
         $this->page3 = factory(Page::class)->create([
             'access_level' => 'M',
+            'publish' => 'Y',
             'user_id' => $this->author1->id,
             'category_id' => $this->category1->id,
         ]);
@@ -137,6 +140,7 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'media', 'action' => 'show' ] );
         factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'show' ] );
+        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'comments' ] );
         factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'show' ] );
         factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'categories', 'action' => 'index' ] );
@@ -151,6 +155,7 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'media', 'action' => 'show' ] );
         factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'show' ] );
+        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'comments' ] );
         factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'store' ] );
         factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'attach' ] );
@@ -179,6 +184,8 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'show' ] );
         factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'update' ] );
         factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'edit' ] );
+        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'publish' ] );
+        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'comments' ] );
         factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'store' ] );
         factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'attach' ] );
@@ -211,6 +218,8 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'show' ] );
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'update' ] );
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'edit' ] );
+        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'publish' ] );
+        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'comments' ] );
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'store' ] );
         factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'attach' ] );
@@ -251,6 +260,8 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'destroy' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'update' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'edit' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'publish' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'comments' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'store' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'attach' ] );

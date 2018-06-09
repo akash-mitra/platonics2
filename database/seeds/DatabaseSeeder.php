@@ -33,7 +33,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Mitra',
             'email' => $adminUserName,
             'password' => bcrypt($adminPassword),
-            'type' => 'Admin'
+            'type' => 'Admin',
+            'slug' => uniqid(mt_rand(), true),
         ]);
 
         // create a few editors
@@ -83,7 +84,7 @@ class DatabaseSeeder extends Seeder
                             ->create([
                                 // 30% contents are protected (M), rest are free (F)
                                 'access_level' => random_int(1, 3) != 3 ? 'F' : 'M',
-
+                                'publish' => random_int(1, 3) != 1 ? 'Y' : 'N',
                                 // written by one of the authors previously created
                                 'user_id' => $authorIds[random_int(0, count($authorIds) - 1)],
 
@@ -139,6 +140,7 @@ class DatabaseSeeder extends Seeder
             [ 'type' => 'Visitor', 'resource' => 'media', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'comments', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Regular', 'resource' => 'categories', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
@@ -153,6 +155,7 @@ class DatabaseSeeder extends Seeder
             [ 'type' => 'Regular', 'resource' => 'media', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'comments', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'store', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'attach', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
@@ -181,6 +184,8 @@ class DatabaseSeeder extends Seeder
             [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'update', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'edit', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'publish', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'comments', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'store', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'attach', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
@@ -213,6 +218,8 @@ class DatabaseSeeder extends Seeder
             [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'update', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'edit', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'publish', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'comments', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'store', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'attach', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
@@ -253,6 +260,8 @@ class DatabaseSeeder extends Seeder
             [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'destroy', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'update', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'edit', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'publish', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'comments', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'store', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'attach', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
