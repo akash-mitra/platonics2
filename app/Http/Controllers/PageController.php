@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Page;
-use App\Content;
-use App\Comment;
+
 use Auth;
 use DB;
+
+use App\Page;
+use App\Content;
 
 class PageController extends Controller
 {
@@ -195,8 +196,12 @@ class PageController extends Controller
      */
     public function comments($id)
     {
-        $comments = Comment::where([['commentable_type', 'App\Page'],['commentable_id', $id]])->get();
+        $page = Page::FindOrFail($id);
+        $comments = $page->comments()->get();
 
-        return response()->json($comments);
+        return response()->json([
+            'length' => count($comments),
+            'data' => $comments
+        ]);
     }
 }

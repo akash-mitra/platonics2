@@ -204,17 +204,20 @@ class PagesTest extends TestDataSetup
                 ->get('/api/pages/' . $this->page1->id . '/comments')
                 ->assertStatus(200)
                 ->assertJsonStructure([
-                    '*' => [
-                        'id',
-                        'parent_id',
-                        'user_id',
-                        'commentable_id',
-                        'commentable_type',
-                        'body',
-                        'vote',
-                        'offensive_index',
-                        'created_at', 
-                        'updated_at'
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'parent_id',
+                            'user_id',
+                            'commentable_id',
+                            'commentable_type',
+                            'body',
+                            'vote',
+                            'offensive_index',
+                            'created_at', 
+                            'updated_at'
+                        ]
                     ]
                 ]);
     }

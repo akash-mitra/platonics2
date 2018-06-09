@@ -25,6 +25,8 @@ Route::get('pages/{page}/comments', 'PageController@comments')->name('pages.comm
 Route::resource('tags', 'TagController');
 Route::post('tags/attach', 'TagController@attach')->name('tags.attach');
 Route::post('tags/detach', 'TagController@detach')->name('tags.detach');
+Route::get('tags/{tag}/categories', 'TagController@taggedCategories')->name('tags.categories');
+Route::get('tags/{tag}/pages', 'TagController@taggedPages')->name('tags.pages');
 
 Route::resource('comments', 'CommentController');
 
