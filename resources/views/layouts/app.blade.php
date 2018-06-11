@@ -38,7 +38,7 @@
     
     <div class="flex flex-wrap bg-white">
 
-        <div class="hidden flex-none md:flex md:flex-col md:w-full xl:w-1/5  max-h-screen overflow-scroll" id="leftCol">
+        <div class="hidden flex-none md:flex md:flex-col md:w-full xl:w-1/6  max-h-screen overflow-scroll" id="leftCol">
 
             <div class="nav-scrollbar-wrapper">
 
@@ -46,18 +46,18 @@
                 
                     <ul class="flex xl:flex-col list-reset">
                         <li class="sticky pin-t pin-l h-16 flex flex-col justify-center">
-                            <h3 class="pl-8 text-teal">
+                            <h3 class="pl-6 text-teal">
                                 Platonics &nbsp;
                                 
                             </h3>
                             
                         </li>
-                        <li class="hidden xl:block">
+                        <!-- <li class="hidden xl:block">
                             <p>&nbsp;</p>
                             
-                        </li>
+                        </li> -->
                         <li>
-                            <span class="hidden p-6 pb-2 xl:flex text-teal font-light text-xs uppercase">Content Management</span>
+                            <span class="hidden px-6 pt-6 pb-2 xl:flex text-teal font-light text-xs uppercase">Content Management</span>
                         </li>
                         <li>
                             <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline active" href="/admin/categories">
@@ -151,7 +151,7 @@
 
         </div><!-- end of left col -->
 
-        <div class="flex-1 w-full xl:w-4/5">
+        <div class="flex-1 w-full xl:w-5/6">
 
             <div class="max-h-screen  overflow-scroll">
 
@@ -176,7 +176,7 @@
                     
                 </header>
 
-                <main class="min-h-screen border-l" style="background-color: #FAFAFA">
+                <main class="min-h-screen border-l" style="background-color: #F8FAFC">
                 
                     
                     @yield('content')
