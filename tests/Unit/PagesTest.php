@@ -8,11 +8,11 @@ use Tests\TestDataSetup;
 class PagesTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 11
+     * Total Test Cases: 13
      */
 
     /**
-     * Positive Test Cases: 7
+     * Positive Test Cases: 9
      */
 
     public function test_index_returns_expected_structure()
@@ -33,6 +33,7 @@ class PagesTest extends TestDataSetup
                             'metadesc',
                             'media_url',
                             'access_level',
+                            'publish',
                             'created_at',
                             'updated_at',
                             'users' => [
@@ -42,6 +43,30 @@ class PagesTest extends TestDataSetup
                                 'email',
                                 'created_at',
                                 'updated_at'
+                            ],
+                            'categories' => [
+                                'id',
+                                'parent_id',
+                                'name',
+                                'description',
+                                'access_level',
+                                'created_at',
+                                'updated_at'
+                            ],
+                            'tags' => [
+                                '*' => [
+                                    'id',
+                                    'user_id',
+                                    'name',
+                                    'description',
+                                    'created_at',
+                                    'updated_at',
+                                    'pivot' => [
+                                        'taggable_id',
+                                        'tag_id',
+                                        'taggable_type'
+                                    ]
+                                ]
                             ]
                         ]
                     ]
@@ -69,6 +94,7 @@ class PagesTest extends TestDataSetup
                     'metadesc',
                     'media_url',
                     'access_level',
+                    'publish',
                     'created_at',
                     'updated_at',
                     'contents' => [
@@ -76,7 +102,17 @@ class PagesTest extends TestDataSetup
                         'body', 
                         'created_at', 
                         'updated_at'
-                    ] 
+                    ],
+                    'users' => [
+                        'id',
+                        'name',
+                        'type',
+                        'email',
+                        'slug',
+                        'avatar',
+                        'created_at', 
+                        'updated_at'
+                    ]  
                 ]);
     }
 
@@ -142,6 +178,49 @@ class PagesTest extends TestDataSetup
                 ->assertJsonFragment([$this->page1->title]);
     }
 
+    public function test_publish_can_persist_data()
+    {
+        $page = [
+            'category_id' => $this->category1->id,
+            'title' => 'test page update',
+            'access_level' => 'F',
+            'body' => 'test page contents body update',
+        ];
+
+        $this->actingAs($this->admin1)
+                ->put('/api/pages/' . $this->page1->id . '/publish', $page)
+                ->assertStatus(200)
+                ->assertJsonFragment([
+                    'category_id' => $this->category1->id,
+                    'title' => 'test page update',
+                    'access_level' => 'F',
+                    'publish' => 'N',
+                ]);
+    }
+
+    public function test_comments_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('/api/pages/' . $this->page1->id . '/comments')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'parent_id',
+                            'user_id',
+                            'commentable_id',
+                            'commentable_type',
+                            'body',
+                            'vote',
+                            'offensive_index',
+                            'created_at', 
+                            'updated_at'
+                        ]
+                    ]
+                ]);
+    }
 
     /**
      * Negative Test Cases: 4

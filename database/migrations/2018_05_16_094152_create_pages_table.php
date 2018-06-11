@@ -23,6 +23,7 @@ class CreatePagesTable extends Migration
             $table->string('metadesc')->nullable();
             $table->string('media_url')->nullable();
             $table->char('access_level', 1)->default('F');
+            $table->char('publish', 1)->default('N');
             $table->timestamps();
         });
     }
