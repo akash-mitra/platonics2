@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Tag;
 use Auth;
+
+use App\Tag;
 
 class TagController extends Controller
 {
@@ -169,5 +170,39 @@ class TagController extends Controller
         $tag = Tag::FindOrFail($input['tag_id']);
         $tag->taggables($input['taggable_type'])->detach($input['taggable_id']);
         return response()->json($tag, 200);
+    }
+
+    /**
+     * Display the categories under a tag resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function taggedCategories($id)
+    {
+        $tag = Tag::FindOrFail($id);
+        $categories = $tag->categories()->get();
+
+        return response()->json([
+            'length' => count($categories),
+            'data' => $categories
+        ]);
+    }
+
+    /**
+     * Display the pages under a tag resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function taggedPages($id)
+    {
+        $tag = Tag::FindOrFail($id);
+        $pages = $tag->pages()->get();
+
+        return response()->json([
+            'length' => count($pages),
+            'data' => $pages
+        ]);
     }
 }

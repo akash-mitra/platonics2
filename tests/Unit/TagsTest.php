@@ -12,7 +12,7 @@ class TagsTest extends TestDataSetup
      */
 
     /**
-     * Positive Test Cases: 10
+     * Positive Test Cases: 12
      */
 
     public function test_index_returns_expected_structure()
@@ -144,6 +144,63 @@ class TagsTest extends TestDataSetup
                 ->post('/api/tags/detach', $tag)
                 ->assertStatus(200)
                 ->assertJsonFragment(['id' => $this->tag2->id]);
+    }
+
+    public function test_categories_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('/api/tags/' . $this->tag1->id . '/categories')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'parent_id',
+                            'name',
+                            'description',
+                            'access_level',
+                            'created_at', 
+                            'updated_at',
+                            'pivot' => [
+                                'tag_id',
+                                'taggable_id',
+                                'taggable_type'
+                            ]
+                        ]
+                    ]
+                ]);
+    }
+
+    public function test_pages_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('/api/tags/' . $this->tag1->id . '/pages')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'category_id',
+                            'user_id',
+                            'title',
+                            'summary',
+                            'metakey',
+                            'metadesc',
+                            'media_url',
+                            'access_level',
+                            'publish',
+                            'created_at', 
+                            'updated_at',
+                            'pivot' => [
+                                'tag_id',
+                                'taggable_id',
+                                'taggable_type'
+                            ]
+                        ]
+                    ]
+                ]);
     }
     
     /**

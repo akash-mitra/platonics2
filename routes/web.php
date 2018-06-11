@@ -17,6 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('login/{provider}', 'Auth\RegisterController@redirectToProvider');
+Route::get('login/{provider}/callback', 'Auth\RegisterController@handleProviderCallback');
+
 Route::get('admin/categories', 'CategoryController@home')->name('categories.home');
 
 Route::get('admin/pages', 'PageController@home')->name('pages.home');
