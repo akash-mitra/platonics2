@@ -10,6 +10,8 @@ use App\Tag;
 use App\Comment;
 use App\Media;
 use App\Permission;
+use DB;
+use Illuminate\Support\Facades\Cache;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -30,6 +32,7 @@ class TestDataSetup extends TestCase
         $this->generate_media();
         $this->generate_users();
         $this->generate_permissions();
+        $this->generate_configurations();
     }
 
     private function generate_categories()
@@ -120,18 +123,26 @@ class TestDataSetup extends TestCase
         $this->regular1 = factory(User::class)->create(['type' => 'Regular']);
     }
 
+    private function generate_configurations()
+    {
+        DB::table('configurations')
+            ->insert(['key' => 'hello', 
+                'value' => serialize('{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}'),
+                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')]);
+        Cache::forever('hello', '{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}');
+
+        DB::table('configurations')
+            ->insert(['key' => 'world', 
+                'value' => serialize('{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}'),
+                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')]);
+        Cache::forever('world', '{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}');
+    }
+
     private function generate_permissions()
     {
         // Add Permissions Entries
-        /*$this->permission1 = factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'categories', 'action' => 'index']);
-        $this->permission2 = factory(Permission::class)->create(['type' => 'Author', 'resource' => 'categories', 'action' => 'index']);
-        $this->permission3 = factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'index']);
-        $this->permission4 = factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'categories', 'action' => 'show']);
-        $this->permission5 = factory(Permission::class)->create(['type' => 'Author', 'resource' => 'categories', 'action' => 'show']);
-        $this->permission6 = factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'show']);
-        $this->permission7 = factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'store']);
-        $this->permission8 = factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'update']);
-        $this->permission9 = factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'destroy']);*/
 
         factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'categories', 'action' => 'index' ] );
         factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'categories', 'action' => 'show' ] );
@@ -281,6 +292,10 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'edit' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'categories' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'pages' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'index' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'store' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'show' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'destroy' ] );
         
     }
 }

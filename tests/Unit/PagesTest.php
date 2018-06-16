@@ -18,7 +18,7 @@ class PagesTest extends TestDataSetup
     public function test_index_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/api/pages')
+                ->get('/pages')
                 ->assertStatus(200)
                 ->assertJsonStructure([ 
                     'length',
@@ -75,14 +75,14 @@ class PagesTest extends TestDataSetup
 
     public function test_index_returns_expected_length()
     {
-        $response = $this->actingAs($this->admin1)->get('/api/pages')->decodeResponseJson();
+        $response = $this->actingAs($this->admin1)->get('/pages')->decodeResponseJson();
         $this->assertEquals($response['length'], count(Page::all()));
     }
 
     public function test_show_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/api/pages/' . $this->page1->id)
+                ->get('/pages/' . $this->page1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
@@ -126,7 +126,7 @@ class PagesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/api/pages', $page)
+                ->post('/pages', $page)
                 ->assertStatus(201)
                 ->assertJsonFragment([
                     'category_id' => $this->category1->id,
@@ -145,7 +145,7 @@ class PagesTest extends TestDataSetup
         ];
 
         $response = $this->actingAs($this->admin1)
-                            ->post('/api/pages', $page)->decodeResponseJson();
+                            ->post('/pages', $page)->decodeResponseJson();
 
         $body = Page::find($response['id'])->contents->body;
         $this->assertEquals($body, $page['body']);
@@ -161,7 +161,7 @@ class PagesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/api/pages/' . $this->page1->id, $page)
+                ->put('/pages/' . $this->page1->id, $page)
                 ->assertStatus(200)
                 ->assertJsonFragment([
                     'category_id' => $this->category1->id,
@@ -173,7 +173,7 @@ class PagesTest extends TestDataSetup
     public function test_destroy_can_delete_data()
     {
         $this->actingAs($this->admin1)
-                ->delete('/api/pages/1')
+                ->delete('/pages/1')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->page1->title]);
     }
@@ -188,7 +188,7 @@ class PagesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/api/pages/' . $this->page1->id . '/publish', $page)
+                ->put('/pages/' . $this->page1->id . '/publish', $page)
                 ->assertStatus(200)
                 ->assertJsonFragment([
                     'category_id' => $this->category1->id,
@@ -201,7 +201,7 @@ class PagesTest extends TestDataSetup
     public function test_comments_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/api/pages/' . $this->page1->id . '/comments')
+                ->get('/pages/' . $this->page1->id . '/comments')
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'length',
@@ -229,7 +229,7 @@ class PagesTest extends TestDataSetup
     public function test_show_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->get('/api/pages/108')
+                ->get('/pages/108')
                 ->assertStatus(404);
     }
 
@@ -243,7 +243,7 @@ class PagesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/api/pages', $page)
+                ->post('/pages', $page)
                 ->assertStatus(302);
                 //->assertJsonFragment(["message"=> "The given data was invalid."]);
     }
@@ -258,14 +258,14 @@ class PagesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/api/pages/' . $this->page1->id, $page)
+                ->put('/pages/' . $this->page1->id, $page)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->delete('/api/pages/108')
+                ->delete('/pages/108')
                 ->assertStatus(404);
     }
 }

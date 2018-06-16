@@ -18,7 +18,7 @@ class CategoriesTest extends TestDataSetup
     public function test_index_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/api/categories')
+                ->get('/categories')
                 ->assertStatus(200)
                 ->assertJsonStructure([ 
                     'length',
@@ -38,14 +38,14 @@ class CategoriesTest extends TestDataSetup
 
     public function test_index_returns_expected_length()
     {
-        $response = $this->actingAs($this->admin1)->get('/api/categories')->decodeResponseJson();
+        $response = $this->actingAs($this->admin1)->get('/categories')->decodeResponseJson();
         $this->assertEquals($response['length'], count(Category::all()));
     }
 
     public function test_show_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/api/categories/' . $this->category1->id)
+                ->get('/categories/' . $this->category1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
@@ -67,7 +67,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/api/categories', $category)
+                ->post('/categories', $category)
                 ->assertStatus(201)
                 ->assertJsonFragment($category);
     }
@@ -81,7 +81,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/api/categories/' . $this->category1->id, $category)
+                ->put('/categories/' . $this->category1->id, $category)
                 ->assertStatus(200)
                 ->assertJsonFragment($category);
     }
@@ -89,7 +89,7 @@ class CategoriesTest extends TestDataSetup
     public function test_destroy_can_delete_data()
     {
         $this->actingAs($this->admin1)
-                ->delete('/api/categories/1')
+                ->delete('/categories/1')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->category1->name]);
     }
@@ -102,7 +102,7 @@ class CategoriesTest extends TestDataSetup
     public function test_show_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->get('/api/categories/108')
+                ->get('/categories/108')
                 ->assertStatus(404);
     }
 
@@ -115,7 +115,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/api/categories', $category)
+                ->post('/categories', $category)
                 ->assertStatus(302);
                 //->assertJsonFragment(['message' => 'The given data was invalid.']);
     }
@@ -129,14 +129,14 @@ class CategoriesTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('/api/categories/' . $this->category1->id, $category)
+                ->put('/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->delete('/api/categories/108')
+                ->delete('/categories/108')
                 ->assertStatus(404);
     }
 
@@ -147,13 +147,13 @@ class CategoriesTest extends TestDataSetup
 
     public function test_visitor_allow_index()
     {
-        $this->get('/api/categories')
+        $this->get('/categories')
                 ->assertStatus(200);
     }
 
     public function test_visitor_allow_show()
     {
-        $this->get('/api/categories/' . $this->category1->id)
+        $this->get('/categories/' . $this->category1->id)
                 ->assertStatus(200);
     }
 
@@ -165,7 +165,7 @@ class CategoriesTest extends TestDataSetup
             'access_level' => 'F'
         ];
 
-        $this->post('/api/categories', $category)
+        $this->post('/categories', $category)
                 ->assertStatus(302);
     }
 
@@ -177,13 +177,13 @@ class CategoriesTest extends TestDataSetup
             'access_level' => 'F'
         ];
 
-        $this->put('/api/categories/' . $this->category1->id, $category)
+        $this->put('/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
     public function test_visitor_deny_destroy()
     {
-        $this->delete('/api/categories/1')
+        $this->delete('/categories/1')
                 ->assertStatus(302);
     }
 
@@ -191,14 +191,14 @@ class CategoriesTest extends TestDataSetup
     public function test_regular_allow_index()
     {
         $this->actingAs($this->regular1)
-                ->get('/api/categories')
+                ->get('/categories')
                 ->assertStatus(200);
     }
 
     public function test_regular_allow_show()
     {
         $this->actingAs($this->regular1)
-                ->get('/api/categories/' . $this->category1->id)
+                ->get('/categories/' . $this->category1->id)
                 ->assertStatus(200);
     }
 
@@ -211,7 +211,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->regular1)
-                ->post('/api/categories', $category)
+                ->post('/categories', $category)
                 ->assertStatus(302);
     }
 
@@ -224,14 +224,14 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->regular1)
-                ->put('/api/categories/' . $this->category1->id, $category)
+                ->put('/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
     public function test_regular_deny_destroy()
     {
         $this->actingAs($this->regular1)
-                ->delete('/api/categories/1')
+                ->delete('/categories/1')
                 ->assertStatus(302);
     }
 
@@ -239,14 +239,14 @@ class CategoriesTest extends TestDataSetup
     public function test_author_allow_index()
     {
         $this->actingAs($this->author1)
-                ->get('/api/categories')
+                ->get('/categories')
                 ->assertStatus(200);
     }
 
     public function test_author_allow_show()
     {
         $this->actingAs($this->author1)
-                ->get('/api/categories/' . $this->category1->id)
+                ->get('/categories/' . $this->category1->id)
                 ->assertStatus(200);
     }
 
@@ -259,7 +259,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->author1)
-                ->post('/api/categories', $category)
+                ->post('/categories', $category)
                 ->assertStatus(302);
     }
 
@@ -272,14 +272,14 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->author1)
-                ->put('/api/categories/' . $this->category1->id, $category)
+                ->put('/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
     public function test_author_deny_destroy()
     {
         $this->actingAs($this->author1)
-                ->delete('/api/categories/1')
+                ->delete('/categories/1')
                 ->assertStatus(302);
     }
 
@@ -287,14 +287,14 @@ class CategoriesTest extends TestDataSetup
     public function test_editor_allow_index()
     {
         $this->actingAs($this->editor1)
-                ->get('/api/categories')
+                ->get('/categories')
                 ->assertStatus(200);
     }
 
     public function test_editor_allow_show()
     {
         $this->actingAs($this->editor1)
-                ->get('/api/categories/' . $this->category1->id)
+                ->get('/categories/' . $this->category1->id)
                 ->assertStatus(200);
     }
 
@@ -307,7 +307,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->editor1)
-                ->post('/api/categories', $category)
+                ->post('/categories', $category)
                 ->assertStatus(201);
     }
 
@@ -320,14 +320,14 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->editor1)
-                ->put('/api/categories/' . $this->category1->id, $category)
+                ->put('/categories/' . $this->category1->id, $category)
                 ->assertStatus(200);
     }
 
     public function test_editor_deny_destroy()
     {
         $this->actingAs($this->editor1)
-                ->delete('/api/categories/1')
+                ->delete('/categories/1')
                 ->assertStatus(302);
     }
 }

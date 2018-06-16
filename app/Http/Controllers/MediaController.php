@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use App\Media;
 use Auth;
@@ -67,16 +68,25 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
+        /*
         // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
         // Optimized
         $request->request->add(['optimized' => 'N']);
         // validate
         $request->validate($this->getRules());
+        */
 
         $input = $request->input();
-        $media = Media::create($input);
-        return response()->json($media, 201);
+        $uploadedFile = request()->file('file');
+        $name = $input['name'];
+        
+        try {
+            $media = Media::store($uploadedFile, $name);
+            return response()->json($media, 201);
+        } catch (HttpException $e) {
+            return response()->json(['message' => 'Error']);
+        }
     }
 
     /**
