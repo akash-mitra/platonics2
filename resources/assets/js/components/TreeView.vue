@@ -3,7 +3,7 @@
         
         <ul v-for="(node, index) in tree" :key="index" :class="listClass">
                 <li :class="itemClass">
-                        <div class="py-4 px-8 border-b">
+                        <div class="py-4 px-8 border-dotted border-blue-lightest border-b">
                                 <div :class="'ml-' + 4 * level">
 
                                         
@@ -11,16 +11,16 @@
                                                 <p v-if="parentName" class="text-xs uppercase text-teal-light mb-1">
                                                      {{ parentName }} &gt; <br>
                                                 </p>
-                                                <p class="text-xl text-grey-dark">
+                                                <p class="text-blue-darker text-lg font-light leading-normal">
                                                         {{node.name}} 
-                                                        <span class="text-xs text-grey-dark p-1 ml-2 border rounded">
+                                                        <span class="text-xs text-grey-dark py-1 px-2 ml-2 border rounded">
                                                                  {{ node.children.length }} items
                                                         </span>
                                                 </p>
                                                 
                                                 
                                         
-                                        <p class="text-sm text-grey-darker my-2" v-text="node.description"></p>
+                                        <p class="text-grey-dark text-sm italic my-2" v-text="node.description"></p>
                                         
                                         <div class="w-full my-4 text-xs">
                                                 <a href="#" class="no-underline text-blue-light hover:text-blue">+ Add Page</a>

@@ -61,6 +61,10 @@
                                         item.title.indexOf(this.searchPhrase) >= 0
                                         ||
                                         item.metakey.indexOf(this.searchPhrase) >= 0
+                                        ||
+                                        item.categories.name.indexOf(this.searchPhrase) >= 0
+                                        ||
+                                        item.users.name.indexOf(this.searchPhrase) >= 0
                                         
                                 ) return item;
                         });

@@ -38,7 +38,7 @@ class CategoryController extends Controller
      */
     public function home()
     {
-        return view('admin.categories');
+        return view('admin.categories.home');
     }
 
     /**

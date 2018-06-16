@@ -27,13 +27,15 @@
                 
                 </div>
                 <div class="sm:w-1/2 pr-4">
-                        <p class="w-full text-grey-dark text-sm">Migration > </p>
+                        <p class="w-full text-grey-dark text-sm" v-text="page.categories.name"></p>
                         <p class="w-full text-blue-darker text-lg font-light leading-normal">
                                 {{ page.title }}
-                                <span class="w-full text-grey text-sm italic leading-loose">{{ page.summary.substr(1,60)}}</span>
+                                <span class="w-full text-grey text-sm italic leading-loose" v-text="page.summary.substr(0,60)"></span>
                         </p>
                         
-                        <p class="w-full text-grey-dark text-sm leading-loose">Written By Akash | 24-May-2018</p>
+                        <p class="w-full text-grey-dark text-sm leading-loose">
+                                Written By <span v-text="page.users.name">Akash</span> | <span v-text="page.created_at.substr(0, 10)"></span>
+                        </p>
 
                         <p class="mt-4 hidden sm:block">
 
