@@ -17,7 +17,7 @@ class CreateMediaTable extends Migration
             $table->increments('id');
             $table->bigInteger('user_id')->unsigned();
             $table->string('base_path');
-            $table->string('filename', 30);
+            $table->string('filename');
             $table->string('name', 60);
             $table->string('type', 10);
             $table->bigInteger('size')->nullable();

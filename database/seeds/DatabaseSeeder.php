@@ -124,8 +124,8 @@ class DatabaseSeeder extends Seeder
         });
         // end of each parent category
 
-        // create 30 random media
-        $media = factory(Media::class, 30)->create([
+        // create 10 random media
+        $media = factory(Media::class, 10)->create([
             'user_id' => $authorIds[random_int(0, count($authorIds) - 1)]
         ]);
 
@@ -260,7 +260,10 @@ class DatabaseSeeder extends Seeder
             [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'destroy', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'update', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
-            [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'edit', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'edit', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],          
+            [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'absolute', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'relative', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'optimize', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],            
             [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'store', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'create', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],

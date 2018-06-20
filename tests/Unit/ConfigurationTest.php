@@ -69,7 +69,7 @@ class ConfigurationTest extends TestDataSetup
             'key' => 'HelloKey.Brown',
             'value' => 'Dog'
         ];
-        dump(cache('HelloKey'));
+        
         $this->actingAs($this->admin1)
                 ->post('/configs', $config)
                 ->assertStatus(200)

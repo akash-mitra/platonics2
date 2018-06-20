@@ -36,6 +36,7 @@ class PagesTest extends TestDataSetup
                             'publish',
                             'created_at',
                             'updated_at',
+                            'slug',
                             'users' => [
                                 'id',
                                 'name',
@@ -97,6 +98,7 @@ class PagesTest extends TestDataSetup
                     'publish',
                     'created_at',
                     'updated_at',
+                    'slug',
                     'contents' => [
                         'page_id',
                         'body', 
@@ -201,7 +203,7 @@ class PagesTest extends TestDataSetup
     public function test_comments_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/pages/' . $this->page1->id . '/comments')
+                ->get('/pages/comments/' . $this->page1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'length',

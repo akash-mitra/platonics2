@@ -17,6 +17,13 @@ class Page extends Model
     ];
     
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['slug', 'google_metrics'];
+
+    /**
      * Get content of the page
      */
     public function contents()
@@ -54,5 +61,25 @@ class Page extends Model
     public function categories()
     {
         return $this->belongsTo('App\Category', 'category_id', 'id');
+    }
+
+    /**
+     * Get the slug value from title.
+     *
+     * @return bool
+     */
+    public function getSlugAttribute()
+    {
+        return str_slug($this->title, '-');
+    }
+
+    /**
+     * Get google metrics associated with the page.
+     *
+     * @return bool
+     */
+    public function getGoogleMetricsAttribute()
+    {
+        return GoogleAnalytics::metrics($this->id);
     }
 }

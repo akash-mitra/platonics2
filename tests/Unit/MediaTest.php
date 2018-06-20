@@ -68,17 +68,15 @@ class MediaTest extends TestDataSetup
 
     public function test_store_can_persist_data()
     {
-        Storage::fake('avatars');
-
         $media = [
-            'name' => 'avatar',
-            'file' => UploadedFile::fake()->image('avatar.jpg')
+            'name' => 'TestMedia',
+            'file' => UploadedFile::fake()->image('testImage.jpg')->size(100)
         ];
 
         $response = $this->actingAs($this->admin1)
                 ->post('/media', $media);
-
-        Storage::disk('avatars')->assertExists('avatar.jpg');
+        $data = $response->getData();
+        Storage::disk('local')->assertExists($data->filename . '.' . $data->type);
     }
 
     public function test_update_can_persist_data()
@@ -119,15 +117,16 @@ class MediaTest extends TestDataSetup
     public function test_store_error_invalid_data()
     {
         $media = [
-            'base_path' => 'http://test.com',
-            'filename' => '600x300',
-            'name' => 'test filename'
+            'name' => 'Unsupported image',
+            'file' => UploadedFile::fake()->image('testImage.xyz')->size(100)
         ];
 
         $this->actingAs($this->admin1)
                 ->post('/media', $media)
-                ->assertStatus(302);
-                //->assertJsonFragment(['message' => 'The given data was invalid.']);
+                ->assertStatus(200)
+                ->assertJsonFragment([
+                    'message' => 'Unallowed file type error'
+                ]);
     }
 
     public function test_update_error_invalid_data()
