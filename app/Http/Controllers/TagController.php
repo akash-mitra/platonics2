@@ -178,7 +178,7 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function taggedCategories($id)
+    public function categories($id)
     {
         $tag = Tag::FindOrFail($id);
         $categories = $tag->categories()->get();
@@ -195,7 +195,7 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function taggedPages($id)
+    public function pages($id)
     {
         $tag = Tag::FindOrFail($id);
         $pages = $tag->pages()->get();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use App\Media;
 use Auth;
@@ -19,7 +20,7 @@ class MediaController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('permissions');
+        //$this->middleware('permissions');
     }
     
     private function getRules() 
@@ -67,16 +68,16 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
-        // AUTH User Id
-        $request->request->add(['user_id' => Auth::id()]);
-        // Optimized
-        $request->request->add(['optimized' => 'N']);
-        // validate
-        $request->validate($this->getRules());
-
         $input = $request->input();
-        $media = Media::create($input);
-        return response()->json($media, 201);
+        $uploadedFile = request()->file('file');
+        $name = $input['name'];
+        
+        try {
+            $media = Media::store($uploadedFile, $name);
+            return response()->json($media, 201);
+        } catch (HttpException $e) {
+            return response()->json(['message' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -120,7 +121,51 @@ class MediaController extends Controller
     public function destroy($id)
     {
         $media = Media::FindOrFail($id);
-        $media->delete();
-        return response()->json($media->name); 
+        try {
+            Media::destroy($id);
+            return response()->json($media->name);
+        } catch (HttpException $e) {
+            return response()->json(['message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Display the Absolute Path of the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function absolute($id)
+    {
+        $media = Media::FindOrFail($id);
+        $path = $media->absolutePath();
+        return response()->json([ 'path' => $path]);
+    }
+
+    /**
+     * Display the Relative Path of the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function relative($id)
+    {
+        $media = Media::FindOrFail($id);
+        $path = $media->relativePath();
+        return response()->json([ 'path' => $path]);
+    }
+
+    /**
+     * Update the specified resource in storage for optimization.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function optimize($id)
+    {
+        $media = Media::FindOrFail($id);
+        $status = $media->optimizeImageDaily();
+        return response()->json($status);
     }
 }

@@ -26,6 +26,12 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+
+        $schedule->call('App\GoogleAnalytics@storeAnalyticsDaily')
+                    ->daily();
+
+        $schedule->call('App\Media@optimizeImageDaily')
+                    ->everyMinute();
     }
 
     /**
