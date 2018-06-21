@@ -1,0 +1,9 @@
+    <input id="docsearch" 
+        class="w-full my-6 px-8 text-grey-dark"
+        placeholder="Search" 
+        autocomplete="off" 
+        spellcheck="false" 
+        aria-autocomplete="list" 
+        aria-expanded="false"
+        dir="auto" 
+        type="text" />

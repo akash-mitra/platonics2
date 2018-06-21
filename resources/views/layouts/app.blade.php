@@ -158,17 +158,7 @@
                 <header class="h-16 bg-white border flex justify-between">
                     
                     
-                    <div class="text-grey-darker w-2/3 p-6">
-                        <input id="docsearch" 
-                            class="w-full"
-                            placeholder="Search" 
-                            autocomplete="off" 
-                            spellcheck="false" 
-                            aria-autocomplete="list" 
-                            aria-expanded="false"
-                            dir="auto" 
-                            type="text" />
-                    </div>
+                    @yield('header')
 
                     <div class="text-grey-darker w-1/3 p-6 text-right">
                         Akash

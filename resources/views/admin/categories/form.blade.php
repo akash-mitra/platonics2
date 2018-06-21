@@ -12,7 +12,6 @@
                 vertical-align: middle;
         }
 
-
     </style>
 @endsection
 
@@ -23,14 +22,20 @@
 
 @section('content')
     
-    <div id="app">
-
-        <category-home></category-home>
+<div id="app">
         
-    </div>  
+        <category-form category_id="{{ $id }}"></category-form> 
+</div>
+
+        
+    
 
 @endsection
 
 @section('page.script')
-    <script src="{{ mix('js/categories.js') }}"></script> 
+
+
+<script src="{{ mix('js/categories.form.js') }}"></script> 
+
+
 @endsection

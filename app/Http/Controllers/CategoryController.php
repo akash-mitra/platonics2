@@ -41,6 +41,26 @@ class CategoryController extends Controller
         return view('admin.categories.home');
     }
 
+    private function form ($id = null)
+    {
+        return view('admin.categories.form', compact('id'));
+    }
+
+    public function create()
+    {
+        return $this->form();
+    }
+
+
+    public function edit($category) {
+
+        return $this->form($category);
+
+    }
+
+
+    
+
     /**
      * Display a listing of the resource.
      *

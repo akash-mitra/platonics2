@@ -1,26 +1,26 @@
 <template>
 
-    <div class="font-light bg-contour-teal">
+    <div class="font-light bg-white">
         <h1 class="px-4 sm:px-8 py-4 font-hairline">
                 Categories 
                 
-                <a href="/admin/categories/create" class="no-underline text-blue-light text-sm float-right" style="line-height: 2.5em">
-                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2v4zm-1 11a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/></svg>
+                <a href="/admin/categories/create" class="no-underline text-sm float-right bg-purple text-white pqy-1 px-4 rounded hover:bg-green" style="line-height: 2.5em">
+                        
                             Add Category
                 </a>
         </h1>
 
-        <div class="px-4 sm:px-8 py-4">
+        <div class="px-4 sm:px-8 py-4 border-purple-lighter border-b-2">
                 
                 <div class="text-grey text-sm">
-                        <input type="text" class="w-3/4" v-model="searchPhrase" placeholder="Type category name to filter">
+                        <input type="text" class="w-3/4" v-model="searchPhrase" placeholder="Type a category name to search...">
                         <span class="w-1/4 float-right text-right">
                                 <span class="hidden sm:inline-block">Showing</span> {{ filteredCategories.length }} of {{ categories.length }} top categories
                         </span>
                 </div>
         </div>
 
-        <div class="border-t">
+        <div class="max-w-lg">
                 
                 <tree-view :tree="filteredCategories" :listClass="listClass" :itemClass="itemClass"></tree-view>
         </div>
@@ -45,7 +45,7 @@
 
         created() {
 
-            axios.get('/api/categories')
+            axios.get('/categories')
 
                 .then(response => {
                     //this.buildTree(response.data)

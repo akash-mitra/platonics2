@@ -1,4 +1,4 @@
-Vue.component('platonics-pages', require('./components/PlatonicsPages.vue'));
+Vue.component('pages-home', require('./components/PageHome.vue'));
 Vue.component('page-card', require('./components/PageCard.vue'));
 
 const app = new Vue({

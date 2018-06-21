@@ -35,8 +35,14 @@ class CheckPermission
         }
 
         if ($request->ajax()) {
-            return response()->json(['status' => 'You do not have permission'], 302);
-        } else {
+            return response()->json([
+                    'status' => 'You do not have permission',
+                    'resource' => $this->resource,
+                    'action' => $this->action,
+                    'user_type' => $this->type
+                ], 403);
+        } 
+        else {
             return back()->with('status', 'You do not have permission');
         }
     }

@@ -16,17 +16,27 @@
                                                         <span class="text-xs text-grey-dark py-1 px-2 ml-2 border rounded">
                                                                  {{ node.children.length }} items
                                                         </span>
+
+                                                        <span class="text-xs px-4">
+                                                                <a :href="editCatURL(node.id)" class="no-underline text-purple hover:text-blue">Edit</a>
+                                                                &nbsp; | &nbsp;
+                                                                <a :href="addPageURL(node.id)" class="no-underline text-purple-light hover:text-blue">Add Page</a>
+                                                                &nbsp; | &nbsp;
+                                                                <a :href="addSubCatURL(node.id)" class="no-underline text-purple-light hover:text-blue">Add Sub-category</a>
+                                                        </span>
                                                 </p>
                                                 
                                                 
                                         
                                         <p class="text-grey-dark text-sm italic my-2" v-text="node.description"></p>
                                         
-                                        <div class="w-full my-4 text-xs">
-                                                <a href="#" class="no-underline text-blue-light hover:text-blue">+ Add Page</a>
+                                        <!-- <div class="w-full my-4 text-xs">
+                                                <a :href="editCatURL(node.id)" class="no-underline text-purple-light hover:text-blue">Edit</a>
                                                 &nbsp; | &nbsp;
-                                                <a href="#" class="no-underline text-blue-light hover:text-blue">+ Add Sub-category</a>
-                                        </div>
+                                                <a :href="addPageURL(node.id)" class="no-underline text-purple-light hover:text-blue">Add Page</a>
+                                                &nbsp; | &nbsp;
+                                                <a :href="addSubCatURL(node.id)" class="no-underline text-purple-light hover:text-blue">Add Sub-category</a>
+                                        </div> -->
                                 </div>
                                 
                         </div>
@@ -72,6 +82,18 @@
                 "parentName": {
                         default: '',
                         type: String
+                }
+        },
+
+        methods: {
+                editCatURL: function (id) {
+                        return '/categories/' + id + '/edit'
+                },
+                addSubCatURL: function (id) {
+                        return '/admin/categories/create?parent_id=' + id
+                },
+                addPageURL: function (id) {
+                        return '/admin/pages/create?category_id=' + id
                 }
         }
     }

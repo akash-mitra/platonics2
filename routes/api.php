@@ -16,21 +16,19 @@
     return $request->user();
 });*/
 
-Route::resource('categories', 'CategoryController');
+// Route::resource('pages', 'PageController')->except('create');
+// Route::put('pages/{page}/publish', 'PageController@publish')->name('pages.publish');
+// Route::get('pages/{page}/comments', 'PageController@comments')->name('pages.comments');
 
-Route::resource('pages', 'PageController')->except('create');
-Route::put('pages/{page}/publish', 'PageController@publish')->name('pages.publish');
-Route::get('pages/{page}/comments', 'PageController@comments')->name('pages.comments');
+// Route::resource('tags', 'TagController');
+// Route::post('tags/attach', 'TagController@attach')->name('tags.attach');
+// Route::post('tags/detach', 'TagController@detach')->name('tags.detach');
+// Route::get('tags/{tag}/categories', 'TagController@taggedCategories')->name('tags.categories');
+// Route::get('tags/{tag}/pages', 'TagController@taggedPages')->name('tags.pages');
 
-Route::resource('tags', 'TagController');
-Route::post('tags/attach', 'TagController@attach')->name('tags.attach');
-Route::post('tags/detach', 'TagController@detach')->name('tags.detach');
-Route::get('tags/{tag}/categories', 'TagController@taggedCategories')->name('tags.categories');
-Route::get('tags/{tag}/pages', 'TagController@taggedPages')->name('tags.pages');
+// Route::resource('comments', 'CommentController');
 
-Route::resource('comments', 'CommentController');
-
-Route::resource('media', 'MediaController');
+// Route::resource('media', 'MediaController');
 
 // Route::get('/test', function() {
 //     return response()->json(Auth::guest());

@@ -41,3 +41,7 @@ if (token) {
 //     cluster: 'mt1',
 //     encrypted: true
 // });
+
+import Errors from './Errors'
+
+window.Errors = Errors
