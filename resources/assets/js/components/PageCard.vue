@@ -6,7 +6,7 @@
                                 <a class="no-underline leading-normal text-blue-darker hover:text-blue text-sm" href="#">Show</a>
                         </p>
                         <p class="my-1">
-                                <a class="no-underline leading-normal text-blue-darker hover:text-blue text-sm" href="#">Unpublish</a>
+                                <span class="leading-normal text-blue-darker hover:text-blue text-sm cursor-pointer" @click="togglePublish(page.id)" v-text="page.publish === 'Y'? 'Unpublish': 'Publish'"></span>
                         </p>
                         
                         <p class="my-1">
@@ -92,7 +92,12 @@
 
                 hasIssue: function() {
                         return false
+                },
+
+                togglePublish: function (id) {
+                        this.$emit('toggle-publish', id)
                 }
+
         }
     }
 </script>

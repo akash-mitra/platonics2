@@ -28,7 +28,12 @@
                                 <div class="w-1/2">Pages</div>
                                 <div class="w-1/3 pl-8">Receptions</div>
                         </div>
-                        <page-card v-for="(page, index) in filteredPages" :key="index" :page="page"></page-card>
+                        <page-card 
+                                v-for="(page, index) in filteredPages" 
+                                :key="index" 
+                                :page="page"
+                                v-on:toggle-publish="togglePublish" 
+                        ></page-card>
                 </div>
         </div>
 
@@ -79,6 +84,32 @@
                     
                     this.pages = response.data.data;
                 })
+        },
+
+        methods: {
+        
+                togglePublish: function (id) {
+
+                        axios.request({
+                                'url': '/pages/' + id + '/publish',
+                                'method': 'put',
+                        })
+                        .then(response => {
+
+                                let eventOriginatedFromPage = this.pages.filter(page => { if (page.id === id) return page })[0]
+
+                                eventOriginatedFromPage.publish = (eventOriginatedFromPage.publish === 'Y' ? 'N' : 'Y')
+
+                        })
+                        .catch(error => {
+                                
+                                alert('Some error occurred. Try again later.')
+
+                        })
+
+
+                }
         }
+        
     }
 </script>

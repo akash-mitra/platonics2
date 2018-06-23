@@ -3,10 +3,10 @@
         
         <ul v-for="(node, index) in tree" :key="index" :class="listClass">
                 <li :class="itemClass">
-                        <div class="py-4 px-8 border-dotted border-blue-lightest border-b">
-                                <div :class="'ml-' + 4 * level">
+                        <div class="px-8 border-dqotted border-blque-lightest bordqer-b">
+                                <div :class="['ml-' + 4 * level, level>0? 'border-dotted border-purple-lightest border-r border-b': '', 'pt-8']">
 
-                                        
+                                        <div :class="level>0?'pl-4':''">
                                                 
                                                 <p v-if="parentName" class="text-xs uppercase text-teal-light mb-1">
                                                      {{ parentName }} &gt; <br>
@@ -28,7 +28,7 @@
                                                 
                                                 
                                         
-                                        <p class="text-grey-dark text-sm italic my-2" v-text="node.description"></p>
+                                                <p class="text-grey-dark text-sm italic mt-2 pb-6" v-text="node.description"></p>
                                         
                                         <!-- <div class="w-full my-4 text-xs">
                                                 <a :href="editCatURL(node.id)" class="no-underline text-purple-light hover:text-blue">Edit</a>
@@ -37,6 +37,7 @@
                                                 &nbsp; | &nbsp;
                                                 <a :href="addSubCatURL(node.id)" class="no-underline text-purple-light hover:text-blue">Add Sub-category</a>
                                         </div> -->
+                                        </div>
                                 </div>
                                 
                         </div>
