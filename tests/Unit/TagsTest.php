@@ -8,11 +8,11 @@ use Tests\TestDataSetup;
 class TagsTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 14
+     * Total Test Cases: 15
      */
 
     /**
-     * Positive Test Cases: 12
+     * Positive Test Cases: 13
      */
 
     public function test_index_returns_expected_structure()
@@ -149,7 +149,7 @@ class TagsTest extends TestDataSetup
     public function test_categories_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags/' . $this->tag1->id . '/categories')
+                ->get('/tags/' . $this->tag1->name . '/categories')
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'length',
@@ -175,7 +175,7 @@ class TagsTest extends TestDataSetup
     public function test_pages_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags/' . $this->tag1->id . '/pages')
+                ->get('/tags/' . $this->tag1->name . '/pages')
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'length',
@@ -197,6 +197,61 @@ class TagsTest extends TestDataSetup
                                 'tag_id',
                                 'taggable_id',
                                 'taggable_type'
+                            ]
+                        ]
+                    ]
+                ]);
+    }
+
+    public function test_taggables_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('/tags/' . $this->tag1->name . '/all')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'length',
+                    'data' => [
+                        'categories' => [
+                            'length',
+                            'data' => [
+                                '*' => [
+                                    'id',
+                                    'parent_id',
+                                    'name',
+                                    'description',
+                                    'access_level',
+                                    'created_at', 
+                                    'updated_at',
+                                    'pivot' => [
+                                        'tag_id',
+                                        'taggable_id',
+                                        'taggable_type'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'pages' => [
+                            'length',
+                            'data' => [
+                                '*' => [
+                                    'id',
+                                    'category_id',
+                                    'user_id',
+                                    'title',
+                                    'summary',
+                                    'metakey',
+                                    'metadesc',
+                                    'media_url',
+                                    'access_level',
+                                    'publish',
+                                    'created_at', 
+                                    'updated_at',
+                                    'pivot' => [
+                                        'tag_id',
+                                        'taggable_id',
+                                        'taggable_type'
+                                    ]
+                                ]
                             ]
                         ]
                     ]

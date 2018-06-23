@@ -41,8 +41,9 @@ Route::get('admin/tags', 'TagController@home')->name('tags.home');
 Route::resource('tags', 'TagController');
 Route::post('tags/attach', 'TagController@attach')->name('tags.attach');
 Route::post('tags/detach', 'TagController@detach')->name('tags.detach');
-Route::get('tags/{tag}/categories', 'TagController@categories')->name('tags.categories');
-Route::get('tags/{tag}/pages', 'TagController@pages')->name('tags.pages');
+Route::get('tags/{tag_name}/categories', 'TagController@categories')->name('tags.categories');
+Route::get('tags/{tag_name}/pages', 'TagController@pages')->name('tags.pages');
+Route::get('tags/{tag_name}/all', 'TagController@all')->name('tags.all');
 
 // COMMENT
 Route::resource('comments', 'CommentController');

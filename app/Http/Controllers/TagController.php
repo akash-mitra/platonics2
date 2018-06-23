@@ -175,13 +175,14 @@ class TagController extends Controller
     /**
      * Display the categories under a tag resource.
      *
-     * @param  int  $id
+     * @param  string  $name
      * @return \Illuminate\Http\Response
      */
-    public function categories($id)
+    public function categories($name)
     {
-        $tag = Tag::FindOrFail($id);
-        $categories = $tag->categories()->get();
+        $tag = Tag::with('categories')->where('name', $name)->firstOrFail();
+        $relations = $tag->getRelations();
+        $categories = $relations['categories'];
 
         return response()->json([
             'length' => count($categories),
@@ -192,17 +193,46 @@ class TagController extends Controller
     /**
      * Display the pages under a tag resource.
      *
-     * @param  int  $id
+     * @param  string  $name
      * @return \Illuminate\Http\Response
      */
-    public function pages($id)
+    public function pages($name)
     {
-        $tag = Tag::FindOrFail($id);
-        $pages = $tag->pages()->get();
+        $tag = Tag::with('pages')->where('name', $name)->firstOrFail();
+        $relations = $tag->getRelations();
+        $pages = $relations['pages'];
 
         return response()->json([
             'length' => count($pages),
             'data' => $pages
+        ]);
+    }
+
+    /**
+     * Display the taggables under a tag name.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Http\Response
+     */
+    public function all($name)
+    {
+        $tag = Tag::with('categories', 'pages')->where('name', $name)->firstOrFail();
+        $relations = $tag->getRelations();
+        $categories = $relations['categories'];
+        $pages = $relations['pages'];
+
+        return response()->json([
+            'length' => count($relations),
+            'data' => [
+                'categories' => [ 
+                    'length' => count($categories),
+                    'data' => $categories
+                ],
+                'pages' => [ 
+                    'length' => count($pages),
+                    'data' => $pages
+                ]
+            ]
         ]);
     }
 }

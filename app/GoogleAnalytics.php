@@ -34,8 +34,10 @@ class GoogleAnalytics extends Model
                         ->where('page_id', $page_id)
                         ->groupBy('page_id')
                         ->first();
-
-        return $metrics;
+        if(isset($metrics))
+            return $metrics;
+        else
+            return ['page_id' => $page_id, 'page_views' => '0', 'adsense_revenue' => '0'];
     }
 
     /**
