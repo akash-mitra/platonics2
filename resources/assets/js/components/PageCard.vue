@@ -53,17 +53,17 @@
                 <div class="hidden sm:block sm:w-1/3 px-8">
                         <div class="flex">
                                 <div class="w-1/2 text-center mr-2">
-                                        <div class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner">
-                                                2K
-                                        </div>
+                                        <div    v-text="page.metrics.page_views"
+                                                class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner" 
+                                        ></div>
                                         <div class="text-sm text-grey leading-loose">
                                                 Page Views
                                         </div>
                                 </div>
                                 <div class="w-1/2 text-center ml-2">
-                                        <div class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner">
-                                                $20
-                                        </div>
+                                        <div    v-text="'$' + page.metrics.adsense_revenue"
+                                                class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner"
+                                        ></div>
                                         <div class="text-sm text-grey leading-loose">
                                                 Ad Revenue
                                         </div>

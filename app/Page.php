@@ -12,16 +12,16 @@ class Page extends Model
      * @var array
      */
     protected $fillable = [
-        'category_id', 'user_id', 'title', 'summary', 
+        'category_id', 'user_id', 'title', 'summary',
         'metakey', 'metadesc', 'media_url', 'access_level', 'publish',
     ];
-    
+
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['slug', 'google_metrics'];
+    protected $appends = ['slug', 'metrics'];
 
     /**
      * Get content of the page
@@ -48,7 +48,7 @@ class Page extends Model
     }
 
     /**
-     * Get user 
+     * Get user
      */
     public function users()
     {
@@ -74,11 +74,11 @@ class Page extends Model
     }
 
     /**
-     * Get google metrics associated with the page.
+     * Get Page Analytics metrics associated with the page.
      *
      * @return bool
      */
-    public function getGoogleMetricsAttribute()
+    public function getMetricsAttribute()
     {
         return GoogleAnalytics::metrics($this->id);
     }
