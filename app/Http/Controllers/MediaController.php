@@ -20,7 +20,7 @@ class MediaController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('permissions');
+        $this->middleware('permissions');
     }
     
     private function getRules() 

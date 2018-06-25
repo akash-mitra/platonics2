@@ -50,6 +50,12 @@ class TestDataSetup extends TestCase
         // create a author
         $this->author1 = factory(User::class)->create(['type' => 'Author']);
 
+        // create a editor
+        $this->editor1 = factory(User::class)->create(['type' => 'Editor']);
+
+        // create a editor
+        $this->regular1 = factory(User::class)->create(['type' => 'Regular']);
+
         // create 3 pages for test
         $this->page1 = factory(Page::class)->create([
             'access_level' => 'F',
@@ -301,6 +307,11 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'store' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'show' ] );
         factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'destroy' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'index' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'show' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'update' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'destroy' ] );
+        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'edit' ] );
         
     }
 }

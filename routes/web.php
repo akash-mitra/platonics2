@@ -61,6 +61,11 @@ Route::get('configs/{key}', 'ConfigurationController@show')->name('configuration
 Route::get('configs', 'ConfigurationController@index')->name('configurations.index');
 Route::delete('configs/{key}', 'ConfigurationController@destroy')->name('configurations.destroy');
 
+// USER
+Route::get('admin/users', 'UserController@home')->name('users.home');
+Route::get('admin/users/create', 'UserController@create')->name('users.create');
+Route::resource('users', 'UserController');
+
 // DUMMY TEST
 Route::get('analyticsga', 'AnalyticsController@test')->name('analytics.test');
 Route::get('test', function () { return view('test'); });
