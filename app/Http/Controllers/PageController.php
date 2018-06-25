@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Auth;
 use DB;
-
 use App\Page;
 use App\Content;
 
@@ -50,6 +48,21 @@ class PageController extends Controller
         return view('admin.pages.home');
     }
 
+    private function form($id = null)
+    {
+        return view('admin.pages.form', compact('id'));
+    }
+
+    public function create()
+    {
+        return $this->form();
+    }
+
+    public function edit($category)
+    {
+        return $this->form($category);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -57,7 +70,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::with('users','categories','tags')->get();
+        $pages = Page::with('users', 'categories', 'tags')->get();
 
         return response()->json([
             'length' => count($pages),
@@ -70,10 +83,10 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        return view('admin.pages.create');
-    }
+    // public function create()
+    // {
+    //     return view('admin.pages.form');
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -119,12 +132,12 @@ class PageController extends Controller
      * @param  int                       $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $page = Page::with('contents', 'users')->FindOrFail($id);
+    // public function edit($id)
+    // {
+    //     $page = Page::with('contents', 'users')->FindOrFail($id);
 
-        return view('page.edit', compact('page'));
-    }
+    //     return view('page.edit', compact('page'));
+    // }
 
     /**
      * Update the specified resource in storage.

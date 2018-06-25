@@ -6,17 +6,19 @@ new Vue ({
 
         data() {
                 return {
-                        "title": '',
-                        "summary": '',
-                        "innerHTML": '',
-                        "innerText": '',
-                        "options": {
+                        id:'',
+                        title: '',
+                        summary: '',
+                        innerHTML: '',
+                        innerText: '',
+                        options: {
                                 toolbar: { 
                                         buttons: ['bold', 'italic', 'underline', 'strikethrough', 'anchor', 'h2', 'h3', 'quote'] 
                                 }
                         },
-                        "lastWordCount": 0,
-                        "lastCharCount": 0
+                        lastWordCount: 0,
+                        lastCharCount: 0,
+                        errors: new Errors()
                 }
         },
 
@@ -25,6 +27,7 @@ new Vue ({
         components: {
                 'medium-editor': editor
         },
+        
 
         computed: {
 
@@ -52,34 +55,6 @@ new Vue ({
                         
                         return 'Post too big. More than ' + min + ' min to read'
                         
-                },
-
-                topKeyWords: function () {
-                        
-                        // let words = this.innerText.split(/\W+/)
-
-                        // let counts = {}, word = '', keyWords = []
-
-                        // for (let i = 0; i < words.length; ++i) {
-
-                        //         word = words[i]
-                                
-                        //         counts[word] = (counts[word] || 0) + 1
-                        // }
-
-                        // let uniqueWords = Object.keys(counts)
-
-                        // for (let i = 0; i < uniqueWords.length; i++)
-                        // {
-                        //         keyWords.push ({
-                        //                 "key": uniqueWords[i],
-                        //                 "freq": counts[uniqueWords[i]]
-                        //         })
-                        // }
-
-                        // let sortedKeyWords = _.orderBy(keyWords, 'freq', 'desc')
-
-                        // return sortedKeyWords.slice(0, 3)
                 }
         },
 
@@ -88,6 +63,8 @@ new Vue ({
                 applyTextEdit: function (operation) {
                         
                         this.innerText = operation.api.origElements.innerText
+
+                        this.innerHTML = operation.api.origElements.innerHTML
                         
                 },
 
@@ -122,6 +99,34 @@ new Vue ({
                         }
 
                         return false
+                },
+
+                savePage: function () {
+
+                        
+
+                        axios.request({
+                                'url': '/pages/' +  this.$data.id,
+                                'method': this.id > 0 ? 'patch' : 'post',
+                                'data': {
+                                        title: this.title,
+                                        summary: this.summary,
+                                        body: this.innerHTML
+                                }
+                        })
+                        .then(response => {
+
+                                this.id = response.data.id
+
+                                //location.href = '/admin/categories'
+                        })
+                        .catch(error => {
+
+                                this.errors.record(error.response.data.errors)
+
+                                console.log(this.errors.get('title'))
+
+                        })
                 }
         }
 })

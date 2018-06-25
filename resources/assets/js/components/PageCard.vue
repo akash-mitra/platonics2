@@ -6,7 +6,7 @@
                                 <a class="no-underline leading-normal text-blue-darker hover:text-blue text-sm" href="#">Show</a>
                         </p>
                         <p class="my-1">
-                                <a class="no-underline leading-normal text-blue-darker hover:text-blue text-sm" href="#">Unpublish</a>
+                                <span class="leading-normal text-blue-darker hover:text-blue text-sm cursor-pointer" @click="togglePublish(page.id)" v-text="page.publish === 'Y'? 'Unpublish': 'Publish'"></span>
                         </p>
                         
                         <p class="my-1">
@@ -53,17 +53,17 @@
                 <div class="hidden sm:block sm:w-1/3 px-8">
                         <div class="flex">
                                 <div class="w-1/2 text-center mr-2">
-                                        <div class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner">
-                                                2K
-                                        </div>
+                                        <div    v-text="page.metrics.page_views"
+                                                class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner" 
+                                        ></div>
                                         <div class="text-sm text-grey leading-loose">
                                                 Page Views
                                         </div>
                                 </div>
                                 <div class="w-1/2 text-center ml-2">
-                                        <div class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner">
-                                                $20
-                                        </div>
+                                        <div    v-text="'$' + page.metrics.adsense_revenue"
+                                                class="py-6 rounded text-teal text-3xl bg-grey-lightest shadow-inner"
+                                        ></div>
                                         <div class="text-sm text-grey leading-loose">
                                                 Ad Revenue
                                         </div>
@@ -92,7 +92,12 @@
 
                 hasIssue: function() {
                         return false
+                },
+
+                togglePublish: function (id) {
+                        this.$emit('toggle-publish', id)
                 }
+
         }
     }
 </script>
