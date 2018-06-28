@@ -131,10 +131,9 @@ class DatabaseSeeder extends Seeder
             'user_id' => $authorIds[random_int(0, count($authorIds) - 1)]
         ]);
 
-        // set s3 Configuration
         DB::table('configurations')->insert([
             'key' => 'storage',
-            'value' => serialize(json_encode('{"type":"s3", "key":"AKIAI3SQSEQQEZ662QRA", "secret":"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", "region":"ap-southeast-1", "bucket":"platonics2"}')),
+            'value' => serialize(json_encode('{"type":"local"}')),
             'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
             'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
         ]);
