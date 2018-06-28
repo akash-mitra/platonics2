@@ -94,7 +94,7 @@ class ConfigurationTest extends TestDataSetup
         $this->actingAs($this->admin1)
                 ->get('/configs/blabla')
                 ->assertStatus(200)
-                ->assertJsonFragment([ 'status' => false ]);
+                ->assertJsonFragment([ 'Not Found' ]);
     }
 
     public function test_destroy_error_invalid_id()

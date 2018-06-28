@@ -73,7 +73,7 @@ class MediaController extends Controller
         $name = $input['name'];
         
         try {
-            $media = Media::store($uploadedFile, $name);
+            $media = Media::storeMedia($uploadedFile, $name);
             return response()->json($media, 201);
         } catch (HttpException $e) {
             return response()->json(['message' => $e->getMessage()]);
@@ -122,7 +122,7 @@ class MediaController extends Controller
     {
         $media = Media::FindOrFail($id);
         try {
-            Media::destroy($id);
+            Media::destroyMedia($id);
             return response()->json($media->name);
         } catch (HttpException $e) {
             return response()->json(['message' => $e->getMessage()]);
@@ -139,7 +139,7 @@ class MediaController extends Controller
     {
         $media = Media::FindOrFail($id);
         $path = $media->absolutePath();
-        return response()->json([ 'path' => $path]);
+        return response()->json(['path' => $path]);
     }
 
     /**
@@ -152,11 +152,11 @@ class MediaController extends Controller
     {
         $media = Media::FindOrFail($id);
         $path = $media->relativePath();
-        return response()->json([ 'path' => $path]);
+        return response()->json(['path' => $path]);
     }
 
     /**
-     * Update the specified resource in storage for optimization.
+     * Optimization the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -165,7 +165,8 @@ class MediaController extends Controller
     public function optimize($id)
     {
         $media = Media::FindOrFail($id);
-        $status = $media->optimizeImageDaily();
+        $status = $media->optimize();
+        //$status = Media::optimizeAll();
         return response()->json($status);
     }
 }

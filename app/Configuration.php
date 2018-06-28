@@ -27,7 +27,7 @@ class Configuration
         DB::table('configurations')
                     ->insert([
                         'key' => $keys[0], 
-                        'value' => serialize($val),
+                        'value' => serialize(json_encode($val)),
                         'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                         'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
                     ]);
@@ -71,12 +71,12 @@ class Configuration
         if (self::keyExists($key)) {
             return Cache::rememberForever($key, function() use($key){
                 $configuration = DB::table('configurations')->where('key', $key)->first();
-                $unserializedValue = unserialize($configuration->value);
+                $unserializedValue = json_decode(unserialize($configuration->value), true);
                 return $unserializedValue;
             });
         }
 
-        return ['status' => false];
+        return 'Not Found';
     }
 
     /**
@@ -86,7 +86,7 @@ class Configuration
     {
         $configurations = DB::table('configurations')->get();
         foreach ($configurations as $configuration) {
-            $configuration->value = unserialize($configuration->value);
+            $configuration->value = json_decode(unserialize($configuration->value), true);
         }
         return $configurations;
     }

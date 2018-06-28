@@ -133,14 +133,14 @@ class TestDataSetup extends TestCase
     {
         DB::table('configurations')
             ->insert(['key' => 'hello', 
-                'value' => serialize('{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}'),
+                'value' => serialize(json_encode('{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}')),
                 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')]);
         Cache::forever('hello', '{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}');
 
         DB::table('configurations')
             ->insert(['key' => 'world', 
-                'value' => serialize('{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}'),
+                'value' => serialize(json_encode('{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}')),
                 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')]);
         Cache::forever('world', '{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}');

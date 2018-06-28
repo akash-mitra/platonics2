@@ -25,8 +25,8 @@ class PageController extends Controller
     private function getRules($id = null)
     {
         return [
-            'category_id' => 'integer',
-            'user_id' => 'bail|required|integer|exists:users,id',
+            'category_id' => 'bail|required|integer',
+            'user_id' => 'required|integer|exists:users,id',
             'title' => 'required|unique:pages,title,' . $id . '|max:100',
             'summary' => 'nullable|max:1048',
             'metakey' => 'nullable|max:255',

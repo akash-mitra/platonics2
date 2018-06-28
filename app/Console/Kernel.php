@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
         $schedule->call('App\GoogleAnalytics@storeAnalyticsDaily')
                     ->daily();
 
-        $schedule->call('App\Media@optimizeImageDaily')
+        $schedule->call('App\Media@optimizeAll')
                     ->everyMinute();
     }
 
