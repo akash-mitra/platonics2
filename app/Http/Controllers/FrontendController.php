@@ -63,7 +63,7 @@ class FrontendController extends Controller
                 ->withStyles($slots)
                 ->withModules($modules)
                 ->withMenus($this->menus)
-                ->withParameters(['object_id' => $page->id]);
+                ->withParameters(['object_id' => null]);
     }
 
     /**
