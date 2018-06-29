@@ -41,7 +41,8 @@ class FrontendController extends Controller
         return view('home')
                 ->withStyles($slots)
                 ->withModules($modules)
-                ->withMenus($this->menus);
+                ->withMenus($this->menus)
+                ->withParameters(['object_id' => null]);
     }
 
     public function category($id)
@@ -61,7 +62,8 @@ class FrontendController extends Controller
                 ->withCategory($category)
                 ->withStyles($slots)
                 ->withModules($modules)
-                ->withMenus($this->menus);
+                ->withMenus($this->menus)
+                ->withParameters(['object_id' => $page->id]);
     }
 
     /**
