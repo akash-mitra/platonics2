@@ -25,7 +25,7 @@ class PageController extends Controller
     private function getRules($id = null)
     {
         return [
-            'category_id' => 'integer',
+            'category_id' => 'required|integer',
             'user_id' => 'bail|required|integer|exists:users,id',
             'title' => 'required|unique:pages,title,' . $id . '|max:100',
             'summary' => 'nullable|max:1048',
@@ -39,28 +39,39 @@ class PageController extends Controller
     }
 
     /**
-     * Display the Single Page Application view for page.
-     * This route is accessible via web, whereas all the
-     * other routes are only accessible via API.
+     * Returns a view to show the listing of all
+     * the pages.
      */
-    public function home()
+    public function adminHome()
     {
         return view('admin.pages.home');
     }
 
+    /**
+     * Returns a view to be used by both create and
+     * edit purpose for a single page.
+     */
     private function form($id = null)
     {
         return view('admin.pages.form', compact('id'));
     }
 
+    /**
+     * Returns an empty view for single page
+     * creation purpose
+     */
     public function create()
     {
         return $this->form();
     }
 
-    public function edit($category)
+    /**
+     * Returns a view for a single page
+     * edit purpose
+     */
+    public function edit($page)
     {
-        return $this->form($category);
+        return $this->form($page);
     }
 
     /**
@@ -79,16 +90,6 @@ class PageController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create()
-    // {
-    //     return view('admin.pages.form');
-    // }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -96,48 +97,21 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
-        // validate
-        $request->validate($this->getRules());
 
-        $page = null;
-        DB::transaction(function () use ($request, &$page) {
-            $input = $request->input();
-            $page = Page::create($input);
+        $this->validateUnlessDraft($request);
 
-            $content = new Content($input);
+        $input = $request->input();
+        $page = new Page($input);
+        $content = new Content($input);
+
+        DB::transaction(function () use ($page, $content) {
+            $page->save();
             $page->contents()->save($content);
         });
 
         return response()->json($page, 201);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int                       $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $page = Page::with('contents', 'users')->FindOrFail($id);
-
-        return response()->json($page);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int                       $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function edit($id)
-    // {
-    //     $page = Page::with('contents', 'users')->FindOrFail($id);
-
-    //     return view('page.edit', compact('page'));
-    // }
 
     /**
      * Update the specified resource in storage.
@@ -148,18 +122,16 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
-        // validate
-        $request->validate($this->getRules($id));
 
-        $page = null;
-        DB::transaction(function () use ($request, $id, &$page) {
-            $input = $request->input();
-            $page = Page::FindOrFail($id);
+        $this->validateUnlessDraft($request, $id);
+
+        $input = $request->input();
+        $page = Page::FindOrFail($id);
+
+        DB::transaction(function () use ($page, $input) {
             $page->fill($input)->save();
-
-            DB::table('contents')->where('page_id', $id)->update(['body' => $input['body']]);
+            $page->contents()->update(['body' => $input['body']]);
         });
 
         return response()->json($page, 200);
@@ -216,5 +188,16 @@ class PageController extends Controller
             'length' => count($comments),
             'data' => $comments
         ]);
+    }
+
+    /**
+     * valdate only when the page is not being
+     * auto-saved as a draft.
+     */
+    private function validateUnlessDraft($request, $id = null)
+    {
+        if ($request->input('draft') != 'Y') {
+            $request->validate($this->getRules($id));
+        }
     }
 }

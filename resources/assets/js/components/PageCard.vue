@@ -87,7 +87,7 @@
 
         methods: {
                 getEditUrl: function (id) {
-                        return '/pages/' + id + '/edit'
+                        return '/admin/pages/' + id + '/edit'
                 },
 
                 hasIssue: function() {

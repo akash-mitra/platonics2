@@ -4,8 +4,9 @@ require('laravel-mix-purgecss')
 mix.js('resources/assets/js/app.js', 'public/js')
   .js('resources/assets/js/categories.js', 'public/js')
   .js('resources/assets/js/pages.js', 'public/js')
-  .js('resources/assets/js/pages.create.js', 'public/js/')
+  .js('resources/assets/js/pages.form.js', 'public/js/')
   .js('resources/assets/js/categories.form.js', 'public/js/')
+  .js('resources/assets/js/comments-frontend.js', 'public/js/')
   .styles([
     'resources/assets/css/medium-editor.css', 
     'resources/assets/css/medium-editor-flat.css'

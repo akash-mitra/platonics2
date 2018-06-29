@@ -45,7 +45,7 @@
 
         created() {
 
-            axios.get('/categories')
+            axios.get('/api/categories')
 
                 .then(response => {
                     //this.buildTree(response.data)

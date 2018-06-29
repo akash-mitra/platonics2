@@ -88,7 +88,7 @@
 
         methods: {
                 editCatURL: function (id) {
-                        return '/categories/' + id + '/edit'
+                        return '/admin/categories/' + id + '/edit'
                 },
                 addSubCatURL: function (id) {
                         return '/admin/categories/create?parent_id=' + id

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Category;
 
 class CategoryController extends Controller
@@ -11,16 +10,15 @@ class CategoryController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure                 $next
      * @return mixed
-     *
      */
     public function __construct()
     {
         $this->middleware('permissions');
     }
-    
+
     private function getRules($id = null)
     {
         return [
@@ -36,12 +34,12 @@ class CategoryController extends Controller
      * This route is accessible via web, whereas all the
      * other routes are only accessible via API.
      */
-    public function home()
+    public function adminHome()
     {
         return view('admin.categories.home');
     }
 
-    private function form ($id = null)
+    private function form($id = null)
     {
         return view('admin.categories.form', compact('id'));
     }
@@ -51,15 +49,10 @@ class CategoryController extends Controller
         return $this->form();
     }
 
-
-    public function edit($category) {
-
+    public function edit($category)
+    {
         return $this->form($category);
-
     }
-
-
-    
 
     /**
      * Display a listing of the resource.
@@ -69,6 +62,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
+
         return response()->json([
                 'length' => count($categories),
                 'data' => $categories
@@ -88,6 +82,7 @@ class CategoryController extends Controller
 
         $input = $request->input();
         $category = Category::create($input);
+
         return response()->json($category, 201);
     }
 
@@ -97,9 +92,10 @@ class CategoryController extends Controller
      * @param  int                       $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function get($id)
     {
         $category = Category::FindOrFail($id);
+
         return response()->json($category);
     }
 
@@ -118,6 +114,7 @@ class CategoryController extends Controller
         $input = $request->input();
         $category = Category::FindOrFail($id);
         $category->fill($input)->save();
+
         return response()->json($category, 200);
     }
 
@@ -131,6 +128,7 @@ class CategoryController extends Controller
     {
         $category = Category::FindOrFail($id);
         $category->delete();
+
         return response()->json($category->name);
     }
 }

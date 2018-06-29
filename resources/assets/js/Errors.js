@@ -28,9 +28,9 @@ export default class Errors {
 
 
         clear (field) {
-                console.log(this.errors)
+                
                 delete this.errors[field]
-                console.log(this.errors)
+                
         }
 
 }

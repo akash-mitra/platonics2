@@ -23,7 +23,23 @@ class Category extends Model
      */
     public function pages()
     {
-        return $this->hasMany('App\Page', 'page_id', 'id');
+        return $this->hasMany('App\Page');
+    }
+
+    /**
+     * Get all of the pages under the category
+     */
+    public function publishedPages()
+    {
+        return $this->hasMany('App\Page')->where('pages.publish', 'Y');
+    }
+
+    /**
+     * Get all of the sub-categories under the category
+     */
+    public function subcategories()
+    {
+        return $this->hasMany('App\Category', 'parent_id', 'id');
     }
 
     /**

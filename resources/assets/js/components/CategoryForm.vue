@@ -1,5 +1,5 @@
 <template>
-    <form method="post" action="/categories" @submit.prevent="onSubmit" @keydown="errors.clear($event.target.name)" @change="errors.clear($event.target.name)">
+    <form method="post"  @submit.prevent="onSubmit" @keydown="errors.clear($event.target.name)" @change="errors.clear($event.target.name)">
                 
                 <div class="bg-white p-8 text-grey-darkest border-purple-lighter border-b-2">
                         <h1 class="font-hairline"><span v-text="ops"></span> Category: <span v-text="name"></span></h1>
@@ -128,11 +128,11 @@
 
         created: function () {
 
-                /*
+                /** 
                  * First populate the category selection drop-down
                  * with list of categories from server.
                  */
-                axios.get('/categories').then(response => {
+                axios.get('/api/categories').then(response => {
                         
                         this.categories = response.data.data
 
@@ -188,7 +188,7 @@
                 onSubmit: function () {
                         
                         axios.request({
-                             'url':   '/categories/' +  this.$data.id, 
+                             'url':   '/admin/categories/' +  this.$data.id, 
                              'method': this.ops === 'Edit' ? 'patch' : 'post',
                              'data': this.$data
                         })

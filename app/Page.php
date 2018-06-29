@@ -13,7 +13,8 @@ class Page extends Model
      */
     protected $fillable = [
         'category_id', 'user_id', 'title', 'summary',
-        'metakey', 'metadesc', 'media_url', 'access_level', 'publish',
+        'metakey', 'metadesc', 'media_url', 'access_level',
+        'publish', 'draft'
     ];
 
     /**
@@ -58,9 +59,9 @@ class Page extends Model
     /**
      * Get category
      */
-    public function categories()
+    public function category()
     {
-        return $this->belongsTo('App\Category', 'category_id', 'id');
+        return $this->belongsTo('App\Category');
     }
 
     /**

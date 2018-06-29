@@ -48,4 +48,8 @@ class User extends Authenticatable
         return $this->providers[0];
     }
 
+    public function pages()
+    {
+        return $this->hasMany('App\Page');
+    }
 }

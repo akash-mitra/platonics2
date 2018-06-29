@@ -78,7 +78,7 @@
         
         created() {
 
-            axios.get('/pages')
+            axios.get('/api/pages')
 
                 .then(response => {
                     
@@ -91,7 +91,7 @@
                 togglePublish: function (id) {
 
                         axios.request({
-                                'url': '/pages/' + id + '/publish',
+                                'url': '/admin/pages/' + id + '/publish',
                                 'method': 'put',
                         })
                         .then(response => {
