@@ -67,7 +67,7 @@
                                         ||
                                         item.metakey.indexOf(this.searchPhrase) >= 0
                                         ||
-                                        item.categories.name.indexOf(this.searchPhrase) >= 0
+                                        item.category.name.indexOf(this.searchPhrase) >= 0
                                         ||
                                         item.users.name.indexOf(this.searchPhrase) >= 0
                                         
