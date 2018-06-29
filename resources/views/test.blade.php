@@ -17,15 +17,28 @@
 </form>
 
 <p>
-    DELETE SOMETHING
+    DELETE SOMETHING (media.destroy.by.id)
 </p>
-
-  
 <div class='hide'>
-    <form method="POST" action="{{ route('media.destroy', ['id' => 37]) }}">
-        <input type="hidden" name="_method" value="delete" />
+    <form method="POST" action="{{ route('media.destroy', ['id' => 16]) }}">
+        <input type="hidden" name="_method" value="DELETE" />
         {!! csrf_field() !!}
-        <button class="btn btn-default">Delete</button>
+        <button class="btn btn-default">DELETE</button>
     </form>
 </div>
+
+<p>
+    UPDATE SOMETHING
+</p>
+<div class='hide'>
+    <form method="POST" action="{{ route('users.update', ['id' => 2]) }}">
+        <input type="hidden" name="_method" value="PATCH" />
+        {!! csrf_field() !!}
+        <input id="type" type="text" name="type">
+        <button class="btn btn-default">UPDATE</button>
+    </form>
+</div>
+
+
+<p>TEST USER UPDATE</p>
 @endsection

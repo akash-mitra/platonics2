@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt($adminPassword),
             'type' => 'Admin',
             'slug' => uniqid(mt_rand(), true),
+            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
+            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
         // create a few editors
@@ -129,7 +131,13 @@ class DatabaseSeeder extends Seeder
             'user_id' => $authorIds[random_int(0, count($authorIds) - 1)]
         ]);
 
-        
+        DB::table('configurations')->insert([
+            'key' => 'storage',
+            'value' => serialize(json_encode('{"type":"local"}')),
+            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
+            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
 
         // populate static permissions table
         $permissions = array( 
@@ -293,6 +301,11 @@ class DatabaseSeeder extends Seeder
             [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'store', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'destroy', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'index', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'show', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'update', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'destroy', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
+            [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'edit', 'permission' => 'allow', 'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s') ],
             
         );
         

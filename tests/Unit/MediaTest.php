@@ -76,7 +76,7 @@ class MediaTest extends TestDataSetup
         $response = $this->actingAs($this->admin1)
                 ->post('/media', $media);
         $data = $response->getData();
-        Storage::disk('local')->assertExists($data->filename . '.' . $data->type);
+        Storage::disk('public')->assertExists($data->filename);
     }
 
     public function test_update_can_persist_data()

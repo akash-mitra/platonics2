@@ -52,24 +52,24 @@ class ConfigurationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $key
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($key)
     {
-        $configuration = Configuration::getConfig($id);
+        $configuration = Configuration::getConfig($key);
         return response()->json($configuration);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  string  $key
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($key)
     {
-        $configuration = Configuration::delConfig($id);
+        $configuration = Configuration::delConfig($key);
         return response()->json(['status' => $configuration]);
     }
 }
