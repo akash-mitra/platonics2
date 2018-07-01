@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use Auth;
-
 use App\Tag;
 
 class TagController extends Controller
@@ -13,22 +11,21 @@ class TagController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure                 $next
      * @return mixed
-     *
      */
     public function __construct()
     {
         $this->middleware('permissions');
     }
     
-    private function getRules($id=null) 
+    private function getRules($id = null) 
     {
         return [
-            'user_id'       =>  'bail|required|integer|exists:users,id',
-            'name'          =>  'required|unique:tags,name,' . $id . '|max:60',
-            'description'   =>  'required|max:255',
+            'user_id' => 'bail|required|integer|exists:users,id',
+            'name' => 'required|unique:tags,name,' . $id . '|max:60',
+            'description' => 'required|max:255',
         ];
     }
 
@@ -37,9 +34,24 @@ class TagController extends Controller
      * This route is accessible via web, whereas all the
      * other routes are only accessible via API.
      */
-    public function home()
+    public function adminHome()
     {
-        return view('admin.tags');
+        return view('admin.tags.home');
+    }
+
+    private function form($id = null)
+    {
+        return view('admin.tags.form', compact('id'));
+    }
+
+    public function create()
+    {
+        return $this->form();
+    }
+
+    public function edit($tag)
+    {
+        return $this->form($tag);
     }
 
     /**
@@ -50,20 +62,11 @@ class TagController extends Controller
     public function index()
     {
         $tags = Tag::all();
+
         return response()->json([
             'length' => count($tags),
             'data' => $tags
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('tag.create');
     }
 
     /**
@@ -74,13 +77,13 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
-        // validate
+
         $request->validate($this->getRules());
 
         $input = $request->input();
         $tag = Tag::create($input);
+
         return response()->json($tag, 201);
     }
 
@@ -93,19 +96,8 @@ class TagController extends Controller
     public function show($id)
     {
         $tag = Tag::FindOrFail($id);
-        return response()->json($tag);
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $tag = Tag::FindOrFail($id);
-        return view ('tag.edit', compact('tag'));
+        return response()->json($tag);
     }
 
     /**
@@ -117,14 +109,14 @@ class TagController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
-        // validate
+        
         $request->validate($this->getRules($id));
 
         $input = $request->input();
         $tag = Tag::FindOrFail($id);
         $tag->fill($input)->save();
+
         return response()->json($tag, 200);
     }
 
@@ -138,6 +130,7 @@ class TagController extends Controller
     {
         $tag = Tag::FindOrFail($id);
         $tag->delete();
+
         return response()->json($tag->name);
     }
 
@@ -149,12 +142,14 @@ class TagController extends Controller
      */
     public function attach(Request $request)
     {
-        // AUTH User Id
         $user_id = Auth::id();
 
         $input = $request->input();
-        $tag = Tag::FindOrFail($input['tag_id']);
-        $tag->taggables($input['taggable_type'])->attach([$input['taggable_id'] => ['user_id' => $user_id]]);
+        $tags = $input['tags'];
+        foreach ($tags as $id) {
+            $tag = Tag::FindOrFail($id);
+            $tag->taggables($input['taggable_type'])->attach([$input['taggable_id'] => ['user_id' => $user_id]]);
+        }
         return response()->json($tag, 201);
     }
 
@@ -169,6 +164,7 @@ class TagController extends Controller
         $input = $request->input();
         $tag = Tag::FindOrFail($input['tag_id']);
         $tag->taggables($input['taggable_type'])->detach($input['taggable_id']);
+        
         return response()->json($tag, 200);
     }
 

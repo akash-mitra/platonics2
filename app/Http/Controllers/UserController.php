@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\User;
 
 class UserController extends Controller
@@ -24,6 +23,9 @@ class UserController extends Controller
     private function getRules($id = null)
     {
         return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
             'type' => 'required|in:Admin,Editor,Author,Regular',
         ];
     }
@@ -60,11 +62,30 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::all()->makeVisible(['id', 'email']);
+
         return response()->json([
                 'length' => count($users),
                 'data' => $users
         ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // validate
+        $request->validate($this->getRules());
+
+        $input = $request->input();
+        $input['slug'] = uniqid(mt_rand(), true);
+        $user = User::create($input);
+
+        return response()->json($user, 201);
     }
 
     /**
@@ -76,6 +97,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::FindOrFail($id);
+
         return response()->json($user);
     }
 
@@ -88,13 +110,33 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // validate
         $request->validate($this->getRules());
 
         $input = $request->input();
         $user = User::FindOrFail($id);
+        $user->fill($input)->save();
+
+        return response()->json($user, 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function type(Request $request, $id)
+    {
+        $input = $request->input();
+        $types = ['Admin','Editor','Author','Regular'];
+        if (!in_array($input['type'], $types))
+            return response()->json('Invalid User Type', 302);
+        
+        $user = User::FindOrFail($id);
         $user->type = $input['type'];
         $user->save();
+
         return response()->json($user, 200);
     }
 
@@ -108,6 +150,7 @@ class UserController extends Controller
     {
         $user = User::FindOrFail($id);
         $user->delete();
+        
         return response()->json($user->name);
     }
 }

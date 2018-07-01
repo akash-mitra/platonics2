@@ -114,6 +114,19 @@ class PageController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $page = Page::FindOrFail($id);
+
+        return response()->json($page);
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -171,6 +184,23 @@ class PageController extends Controller
         $page->fill($input)->save();
 
         return response()->json($page, 200);
+    }
+
+    /**
+     * Show the tags for a page.
+     *
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function tags($id)
+    {
+        $page = Page::FindOrFail($id);
+        $tags = $page->tags()->get();
+
+        return response()->json([
+            'length' => count($tags),
+            'data' => $tags
+        ]);
     }
 
     /**

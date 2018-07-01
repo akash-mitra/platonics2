@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Comment;
 use App\Category;
 use App\Page;
@@ -27,38 +26,23 @@ class CommentController extends Controller
     private function getRules() 
     {
         return [
-            'parent_id'         =>  'nullable|integer|exists:comments,id',
-            'user_id'           =>  'bail|required|integer|exists:users,id',
-            'commentable_id'    =>  'required|integer',
-            'commentable_type'  =>  'required|max:30',
-            'body'              =>  'required',
-            'vote'              =>  'nullable|integer',
-            'offensive_index'   =>  'nullable|integer',
+            'parent_id' => 'nullable|integer|exists:comments,id',
+            'user_id' => 'bail|required|integer|exists:users,id',
+            'commentable_id' => 'required|integer',
+            'commentable_type' => 'required|max:30',
+            'body' => 'required',
+            'vote' => 'nullable|integer',
+            'offensive_index' => 'nullable|integer',
         ];
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Returns a view to show the listing of all
+     * the comments.
      */
-    public function index()
+    public function adminHome()
     {
-        $comments = Comment::all();
-        return response()->json([
-            'length' => count($comments),
-            'data' => $comments
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('comment.create');
+        return view('admin.comments.home');
     }
 
     /**
@@ -69,9 +53,8 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
-        // validate
+
         $request->validate($this->getRules());
 
         $input = $request->input();
@@ -82,31 +65,8 @@ class CommentController extends Controller
             $model = Page::FindOrFail($input['commentable_id']);
 
         $comment = $model->comments()->create($input);
+        
         return response()->json($comment, 201);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $comment = Comment::FindOrFail($id);
-        return response()->json($comment);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $comment = Comment::FindOrFail($id);
-        return view ('comment.edit', compact('comment'));
     }
 
     /**
@@ -118,14 +78,14 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
-        // validate
+        
         $request->validate($this->getRules());
 
         $input = $request->input();
         $comment = Comment::FindOrFail($id);
         $comment->fill($input)->save();
+        
         return response()->json($comment, 200);
     }
 
@@ -139,6 +99,7 @@ class CommentController extends Controller
     {
         $comment = Comment::FindOrFail($id);
         $comment->delete();
+        
         return response()->json($comment->id);
     }
 }

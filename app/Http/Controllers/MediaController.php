@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
 use App\Media;
 use Auth;
 
@@ -26,24 +25,50 @@ class MediaController extends Controller
     private function getRules() 
     {
         return [
-            'user_id'       =>  'bail|required|integer|exists:users,id',
-            'base_path'     =>  'required|max:255',
-            'filename'      =>  'required|max:30',
-            'name'          =>  'required|max:60',
-            'type'          =>  'required|max:10',
-            'size'          =>  'nullable|integer',
-            'optimized'     =>  'in:Y,N|max:1',
+            'user_id' => 'bail|required|integer|exists:users,id',
+            'base_path' => 'required|max:255',
+            'filename' => 'required|max:30',
+            'name' => 'required|max:60',
+            'type' => 'required|max:10',
+            'size' => 'nullable|integer',
+            'optimized' => 'in:Y,N|max:1',
         ];
     }
 
     /**
-     * Display the Single Page Application view for media.
-     * This route is accessible via web, whereas all the
-     * other routes are only accessible via API.
+     * Returns a view to show the listing of all
+     * the media.
      */
-    public function home()
+    public function adminHome()
     {
-        return view('admin.media');
+        return view('admin.media.home');
+    }
+
+    /**
+     * Returns a view to be used by both create and
+     * edit purpose for a single media.
+     */
+    private function form($id = null)
+    {
+        return view('admin.media.form', compact('id'));
+    }
+
+    /**
+     * Returns an empty view for single media
+     * creation purpose
+     */
+    public function create()
+    {
+        return $this->form();
+    }
+
+    /**
+     * Returns a view for a single media
+     * edit purpose
+     */
+    public function edit($media)
+    {
+        return $this->form($media);
     }
 
     /**
@@ -53,7 +78,8 @@ class MediaController extends Controller
      */
     public function index()
     {
-        $media = Media::all();       
+        $media = Media::all();
+
         return response()->json([
             'length' => count($media),
             'data' => $media
@@ -89,6 +115,7 @@ class MediaController extends Controller
     public function show($id)
     {
         $media = Media::FindOrFail($id);
+        
         return response()->json($media);
     }
 
@@ -101,14 +128,14 @@ class MediaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // AUTH User Id
         $request->request->add(['user_id' => Auth::id()]);
-        // validate
+        
         $request->validate($this->getRules());
 
         $input = $request->input();      
         $media = Media::FindOrFail($id);
         $media->fill($input)->save();
+
         return response()->json($media, 200);
     }
 
@@ -139,6 +166,7 @@ class MediaController extends Controller
     {
         $media = Media::FindOrFail($id);
         $path = $media->absolutePath();
+
         return response()->json(['path' => $path]);
     }
 
@@ -152,6 +180,7 @@ class MediaController extends Controller
     {
         $media = Media::FindOrFail($id);
         $path = $media->relativePath();
+        
         return response()->json(['path' => $path]);
     }
 
@@ -167,6 +196,7 @@ class MediaController extends Controller
         $media = Media::FindOrFail($id);
         $status = $media->optimize();
         //$status = Media::optimizeAll();
+        
         return response()->json($status);
     }
 }
