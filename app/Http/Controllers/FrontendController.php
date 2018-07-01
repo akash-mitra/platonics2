@@ -139,7 +139,7 @@ class FrontendController extends Controller
                         ],
                         'header' => [
                                 'display' => true,
-                                'class' => 'flex w-full bg-white'
+                                'class' => 'flex w-full bg-purple'
                         ],
                         'subheader' => [
                                 'display' => true,
@@ -203,11 +203,11 @@ class FrontendController extends Controller
     private function getModulePositions($contentType, array $inclusionList = [], array $exclusionList = [])
     {
         if ($contentType === 'page') {
-            return ['header' => ['logo', 'menu'], 'left' => ['related'], 'right' => ['similar'], 'center' => ['comments']];
+            return ['header' => ['logo-light', 'menu-light'], 'left' => ['related'], 'right' => ['similar'], 'center' => ['comments']];
         }
 
         if ($contentType === 'category') {
-            return ['header' => ['logo', 'menu']];
+            return ['header' => ['logo-light', 'menu-light']];
         }
 
         if ($contentType === 'forum') {

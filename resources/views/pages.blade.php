@@ -20,11 +20,11 @@
 @section('subheader')
         
         
-        <div class="w-full -mt-20 flex h-screen justify-center items-center"  style="@if (! empty($page->media_url)) background-image: url('{{ $page->media_url }}'); @endif background-size: cover; box-shadow: inset 0 0 0 2000px rgba(0,0,0,0.75)">
+        <div class="w-full -mt-16 py-20 px-8 flex h-screen justify-center"  style="@if (! empty($page->media_url)) background-image: url('{{ $page->media_url }}'); @endif background-size: cover; box-shadow: inset 0 0 0 2000px rgba(0,0,0,0.75)">
                 <div class="max-w-lg w-full mx-auto">
                         <div class="text-white my-4">
 
-                                <span class="text-blue">{{ $page->updated_at->diffForHumans() }}</span> 
+                                <span class="text-grey">{{ $page->updated_at->diffForHumans() }}</span> 
                                 <span class="text-grey">under</span>
                                 <a class="text-blue no-underline" href="{{ route('frontend.category', $page->category_id) }}">{{ $page->category->name }}</a>
                         </div>
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="flex items-center">
-                                <img class="w-16 h-16 border border-white rounded-full mr-4" src="https://pbs.twimg.com/profile_images/885868801232961537/b1F6H4KC_400x400.jpg" alt="Avatar of User">
+                                <img class="w-12 h-12 border border-white rounded-full mr-4" src="https://pbs.twimg.com/profile_images/885868801232961537/b1F6H4KC_400x400.jpg" alt="Avatar of User">
                                 <div class="text-sm">
                                         <p class="text-grey text-2xl leading-none">{{ $page->users->name }}</p>
                                         
@@ -51,7 +51,7 @@
         
 
         @if($page->access_level === 'F')
-        <div class="max-w-lg bg-white mx-auto my-6 -mt-16 rounded overflow-hidden shadow-lg">
+        <div class="max-w-lg bg-white mx-auto -mt-12 rounded overflow-hidden shadow-lg">
                 <div class="p-8">
                         <div class="text-grey-darker main-content">
                                 {!! $page->contents->body !!}
