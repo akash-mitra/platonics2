@@ -35,9 +35,26 @@ class GoogleAnalytics extends Model
                         ->groupBy('page_id')
                         ->first();
         if(isset($metrics))
-            return $metrics;
+        return [
+            'page_id' => $metrics->page_id, 
+            'page_views' => self::prettyPrint($metrics->page_views), 
+            'adsense_revenue' => self::prettyPrint($metrics->adsense_revenue)
+        ];
         else
             return ['page_id' => $page_id, 'page_views' => '0', 'adsense_revenue' => '0'];
+    }
+
+    /**
+     * Beautify Revenue & Page View Numbers.
+     */
+    private static function prettyPrint($num)
+    {
+        if ($num>=1000)
+            return round($num/1000, 1) . 'K';
+        else if ($num>100)
+            return floor($num);
+        else 
+            return $num;
     }
 
     /**
