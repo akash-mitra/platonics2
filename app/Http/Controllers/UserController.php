@@ -96,7 +96,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::FindOrFail($id);
+        $user = User::FindOrFail($id)->makeVisible(['id', 'email']);
 
         return response()->json($user);
     }

@@ -49,8 +49,10 @@ class UsersTest extends TestDataSetup
                 ->get('api/users/' . $this->author1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
+                    'id',
                     'name',
                     'type',
+                    'email',
                     'slug',
                     'avatar',
                     'created_at',
