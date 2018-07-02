@@ -14,11 +14,11 @@ class TagsTest extends TestDataSetup
     /**
      * Positive Test Cases: 13
      */
-
+    
     public function test_index_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags')
+                ->get('api/tags')
                 ->assertStatus(200)
                 ->assertJsonStructure([ 
                     'length',
@@ -37,14 +37,14 @@ class TagsTest extends TestDataSetup
 
     public function test_index_returns_expected_length()
     {
-        $response = $this->actingAs($this->admin1)->get('/tags')->decodeResponseJson();
+        $response = $this->actingAs($this->admin1)->get('api/tags')->decodeResponseJson();
         $this->assertEquals($response['length'], count(Tag::all()));
     }
 
     public function test_show_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags/' . $this->tag1->id)
+                ->get('api/tags/' . $this->tag1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
@@ -64,7 +64,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/tags', $tag)
+                ->post('admin/tags', $tag)
                 ->assertStatus(201)
                 ->assertJsonFragment($tag);
     }
@@ -77,7 +77,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/tags/' . $this->tag1->id, $tag)
+                ->put('admin/tags/' . $this->tag1->id, $tag)
                 ->assertStatus(200)
                 ->assertJsonFragment($tag);
     }
@@ -85,7 +85,7 @@ class TagsTest extends TestDataSetup
     public function test_destroy_can_delete_data()
     {
         $this->actingAs($this->admin1)
-                ->delete('/tags/1')
+                ->delete('admin/tags/1')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->tag1->name]);
     }
@@ -93,13 +93,13 @@ class TagsTest extends TestDataSetup
     public function test_attach_can_add_tags_to_category()
     {
         $tag = [
-            'tag_id' => $this->tag3->id,
+            'tags' => [ $this->tag3->id ],
             'taggable_id' => $this->category3->id,
             'taggable_type' => 'App\Category'
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/tags/attach', $tag)
+                ->post('admin/tags/attach', $tag)
                 ->assertStatus(201)
                 ->assertJsonFragment(['id' => $this->tag3->id]);
     }
@@ -113,7 +113,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/tags/detach', $tag)
+                ->post('admin/tags/detach', $tag)
                 ->assertStatus(200)
                 ->assertJsonFragment(['id' => $this->tag2->id]);
     }
@@ -121,13 +121,13 @@ class TagsTest extends TestDataSetup
     public function test_attach_can_add_tags_to_page()
     {
         $tag = [
-            'tag_id' => $this->tag3->id,
+            'tags' => [ $this->tag3->id ],
             'taggable_id' => $this->page3->id,
             'taggable_type' => 'App\Page'
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/tags/attach', $tag)
+                ->post('admin/tags/attach', $tag)
                 ->assertStatus(201)
                 ->assertJsonFragment(['id' => $this->tag3->id]);
     }
@@ -141,7 +141,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/tags/detach', $tag)
+                ->post('admin/tags/detach', $tag)
                 ->assertStatus(200)
                 ->assertJsonFragment(['id' => $this->tag2->id]);
     }
@@ -149,7 +149,7 @@ class TagsTest extends TestDataSetup
     public function test_categories_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags/' . $this->tag1->name . '/categories')
+                ->get('api/tags/' . $this->tag1->name . '/categories')
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'length',
@@ -175,7 +175,7 @@ class TagsTest extends TestDataSetup
     public function test_pages_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags/' . $this->tag1->name . '/pages')
+                ->get('api/tags/' . $this->tag1->name . '/pages')
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'length',
@@ -206,7 +206,7 @@ class TagsTest extends TestDataSetup
     public function test_taggables_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags/' . $this->tag1->name . '/all')
+                ->get('api/tags/' . $this->tag1->name . '/all')
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'length',
@@ -257,15 +257,16 @@ class TagsTest extends TestDataSetup
                     ]
                 ]);
     }
-    
+
+
     /**
      * Negative Test Cases: 4
      */
-
+    
     public function test_show_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->get('/tags/108')
+                ->get('api/tags/108')
                 ->assertStatus(404);
     }
 
@@ -276,7 +277,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/tags', $tag)
+                ->post('admin/tags', $tag)
                 ->assertStatus(302);
                 //->assertJsonFragment(['message' => 'The given data was invalid.']);
     }
@@ -288,14 +289,14 @@ class TagsTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('/tags/' . $this->tag1->id, $tag)
+                ->put('admin/tags/' . $this->tag1->id, $tag)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->delete('/tags/108')
+                ->delete('admin/tags/108')
                 ->assertStatus(404);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Page;
 use App\Category;
+use App\User;
 use Illuminate\Support\Facades\Cache;
 
 class FrontendController extends Controller
@@ -91,6 +92,35 @@ class FrontendController extends Controller
                 ->withModules($modules)
                 ->withMenus($this->menus)
                 ->withParameters(['object_id' => $page->id]);
+    }
+
+    /**
+     * Display the specified user.
+     *
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function user($id)
+    {
+        // find out what template needs to be applied
+        // for this page and get the respective style
+        //$template = 'page';
+        //$slots = $this->getTemplateSlots($template);
+
+        // find out what are the various modules that
+        // need to be published with the main contents
+        //$modules = $this->getModulePositions($template);
+
+        $user = User::with('pages')->where('slug', $id)->first();
+        return response()->json($user, 201);
+
+        /*return view('users')
+                ->withUser($user)
+                ->withStyles($slots)
+                ->withModules($modules)
+                ->withMenus($this->menus)
+                ->withParameters(['object_id' => $page->id]);
+        */
     }
 
     /**

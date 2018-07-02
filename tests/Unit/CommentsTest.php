@@ -8,61 +8,12 @@ use Tests\TestDataSetup;
 class CommentsTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 12
+     * Total Test Cases: 8
      */
 
     /**
-     * Positive Test Cases: 8
+     * Positive Test Cases: 5
      */
-
-    public function test_index_returns_expected_structure()
-    {
-        $this->actingAs($this->admin1)
-                ->get('/comments')
-                ->assertStatus(200)
-                ->assertJsonStructure([ 
-                    'length',
-                    'data' => [
-                        '*' => [
-                            'id',
-                            'parent_id',
-                            'user_id',
-                            'commentable_id',
-                            'commentable_type',
-                            'body',
-                            'vote',
-                            'offensive_index',
-                            'created_at',
-                            'updated_at'
-                        ]
-                    ]
-                ]);
-    }
-
-    public function test_index_returns_expected_length()
-    {
-        $response = $this->actingAs($this->admin1)->get('/comments')->decodeResponseJson();
-        $this->assertEquals($response['length'], count(Comment::all()));
-    }
-
-    public function test_show_returns_expected_structure()
-    {
-        $this->actingAs($this->admin1)
-                ->get('/comments/' . $this->comment1->id)
-                ->assertStatus(200)
-                ->assertJsonStructure([
-                    'id',
-                    'parent_id',
-                    'user_id',
-                    'commentable_id',
-                    'commentable_type',
-                    'body',
-                    'vote',
-                    'offensive_index',
-                    'created_at',
-                    'updated_at'
-                ]);
-    }
 
     public function test_store_can_persist_page_data()
     {
@@ -73,7 +24,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/comments', $comment)
+                ->post('admin/comments', $comment)
                 ->assertStatus(201)
                 ->assertJsonFragment($comment);
     }
@@ -87,7 +38,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/comments/' . $this->comment1->id, $comment)
+                ->put('admin/comments/' . $this->comment1->id, $comment)
                 ->assertStatus(200)
                 ->assertJsonFragment($comment);
     }
@@ -101,7 +52,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/comments', $comment)
+                ->post('admin/comments', $comment)
                 ->assertStatus(201)
                 ->assertJsonFragment($comment);
     }
@@ -115,7 +66,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/comments/' . $this->comment2->id, $comment)
+                ->put('admin/comments/' . $this->comment2->id, $comment)
                 ->assertStatus(200)
                 ->assertJsonFragment($comment);;
     }
@@ -123,22 +74,15 @@ class CommentsTest extends TestDataSetup
     public function test_destroy_can_delete_data()
     {
         $this->actingAs($this->admin1)
-                ->delete('/comments/1')
+                ->delete('admin/comments/1')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->comment1->id]);
     }
-
+    
     
     /**
-     * Negative Test Cases: 4
+     * Negative Test Cases: 3
      */
-
-    public function test_show_error_invalid_id()
-    {
-        $this->actingAs($this->admin1)
-                ->get('/comments/108')
-                ->assertStatus(404);
-    }
 
     public function test_store_error_invalid_data()
     {
@@ -148,7 +92,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/comments', $comment)
+                ->post('admin/comments', $comment)
                 ->assertStatus(302);
                 //->assertJsonFragment(['message' => 'The given data was invalid.']);
     }
@@ -161,14 +105,14 @@ class CommentsTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('/comments/' . $this->comment1->id, $comment)
+                ->put('admin/comments/' . $this->comment1->id, $comment)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->delete('/comments/108')
+                ->delete('admin/comments/108')
                 ->assertStatus(404);
     }
 }

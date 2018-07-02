@@ -16,11 +16,11 @@ class MediaTest extends TestDataSetup
     /**
      * Positive Test Cases: 6
      */
-
+    
     public function test_index_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/media')
+                ->get('api/media')
                 ->assertStatus(200)
                 ->assertJsonStructure([ 
                     'length',
@@ -43,14 +43,14 @@ class MediaTest extends TestDataSetup
 
     public function test_index_returns_expected_length()
     {
-        $response = $this->actingAs($this->admin1)->get('/media')->decodeResponseJson();
+        $response = $this->actingAs($this->admin1)->get('api/media')->decodeResponseJson();
         $this->assertEquals($response['length'], count(Media::all()));
     }
 
     public function test_show_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
-                ->get('/media/' . $this->media1->id)
+                ->get('api/media/' . $this->media1->id)
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
@@ -74,7 +74,7 @@ class MediaTest extends TestDataSetup
         ];
 
         $response = $this->actingAs($this->admin1)
-                ->post('/media', $media);
+                ->post('admin/media', $media);
         $data = $response->getData();
         Storage::disk('public')->assertExists($data->filename);
     }
@@ -89,7 +89,7 @@ class MediaTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('/media/' . $this->media1->id, $media)
+                ->put('admin/media/' . $this->media1->id, $media)
                 ->assertStatus(200)
                 ->assertJsonFragment($media);
     }
@@ -97,20 +97,20 @@ class MediaTest extends TestDataSetup
     public function test_destroy_can_delete_data()
     {
         $this->actingAs($this->admin1)
-                ->delete('/media/1')
+                ->delete('admin/media/1')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->media1->name]);
     }
-
+    
     
     /**
      * Negative Test Cases: 4
      */
-
+    
     public function test_show_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->get('/media/108')
+                ->get('api/media/108')
                 ->assertStatus(404);
     }
 
@@ -122,7 +122,7 @@ class MediaTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('/media', $media)
+                ->post('admin/media', $media)
                 ->assertStatus(200)
                 ->assertJsonFragment([
                     'message' => 'Unallowed file type error'
@@ -138,14 +138,14 @@ class MediaTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('/media/' . $this->media1->id, $media)
+                ->put('admin/media/' . $this->media1->id, $media)
                 ->assertStatus(302);
     }
 
     public function test_destroy_error_invalid_id()
     {
         $this->actingAs($this->admin1)
-                ->delete('/media/108')
+                ->delete('admin/media/108')
                 ->assertStatus(404);
     }
 }

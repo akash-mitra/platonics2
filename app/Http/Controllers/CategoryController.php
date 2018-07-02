@@ -92,7 +92,7 @@ class CategoryController extends Controller
      * @param  int                       $id
      * @return \Illuminate\Http\Response
      */
-    public function get($id)
+    public function show($id)
     {
         $category = Category::FindOrFail($id);
 
@@ -108,7 +108,6 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // validate
         $request->validate($this->getRules($id));
 
         $input = $request->input();
@@ -130,5 +129,39 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json($category->name);
+    }
+
+    /**
+     * Show the tags for a category.
+     *
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function tags($id)
+    {
+        $category = Category::FindOrFail($id);
+        $tags = $category->tags()->get();
+
+        return response()->json([
+            'length' => count($tags),
+            'data' => $tags
+        ]);
+    }
+
+    /**
+     * Show the comments for a category.
+     *
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function comments($id)
+    {
+        $category = Category::FindOrFail($id);
+        $comments = $category->comments()->get();
+
+        return response()->json([
+            'length' => count($comments),
+            'data' => $comments
+        ]);
     }
 }

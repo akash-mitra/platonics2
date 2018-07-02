@@ -26,7 +26,7 @@ class SocialLoginTest extends TestCaseBrowser
     /**
      * Positive Test Cases: 1
      */
-
+    
     public function test_google_login()
     {
         $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
