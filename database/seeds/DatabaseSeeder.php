@@ -8,6 +8,7 @@ use App\Comment;
 use App\Content;
 use App\Media;
 use App\Permission;
+use App\GoogleAnalytics;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -96,6 +97,10 @@ class DatabaseSeeder extends Seeder
 
                             ->each(function ($page) use ($userIds, $someTagsForCategory) {
                                 factory(Content::class)->create([
+                                    'page_id' => $page->id
+                                ]);
+
+                                factory(GoogleAnalytics::class)->create([
                                     'page_id' => $page->id
                                 ]);
 
