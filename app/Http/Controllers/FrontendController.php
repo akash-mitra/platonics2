@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\User;
 use App\Page;
 use App\Category;
-use App\User;
+use App\Configuration;
 use Illuminate\Support\Facades\Cache;
 
 class FrontendController extends Controller
@@ -77,7 +78,7 @@ class FrontendController extends Controller
     {
         // find out what template needs to be applied
         // for this page and get the respective style
-        $template = 'page';
+        $template = 'pages';
         $slots = $this->getTemplateSlots($template);
 
         // find out what are the various modules that
@@ -112,6 +113,7 @@ class FrontendController extends Controller
         //$modules = $this->getModulePositions($template);
 
         $user = User::with('pages')->where('slug', $id)->first();
+
         return response()->json($user, 201);
 
         /*return view('users')
@@ -128,103 +130,107 @@ class FrontendController extends Controller
      * Each template has a specific set of defined styles.
      * This function retrieves the styles for a given template
      */
-    private function getTemplateSlots($template = 'default')
+    private function getTemplateSlots($template = 'home')
     {
-        if ($template === 'home') {
-            return [
-                        'body' => [
-                                'class' => 'bg-grey-lightest font-sans'
-                        ],
-                        'subheader' => [
-                                'display' => false,
-                                'class' => 'w-full bg-white border-b'
-                        ],
-                        'header' => [
-                                'display' => true,
-                                'class' => 'flex w-full bg-white'
-                        ],
-                        'left' => [
-                                'display' => false,
-                                'class' => 'w-full sm:w-1/4 bg-grey-lightest'
-                        ],
-                        'center' => [
-                                'display' => true,
-                                'class' => 'w-full sm:w-3/4 bg-grey-lightest'
-                        ],
-                        'right' => [
-                                'display' => false,
-                                'class' => 'w-full sm:w-1/4 bg-grey-lightest'
-                        ],
-                        'footer' => [
-                                'display' => true,
-                                'class' => 'w-full bg-white'
-                        ],
-                ];
-        }
+        $config = Configuration::getConfig('templates');
 
-        if ($template === 'category') {
-            return [
-                        'body' => [
-                                'class' => 'bg-grey-lightest font-sans'
-                        ],
-                        'header' => [
-                                'display' => true,
-                                'class' => 'flex w-full bg-purple'
-                        ],
-                        'subheader' => [
-                                'display' => true,
-                                'class' => 'w-full'
-                        ],
-                        'left' => [
-                                'display' => false,
-                                'class' => 'w-full sm:w-1/4 bg-grey-lightest'
-                        ],
-                        'center' => [
-                                'display' => true,
-                                'class' => 'w-full sm:w-3/4 bg-grey-lightest'
-                        ],
-                        'right' => [
-                                'display' => false,
-                                'class' => 'w-full sm:w-1/4 bg-grey-lightest'
-                        ],
-                        'footer' => [
-                                'display' => true,
-                                'class' => 'w-full bg-white'
-                        ],
-                ];
-        }
+        return $config['templates'][$template];
 
-        if ($template === 'page') {
-            return [
-                        'body' => [
-                                'class' => 'bg-grey-lightest font-sans'
-                        ],
-                        'header' => [
-                                'display' => true,
-                                'class' => 'flex w-full bg-white border-b'
-                        ],
-                        'subheader' => [
-                                'display' => true,
-                                'class' => 'w-full'
-                        ],
-                        'left' => [
-                                'display' => false,
-                                'class' => 'w-full sm:w-1/4 bg-grey-lightest'
-                        ],
-                        'center' => [
-                                'display' => true,
-                                'class' => 'w-full sm:w-3/4 bg-grey-lightest'
-                        ],
-                        'right' => [
-                                'display' => false,
-                                'class' => 'w-full sm:w-1/4 bg-grey-lightest'
-                        ],
-                        'footer' => [
-                                'display' => true,
-                                'class' => 'w-full bg-white'
-                        ],
-                ];
-        }
+        // if ($template === 'home') {
+        //     return [
+        //                 'body' => [
+        //                         'class' => 'bg-grey-lightest font-sans'
+        //                 ],
+        //                 'subheader' => [
+        //                         'display' => false,
+        //                         'class' => 'w-full bg-white border-b'
+        //                 ],
+        //                 'header' => [
+        //                         'display' => true,
+        //                         'class' => 'flex w-full bg-white'
+        //                 ],
+        //                 'left' => [
+        //                         'display' => false,
+        //                         'class' => 'w-full sm:w-1/4 bg-grey-lightest'
+        //                 ],
+        //                 'center' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full sm:w-3/4 bg-grey-lightest'
+        //                 ],
+        //                 'right' => [
+        //                         'display' => false,
+        //                         'class' => 'w-full sm:w-1/4 bg-grey-lightest'
+        //                 ],
+        //                 'footer' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full bg-white'
+        //                 ],
+        //         ];
+        // }
+
+        // if ($template === 'category') {
+        //     return [
+        //                 'body' => [
+        //                         'class' => 'bg-grey-lightest font-sans'
+        //                 ],
+        //                 'header' => [
+        //                         'display' => true,
+        //                         'class' => 'flex w-full bg-purple'
+        //                 ],
+        //                 'subheader' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full'
+        //                 ],
+        //                 'left' => [
+        //                         'display' => false,
+        //                         'class' => 'w-full sm:w-1/4 bg-grey-lightest'
+        //                 ],
+        //                 'center' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full sm:w-3/4 bg-grey-lightest'
+        //                 ],
+        //                 'right' => [
+        //                         'display' => false,
+        //                         'class' => 'w-full sm:w-1/4 bg-grey-lightest'
+        //                 ],
+        //                 'footer' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full bg-white'
+        //                 ],
+        //         ];
+        // }
+
+        // if ($template === 'page') {
+        //     return [
+        //                 'body' => [
+        //                         'class' => 'bg-grey-lightest font-sans'
+        //                 ],
+        //                 'header' => [
+        //                         'display' => true,
+        //                         'class' => 'flex w-full bg-white border-b'
+        //                 ],
+        //                 'subheader' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full'
+        //                 ],
+        //                 'left' => [
+        //                         'display' => false,
+        //                         'class' => 'w-full sm:w-1/4 bg-grey-lightest'
+        //                 ],
+        //                 'center' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full sm:w-3/4 bg-grey-lightest'
+        //                 ],
+        //                 'right' => [
+        //                         'display' => false,
+        //                         'class' => 'w-full sm:w-1/4 bg-grey-lightest'
+        //                 ],
+        //                 'footer' => [
+        //                         'display' => true,
+        //                         'class' => 'w-full bg-white'
+        //                 ],
+        //         ];
+        // }
     }
 
     /**
@@ -232,7 +238,7 @@ class FrontendController extends Controller
      */
     private function getModulePositions($contentType, array $inclusionList = [], array $exclusionList = [])
     {
-        if ($contentType === 'page') {
+        if ($contentType === 'pages') {
             return ['header' => ['logo-light', 'menu-light'], 'left' => ['related'], 'right' => ['similar'], 'center' => ['comments']];
         }
 

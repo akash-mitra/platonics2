@@ -166,8 +166,9 @@ Route::put('admin/users/{user}/type', 'UserController@type')->name('users.type')
 Route::get('api/users', 'UserController@index')->name('users.index');
 Route::get('api/users/{user}', 'UserController@show')->name('users.show');
 
-
-
 //*** DUMMY TEST ***//
 //Route::get('analyticsga', 'AnalyticsController@test')->name('analytics.test');
 //Route::get('test', function () { return view('test'); });
+Route::get('admin/templates', function () {
+    return view('admin.templates.home');
+});

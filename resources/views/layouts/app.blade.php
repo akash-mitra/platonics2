@@ -142,6 +142,11 @@
                             </a>
                         </li>
                         <li>
+                            <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline" href="/admin/templates">
+                                Templates
+                            </a>
+                        </li>
+                        <li>
                             <p>&nbsp;</p>
                         </li>
                     </ul>
