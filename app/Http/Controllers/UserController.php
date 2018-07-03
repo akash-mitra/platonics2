@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Page;
 
 class UserController extends Controller
 {
@@ -152,5 +153,34 @@ class UserController extends Controller
         $user->delete();
         
         return response()->json($user->name);
+    }
+
+    /**
+     * Display a listing of recent pages under a category.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function pages(Request $request, $slug)
+    {
+        $input = $request->input();
+        $limit = isset($input['n']) ? $input['n'] : 5;
+        $user = User::where('slug', $slug)->first();
+        if (isset($user)) {
+            $pages = Page::with('category', 'tags')
+                        ->where('user_id', $user->id)
+                        ->orderBy('updated_at', 'desc')
+                        ->take($limit)
+                        ->get();
+            
+            return response()->json([
+                'length' => count($pages),
+                'data' => $pages
+            ]);
+        }
+        else {
+            return response()->json([]);
+        }
     }
 }

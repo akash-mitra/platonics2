@@ -99,7 +99,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('admin/tags/attach', $tag)
+                ->post('api/tags/attach', $tag)
                 ->assertStatus(201)
                 ->assertJsonFragment(['id' => $this->tag3->id]);
     }
@@ -113,7 +113,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('admin/tags/detach', $tag)
+                ->post('api/tags/detach', $tag)
                 ->assertStatus(200)
                 ->assertJsonFragment(['id' => $this->tag2->id]);
     }
@@ -127,7 +127,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('admin/tags/attach', $tag)
+                ->post('api/tags/attach', $tag)
                 ->assertStatus(201)
                 ->assertJsonFragment(['id' => $this->tag3->id]);
     }
@@ -141,7 +141,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('admin/tags/detach', $tag)
+                ->post('api/tags/detach', $tag)
                 ->assertStatus(200)
                 ->assertJsonFragment(['id' => $this->tag2->id]);
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
+use App\Page;
+use \Cache;
 
 class CategoryController extends Controller
 {
@@ -82,6 +84,7 @@ class CategoryController extends Controller
 
         $input = $request->input();
         $category = Category::create($input);
+        $this->revalidateMenu();
 
         return response()->json($category, 201);
     }
@@ -113,6 +116,7 @@ class CategoryController extends Controller
         $input = $request->input();
         $category = Category::FindOrFail($id);
         $category->fill($input)->save();
+        $this->revalidateMenu();
 
         return response()->json($category, 200);
     }
@@ -129,6 +133,18 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json($category->name);
+    }
+
+    /**
+     * Revalidate the category menu cache.
+     *
+     */
+    private function revalidateMenu()
+    {
+        Cache::forget('menu');
+        $value = Cache::rememberForever('menu', function () {
+            return DB::table('categories')->whereNull('parent_id')->pluck('id', 'name');
+        });
     }
 
     /**
@@ -163,5 +179,42 @@ class CategoryController extends Controller
             'length' => count($comments),
             'data' => $comments
         ]);
+    }
+
+    /**
+     * Display a listing of recent pages under a category.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int                       $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pages(Request $request, $id)
+    {
+        $input = $request->input();
+        $limit = isset($input['n']) ? $input['n'] : 5;
+        $category = Category::where('id', $id)->first();
+        if (isset($category)) {
+            $pages = Page::with('users', 'category', 'tags')
+                        ->where('category_id', $category->id)
+                        ->orderBy('updated_at', 'desc')
+                        ->take($limit)
+                        ->get();
+            
+            return response()->json([
+                'length' => count($pages),
+                'data' => $pages
+            ]);
+        }
+        else {
+            $pages = Page::with('users', 'category', 'tags')
+                        ->orderBy('updated_at', 'desc')
+                        ->take($n)
+                        ->get();
+            
+            return response()->json([
+                'length' => count($pages),
+                'data' => $pages
+            ]);
+        }
     }
 }

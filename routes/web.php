@@ -43,6 +43,7 @@ Route::get('api/categories', 'CategoryController@index')->name('categories.index
 Route::get('api/categories/{category}', 'CategoryController@show')->name('categories.show');
 Route::get('api/tags/categories/{category}', 'CategoryController@tags')->name('categories.tags');
 Route::get('api/comments/categories/{category}', 'CategoryController@comments')->name('categories.comments');
+Route::get('api/categories/{category}/pages', 'CategoryController@pages')->name('categories.pages');
 
 /*
 |--------------------------------------------------------------------------
@@ -91,9 +92,9 @@ Route::get('api/tags/{tag}', 'TagController@show')->name('tags.show');
 Route::get('api/tags/{tagName}/categories', 'TagController@categories')->name('tags.categories');
 Route::get('api/tags/{tagName}/pages', 'TagController@pages')->name('tags.pages');
 Route::get('api/tags/{tagName}/all', 'TagController@all')->name('tags.all');
-Route::post('admin/tags/attach', 'TagController@attach')->name('tags.attach'); // Array Object
-Route::post('admin/tags/detach', 'TagController@detach')->name('tags.detach');
-Route::post('admin/tags/fullattach', 'TagController@fullattach')->name('tags.fullattach'); // Array Object Clear & attach
+Route::post('api/tags/attach', 'TagController@attach')->name('tags.attach'); // Array Object
+Route::post('api/tags/detach', 'TagController@detach')->name('tags.detach');
+Route::post('api/tags/fullattach', 'TagController@fullattach')->name('tags.fullattach'); // Array Object Clear & attach
 
 /*
 |--------------------------------------------------------------------------
@@ -165,6 +166,7 @@ Route::put('admin/users/{user}/type', 'UserController@type')->name('users.type')
 // Below are public api endpoints returning JSON as response
 Route::get('api/users', 'UserController@index')->name('users.index');
 Route::get('api/users/{user}', 'UserController@show')->name('users.show');
+Route::get('api/users/{slug}/pages', 'UserController@pages')->name('users.pages');
 
 //*** DUMMY TEST ***//
 //Route::get('analyticsga', 'AnalyticsController@test')->name('analytics.test');

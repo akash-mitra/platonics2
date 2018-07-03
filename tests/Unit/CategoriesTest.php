@@ -298,7 +298,7 @@ class CategoriesTest extends TestDataSetup
                 ->assertStatus(200);
     }
 
-    public function test_editor_deny_store()
+    public function test_editor_allow_store()
     {
         $category = [
             'name' => 'test category',
@@ -311,7 +311,7 @@ class CategoriesTest extends TestDataSetup
                 ->assertStatus(201);
     }
 
-    public function test_editor_deny_update()
+    public function test_editor_allow_update()
     {
         $category = [
             'name' => 'test category update',
