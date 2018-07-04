@@ -25,11 +25,18 @@ class TagsTest extends TestDataSetup
                     'data' => [
                         '*' => [
                             'id',
-                            'user_id',
                             'name',
                             'description',
                             'created_at',
-                            'updated_at'
+                            'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at',
+                            ]
                         ]
                     ]
                 ]);
@@ -48,11 +55,18 @@ class TagsTest extends TestDataSetup
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
-                    'user_id',
                     'name',
                     'description',
                     'created_at',
-                    'updated_at'
+                    'updated_at',
+                    'user' => [
+                        'name',
+                        'type',
+                        'slug',
+                        'avatar',
+                        'created_at',
+                        'updated_at',
+                    ]
                 ]);
     }
 

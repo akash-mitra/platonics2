@@ -183,7 +183,7 @@ class CategoryController extends Controller
         $category = Category::where('id', $id)->first();
         if (isset($category)) {
             $pages = Page::with('users', 'category', 'tags')
-                        ->where('category_id', $category->id)
+                        ->where([['category_id', $category->id],['publish', 'Y']])
                         ->latest('updated_at')
                         ->take($limit)
                         ->get();
@@ -195,6 +195,7 @@ class CategoryController extends Controller
         }
         else {
             $pages = Page::with('users', 'category', 'tags')
+                        ->where('publish', 'Y')
                         ->latest('updated_at')
                         ->take($limit)
                         ->get();

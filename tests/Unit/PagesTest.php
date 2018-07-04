@@ -26,7 +26,6 @@ class PagesTest extends TestDataSetup
                         '*' => [
                             'id',
                             'category_id',
-                            'user_id',
                             'title',
                             'summary',
                             'metakey',
@@ -38,6 +37,11 @@ class PagesTest extends TestDataSetup
                             'created_at',
                             'updated_at',
                             'slug',
+                            'metrics' => [
+                                'page_id',
+                                'page_views',
+                                'adsense_revenue',
+                            ],
                             'users' => [
                                 'name',
                                 'type',
@@ -58,11 +62,18 @@ class PagesTest extends TestDataSetup
                             'tags' => [
                                 '*' => [
                                     'id',
-                                    'user_id',
                                     'name',
                                     'description',
                                     'created_at',
                                     'updated_at',
+                                    'user' => [
+                                        'name',
+                                        'type',
+                                        'slug',
+                                        'avatar',
+                                        'created_at',
+                                        'updated_at'
+                                    ],
                                     'pivot' => [
                                         'taggable_id',
                                         'tag_id',
@@ -89,7 +100,6 @@ class PagesTest extends TestDataSetup
                 ->assertJsonStructure([
                     'id',
                     'category_id',
-                    'user_id',
                     'title',
                     'summary',
                     'metakey',
@@ -201,11 +211,18 @@ class PagesTest extends TestDataSetup
                     'data' => [
                         '*' => [
                             'id',
-                            'user_id',
                             'name',
                             'description',
                             'created_at',
                             'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at'
+                            ],
                             'pivot' => [
                                 'taggable_id',
                                 'tag_id',
@@ -227,14 +244,21 @@ class PagesTest extends TestDataSetup
                         '*' => [
                             'id',
                             'parent_id',
-                            'user_id',
                             'commentable_id',
                             'commentable_type',
                             'body',
                             'vote',
                             'offensive_index',
                             'created_at', 
-                            'updated_at'
+                            'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at'
+                            ]
                         ]
                     ]
                 ]);

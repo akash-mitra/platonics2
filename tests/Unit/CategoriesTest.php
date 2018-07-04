@@ -104,11 +104,18 @@ class CategoriesTest extends TestDataSetup
                     'data' => [
                         '*' => [
                             'id',
-                            'user_id',
                             'name',
                             'description',
                             'created_at',
                             'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at',
+                            ],
                             'pivot' => [
                                 'taggable_id',
                                 'tag_id',
@@ -130,14 +137,21 @@ class CategoriesTest extends TestDataSetup
                         '*' => [
                             'id',
                             'parent_id',
-                            'user_id',
                             'commentable_id',
                             'commentable_type',
                             'body',
                             'vote',
                             'offensive_index',
                             'created_at',
-                            'updated_at'
+                            'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at',
+                            ]
                         ]
                     ]
                 ]);
@@ -154,7 +168,6 @@ class CategoriesTest extends TestDataSetup
                         '*' => [
                             'id',
                             'category_id',
-                            'user_id',
                             'title',
                             'summary',
                             'metakey',
@@ -165,6 +178,14 @@ class CategoriesTest extends TestDataSetup
                             'draft',
                             'created_at',
                             'updated_at',
+                            'users' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at',
+                            ]
                         ]
                     ]
                 ]);

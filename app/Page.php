@@ -18,11 +18,18 @@ class Page extends Model
     ];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['user_id'];
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    //protected $appends = ['slug', 'metrics'];
+    //protected $appends = ['user']; //'slug', 'metrics'
 
     /**
      * Get content of the page

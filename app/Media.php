@@ -21,6 +21,26 @@ class Media extends Model
         'type', 'size', 'optimized',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['user_id'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['user'];
+
+    public function getUserAttribute()
+    {
+        return User::where('id', $this->user_id)->first();
+    }
+
+
     // Static Global Variables
     protected static $allowedExtensions = ['jpeg', 'jpg', 'png', 'bmp', 'gif'];
     protected static $maxSize = 10; //megabytes

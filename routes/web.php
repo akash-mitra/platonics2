@@ -167,7 +167,7 @@ Route::put('admin/users/{user}/type', 'UserController@type')->name('users.type')
 Route::get('api/users', 'UserController@index')->name('users.index');
 Route::get('api/users/{user}', 'UserController@show')->name('users.show');
 Route::get('api/users/{slug}/pages', 'UserController@pages')->name('users.pages');
-//Route::get('api/users/{slug}/unpublished', 'UserController@unpublished')->name('users.unpublished');
+Route::get('api/users/{slug}/draft', 'UserController@draft')->name('users.draft');
 
 
 //*** DUMMY TEST ***//

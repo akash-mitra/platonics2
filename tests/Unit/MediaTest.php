@@ -27,7 +27,6 @@ class MediaTest extends TestDataSetup
                     'data' => [
                         '*' => [
                             'id',
-                            'user_id',
                             'base_path',
                             'filename',
                             'name',
@@ -35,7 +34,15 @@ class MediaTest extends TestDataSetup
                             'size',
                             'optimized',
                             'created_at',
-                            'updated_at'
+                            'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at',
+                            ]
                         ]
                     ]
                 ]);
@@ -54,7 +61,6 @@ class MediaTest extends TestDataSetup
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
-                    'user_id',
                     'base_path',
                     'filename',
                     'name',
@@ -62,7 +68,15 @@ class MediaTest extends TestDataSetup
                     'size',
                     'optimized',
                     'created_at',
-                    'updated_at'
+                    'updated_at',
+                    'user' => [
+                        'name',
+                        'type',
+                        'slug',
+                        'avatar',
+                        'created_at',
+                        'updated_at',
+                    ]
                 ]);
     }
 

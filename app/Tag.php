@@ -16,6 +16,20 @@ class Tag extends Model
     ];
     
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['user_id'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['user'];
+
+    /**
      * Get all of the pages that are assigned this tag.
      */
     public function pages()
@@ -29,5 +43,10 @@ class Tag extends Model
     public function categories()
     {
         return $this->morphedByMany('App\Category', 'taggable');
+    }
+
+    public function getUserAttribute()
+    {
+        return User::where('id', $this->user_id)->first();
     }
 }
