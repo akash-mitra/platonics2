@@ -8,11 +8,11 @@ use Tests\TestDataSetup;
 class CategoriesTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 30
+     * Total Test Cases: 45
      */
 
     /**
-     * Positive Test Cases: 6
+     * Positive Test Cases: 9
      */
 
     public function test_index_returns_expected_structure()
@@ -94,7 +94,83 @@ class CategoriesTest extends TestDataSetup
                 ->assertJsonFragment([$this->category1->name]);
     }
 
-    
+    public function test_tags_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/tags/categories/2')
+                ->assertStatus(200)
+                ->assertJsonStructure([ 
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'user_id',
+                            'name',
+                            'description',
+                            'created_at',
+                            'updated_at',
+                            'pivot' => [
+                                'taggable_id',
+                                'tag_id',
+                                'taggable_type'
+                            ]
+                        ]
+                    ]
+                ]);
+    }
+
+    public function test_comments_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/comments/categories/2')
+                ->assertStatus(200)
+                ->assertJsonStructure([ 
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'parent_id',
+                            'user_id',
+                            'commentable_id',
+                            'commentable_type',
+                            'body',
+                            'vote',
+                            'offensive_index',
+                            'created_at',
+                            'updated_at'
+                        ]
+                    ]
+                ]);
+    }
+
+    public function test_pages_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/categories/1/pages')
+                ->assertStatus(200)
+                ->assertJsonStructure([ 
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'category_id',
+                            'user_id',
+                            'title',
+                            'summary',
+                            'metakey',
+                            'metadesc',
+                            'media_url',
+                            'access_level',
+                            'publish',
+                            'draft',
+                            'created_at',
+                            'updated_at',
+                        ]
+                    ]
+                ]);
+    }
+
+
     /**
      * Negative Test Cases: 4
      */
@@ -142,7 +218,7 @@ class CategoriesTest extends TestDataSetup
 
 
     /**
-     * User Type Permissions Cases: 5 * 4 = 20
+     * User Type Permissions Cases: 8 * 4 = 32
      */
 
     public function test_visitor_allow_index()
@@ -154,6 +230,24 @@ class CategoriesTest extends TestDataSetup
     public function test_visitor_allow_show()
     {
         $this->get('api/categories/' . $this->category1->id)
+                ->assertStatus(200);
+    }
+
+    public function test_visitor_allow_tags()
+    {
+        $this->get('api/tags/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_visitor_allow_comments()
+    {
+        $this->get('api/comments/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_visitor_allow_pages()
+    {
+        $this->get('api/categories/1/pages')
                 ->assertStatus(200);
     }
 
@@ -199,6 +293,27 @@ class CategoriesTest extends TestDataSetup
     {
         $this->actingAs($this->regular1)
                 ->get('api/categories/' . $this->category1->id)
+                ->assertStatus(200);
+    }
+
+    public function test_regular_allow_tags()
+    {
+        $this->actingAs($this->regular1)
+                ->get('api/tags/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_regular_allow_comments()
+    {
+        $this->actingAs($this->regular1)
+                ->get('api/comments/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_regular_allow_pages()
+    {
+        $this->actingAs($this->regular1)
+                ->get('api/categories/1/pages')
                 ->assertStatus(200);
     }
 
@@ -250,6 +365,27 @@ class CategoriesTest extends TestDataSetup
                 ->assertStatus(200);
     }
 
+    public function test_author_allow_tags()
+    {
+        $this->actingAs($this->author1)
+                ->get('api/tags/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_author_allow_comments()
+    {
+        $this->actingAs($this->author1)
+                ->get('api/comments/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_author_allow_pages()
+    {
+        $this->actingAs($this->author1)
+                ->get('api/categories/1/pages')
+                ->assertStatus(200);
+    }
+
     public function test_author_deny_store()
     {
         $category = [
@@ -295,6 +431,27 @@ class CategoriesTest extends TestDataSetup
     {
         $this->actingAs($this->editor1)
                 ->get('api/categories/' . $this->category1->id)
+                ->assertStatus(200);
+    }
+
+    public function test_editor_allow_tags()
+    {
+        $this->actingAs($this->editor1)
+                ->get('api/tags/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_editor_allow_comments()
+    {
+        $this->actingAs($this->editor1)
+                ->get('api/comments/categories/2')
+                ->assertStatus(200);
+    }
+
+    public function test_editor_allow_pages()
+    {
+        $this->actingAs($this->editor1)
+                ->get('api/categories/1/pages')
                 ->assertStatus(200);
     }
 

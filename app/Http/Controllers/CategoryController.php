@@ -84,7 +84,7 @@ class CategoryController extends Controller
 
         $input = $request->input();
         $category = Category::create($input);
-        $this->revalidateMenu();
+        //$this->revalidateMenu();
 
         return response()->json($category, 201);
     }
@@ -116,7 +116,7 @@ class CategoryController extends Controller
         $input = $request->input();
         $category = Category::FindOrFail($id);
         $category->fill($input)->save();
-        $this->revalidateMenu();
+        //$this->revalidateMenu();
 
         return response()->json($category, 200);
     }
@@ -136,18 +136,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Revalidate the category menu cache.
-     *
-     */
-    private function revalidateMenu()
-    {
-        Cache::forget('menu');
-        $value = Cache::rememberForever('menu', function () {
-            return DB::table('categories')->whereNull('parent_id')->pluck('id', 'name');
-        });
-    }
-
-    /**
      * Show the tags for a category.
      *
      * @param  int                       $id
@@ -157,7 +145,7 @@ class CategoryController extends Controller
     {
         $category = Category::FindOrFail($id);
         $tags = $category->tags()->get();
-
+        
         return response()->json([
             'length' => count($tags),
             'data' => $tags
@@ -196,7 +184,7 @@ class CategoryController extends Controller
         if (isset($category)) {
             $pages = Page::with('users', 'category', 'tags')
                         ->where('category_id', $category->id)
-                        ->orderBy('updated_at', 'desc')
+                        ->latest('updated_at')
                         ->take($limit)
                         ->get();
             
@@ -207,8 +195,8 @@ class CategoryController extends Controller
         }
         else {
             $pages = Page::with('users', 'category', 'tags')
-                        ->orderBy('updated_at', 'desc')
-                        ->take($n)
+                        ->latest('updated_at')
+                        ->take($limit)
                         ->get();
             
             return response()->json([
@@ -216,5 +204,16 @@ class CategoryController extends Controller
                 'data' => $pages
             ]);
         }
+    }
+
+    /**
+     * Revalidate the category menu cache.
+     *
+     */
+    private function revalidateMenu()
+    {
+        return Cache::rememberForever('menu', function () {
+            return DB::table('categories')->whereNull('parent_id')->pluck('id', 'name');
+        });
     }
 }

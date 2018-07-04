@@ -36,14 +36,14 @@ class Media extends Model
     private static function setStorageType()
     {
         $storage = Configuration::getConfig('storage');
-        $value = json_decode($storage, true);
+        $value = json_decode($storage['storage']);
 
-        if ($value['type'] == 's31') { 
+        if ($value->type == 's3') { 
             self::$storageType = 's3';
-            \Config::set('filesystems.disks.s3.key', $value['key']);
-            \Config::set('filesystems.disks.s3.secret', $value['secret']);
-            \Config::set('filesystems.disks.s3.region', $value['region']);
-            \Config::set('filesystems.disks.s3.bucket', $value['bucket']);
+            \Config::set('filesystems.disks.s3.key', $value->key);
+            \Config::set('filesystems.disks.s3.secret', $value->secret);
+            \Config::set('filesystems.disks.s3.region', $value->region);
+            \Config::set('filesystems.disks.s3.bucket', $value->bucket);
         }
         return true;
     }

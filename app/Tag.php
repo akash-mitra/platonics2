@@ -30,12 +30,4 @@ class Tag extends Model
     {
         return $this->morphedByMany('App\Category', 'taggable');
     }
-
-    public function taggables($type)
-    {
-        if ($type == 'App\Category')
-            return $this->categories();
-        
-        return $this->pages(); 
-    }
 }

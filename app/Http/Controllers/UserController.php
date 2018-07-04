@@ -26,7 +26,7 @@ class UserController extends Controller
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6', //|confirmed
             'type' => 'required|in:Admin,Editor,Author,Regular',
         ];
     }
@@ -36,7 +36,7 @@ class UserController extends Controller
      * This route is accessible via web, whereas all the
      * other routes are only accessible via API.
      */
-    public function home()
+    public function adminHome()
     {
         return view('admin.users.home');
     }
@@ -170,7 +170,7 @@ class UserController extends Controller
         if (isset($user)) {
             $pages = Page::with('category', 'tags')
                         ->where('user_id', $user->id)
-                        ->orderBy('updated_at', 'desc')
+                        ->latest('updated_at')
                         ->take($limit)
                         ->get();
             

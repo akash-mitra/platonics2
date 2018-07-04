@@ -9,6 +9,7 @@ use App\Content;
 use App\Media;
 use App\Permission;
 use App\GoogleAnalytics;
+use App\Configuration;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -82,6 +83,17 @@ class DatabaseSeeder extends Seeder
                     $someTagsForCategory = array_slice($tags, 0, 5);
                     $category->tags()->attach($someTagsForCategory, ['user_id' => 1]);
 
+                    // randomly select 75% of these categories and put
+                    // random number of comments in them
+
+                    if (random_int(1, 4) != 1) {
+                        $comments = factory(Comment::class, random_int(0, 4))->make([
+                            'user_id' => $userIds[random_int(0, count($userIds) - 1)],
+                        ]);
+
+                        $category->comments()->saveMany($comments);
+                    }
+
                     $maxPagePerCategory = 8;
 
                     $pages = factory(Page::class, random_int(0, $maxPagePerCategory))
@@ -137,20 +149,14 @@ class DatabaseSeeder extends Seeder
             'user_id' => $authorIds[random_int(0, count($authorIds) - 1)]
         ]);
 
-        // Configurations Table
-        DB::table('configurations')->insert([
-            'key' => 'templates',
-            'value' => serialize(json_encode('{"home": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "pages": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "category": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "profile": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "forum": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "forumhome": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} } }')),
-            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
-            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        // Seed Default Configurations   
+        $key1 = 'templates';
+        $value1 = '{"home": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "pages": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "category": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "profile": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "forum": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "forumhome": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} } }';
+        Configuration::setConfig($key1, $value1);
 
-        DB::table('configurations')->insert([
-            'key' => 'storage',
-            'value' => serialize(json_encode('{"type":"local"}')),
-            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
-            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        $key2 = 'storage';
+        $value2 = '{"type": "local"}';
+        Configuration::setConfig($key2, $value2);
 
 
         // Populate static Permissions table

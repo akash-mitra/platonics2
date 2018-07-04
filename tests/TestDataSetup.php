@@ -10,6 +10,7 @@ use App\Tag;
 use App\Comment;
 use App\Media;
 use App\Permission;
+use App\Configuration;
 use DB;
 use Illuminate\Support\Facades\Cache;
 
@@ -112,9 +113,9 @@ class TestDataSetup extends TestCase
     private function generate_media()
     {
         // create 3 media for test
-        $this->media1 = factory(Media::class)->create(['user_id' => $this->author1->id]);
-        $this->media2 = factory(Media::class)->create(['user_id' => $this->author1->id]);
-        $this->media3 = factory(Media::class)->create(['user_id' => $this->author1->id]);
+        $this->media1 = factory(Media::class)->create(['user_id' => $this->editor1->id]);
+        $this->media2 = factory(Media::class)->create(['user_id' => $this->editor1->id]);
+        $this->media3 = factory(Media::class)->create(['user_id' => $this->editor1->id]);
     }
 
     private function generate_users()
@@ -131,19 +132,19 @@ class TestDataSetup extends TestCase
 
     private function generate_configurations()
     {
-        DB::table('configurations')
-            ->insert(['key' => 'hello', 
-                'value' => serialize(json_encode('{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}')),
-                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')]);
-        Cache::forever('hello', '{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}');
+        $key1 = 'storage';
+        $value1 = '{"type": "local"}';
+        Configuration::setConfig($key1, $value1);
 
-        DB::table('configurations')
-            ->insert(['key' => 'world', 
-                'value' => serialize(json_encode('{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}')),
-                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')]);
-        Cache::forever('world', '{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}');
+        $key2 = 'hello';
+        $value2 = '{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}';
+        Configuration::setConfig($key2, $value2);
+        //Cache::forever($key, $value);
+
+        $key3 = 'world';
+        $value3 = '{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}';
+        Configuration::setConfig($key3, $value3);
+        //Cache::forever($key, $value);
     }
 
     private function generate_permissions()

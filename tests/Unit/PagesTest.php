@@ -8,11 +8,11 @@ use Tests\TestDataSetup;
 class PagesTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 13
+     * Total Test Cases: 14
      */
 
     /**
-     * Positive Test Cases: 9
+     * Positive Test Cases: 10
      */
     
     public function test_index_returns_expected_structure()
@@ -188,6 +188,31 @@ class PagesTest extends TestDataSetup
                     'title' => 'test page update',
                     'access_level' => 'F',
                     'publish' => 'N',
+                ]);
+    }
+
+    public function test_tags_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/tags/pages/2')
+                ->assertStatus(200)
+                ->assertJsonStructure([ 
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'user_id',
+                            'name',
+                            'description',
+                            'created_at',
+                            'updated_at',
+                            'pivot' => [
+                                'taggable_id',
+                                'tag_id',
+                                'taggable_type'
+                            ]
+                        ]
+                    ]
                 ]);
     }
 

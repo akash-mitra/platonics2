@@ -37,7 +37,7 @@ class ConfigurationTest extends TestDataSetup
     public function test_index_returns_expected_length()
     {
         $response = $this->actingAs($this->admin1)->get('admin/configs')->decodeResponseJson();
-        $this->assertEquals($response['length'], 2);
+        $this->assertEquals($response['length'], 3);
     }
 
     public function test_show_returns_expected_structure()

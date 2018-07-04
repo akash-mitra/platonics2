@@ -20,7 +20,7 @@
     DELETE SOMETHING (media.destroy.by.id)
 </p>
 <div class='hide'>
-    <form method="POST" action="{{ route('media.destroy', ['id' => 16]) }}">
+    <form method="POST" action="{{ route('media.destroy', ['id' => 11]) }}">
         <input type="hidden" name="_method" value="DELETE" />
         {!! csrf_field() !!}
         <button class="btn btn-default">DELETE</button>

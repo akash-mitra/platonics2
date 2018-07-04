@@ -43,7 +43,7 @@ Route::get('api/categories', 'CategoryController@index')->name('categories.index
 Route::get('api/categories/{category}', 'CategoryController@show')->name('categories.show');
 Route::get('api/tags/categories/{category}', 'CategoryController@tags')->name('categories.tags');
 Route::get('api/comments/categories/{category}', 'CategoryController@comments')->name('categories.comments');
-Route::get('api/categories/{category}/pages', 'CategoryController@pages')->name('categories.pages');
+Route::get('api/categories/{category?}/pages', 'CategoryController@pages')->name('categories.pages');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,7 +79,7 @@ Route::get('api/comments/pages/{page}', 'PageController@comments')->name('pages.
 Route::get('admin/tags', 'TagController@adminHome')->name('tags.home');
 Route::get('admin/tags/create', 'TagController@create')->name('tags.create');
 Route::get('admin/tags/{tag}/edit', 'TagController@edit')->name('tags.edit');
-Route::get('tags/{tagName}', 'FrontendController@tag')->name('frontend.tag'); //TO-DO same as TagController@all
+Route::get('tags/{tagName}', 'FrontendController@tag')->name('frontend.tag');
 
 // Below URLs will return JSON as response
 Route::post('admin/tags', 'TagController@store')->name('tags.store');
@@ -92,9 +92,9 @@ Route::get('api/tags/{tag}', 'TagController@show')->name('tags.show');
 Route::get('api/tags/{tagName}/categories', 'TagController@categories')->name('tags.categories');
 Route::get('api/tags/{tagName}/pages', 'TagController@pages')->name('tags.pages');
 Route::get('api/tags/{tagName}/all', 'TagController@all')->name('tags.all');
-Route::post('api/tags/attach', 'TagController@attach')->name('tags.attach'); // Array Object
+Route::post('api/tags/attach', 'TagController@attach')->name('tags.attach');
 Route::post('api/tags/detach', 'TagController@detach')->name('tags.detach');
-Route::post('api/tags/fullattach', 'TagController@fullattach')->name('tags.fullattach'); // Array Object Clear & attach
+Route::post('api/tags/fullattach', 'TagController@fullattach')->name('tags.fullattach');
 
 /*
 |--------------------------------------------------------------------------
@@ -167,8 +167,9 @@ Route::put('admin/users/{user}/type', 'UserController@type')->name('users.type')
 Route::get('api/users', 'UserController@index')->name('users.index');
 Route::get('api/users/{user}', 'UserController@show')->name('users.show');
 Route::get('api/users/{slug}/pages', 'UserController@pages')->name('users.pages');
+//Route::get('api/users/{slug}/unpublished', 'UserController@unpublished')->name('users.unpublished');
 
 
 //*** DUMMY TEST ***//
-//Route::get('analyticsga', 'AnalyticsController@test')->name('analytics.test');
 //Route::get('test', function () { return view('test'); });
+//Route::get('analyticsga', 'AnalyticsController@test')->name('analytics.test');

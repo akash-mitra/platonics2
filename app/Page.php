@@ -22,7 +22,7 @@ class Page extends Model
      *
      * @var array
      */
-    protected $appends = ['slug', 'metrics'];
+    //protected $appends = ['slug', 'metrics'];
 
     /**
      * Get content of the page

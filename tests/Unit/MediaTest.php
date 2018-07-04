@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Storage;
 class MediaTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 10
+     * Total Test Cases: 13
      */
 
     /**
-     * Positive Test Cases: 6
+     * Positive Test Cases: 9
      */
     
     public function test_index_returns_expected_structure()
@@ -97,12 +97,42 @@ class MediaTest extends TestDataSetup
     public function test_destroy_can_delete_data()
     {
         $this->actingAs($this->admin1)
-                ->delete('admin/media/1')
+                ->delete('admin/media/3')
                 ->assertStatus(200)
-                ->assertJsonFragment([$this->media1->name]);
+                ->assertJsonFragment([$this->media3->name]);
     }
     
-    
+    public function test_absolute_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/media/' . $this->media1->id . '/absolute')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'path'
+                ]);
+    }
+
+    public function test_relative_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/media/' . $this->media1->id . '/relative')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'path'
+                ]);
+    }
+
+    public function test_optimize_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/media/' . $this->media1->id . '/optimize')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'status'
+                ]);
+    }
+
+
     /**
      * Negative Test Cases: 4
      */
