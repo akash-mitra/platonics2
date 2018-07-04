@@ -78,7 +78,7 @@
                             <span class="hidden p-6 pb-2 xl:flex text-teal font-light text-xs uppercase">User Management</span>
                         </li>
                         <li>
-                            <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline" href="#">
+                            <a class="pl-8 py-6 xl:py-2 flex hover:text-teal text-grey-darker no-underline font-hairline" href="/admin/users">
                                  Users
                             </a>
                         </li>                

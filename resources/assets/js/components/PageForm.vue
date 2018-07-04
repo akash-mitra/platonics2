@@ -1,14 +1,14 @@
 <template>
 <div>
         <div class="md:flex">
-                <div class="md:w-2/3 min-h-screen bg-white px-6 py-2">
+                <div class="md:w-2/3 min-h-screen bg-white main-content">
                         
-                        <div class="pt-2">
+                        <div class="px-4 py-2 border-b">
                                 <p class="text-xs text-grey-dark pb-2">
                                         Title
                                 </p>
 
-                                <input v-model="title" type="text" class="p-2 text-grey-darker text-2xl w-full border-b"  @keydown="errors.clear('title')">
+                                <input v-model="title" type="text" class="text-grey-darker text-2xl w-full"  :class="title.length == 0?'bg-grey-lightest':''" @keydown="errors.clear('title')">
 
                                 <p class="text-xs text-right text-grey-dark my-1">
                                         
@@ -26,12 +26,12 @@
                                 
                         </div>
 
-                        <div class="pt-1">
+                        <div class="px-4 py-2 border-b">
                                 <p class="text-xs text-grey-dark pb-2">
                                         Summary
                                 </p>
                                 
-                                <textarea v-model="summary" type="text" class="p-2 italic text-grey-darkest font-light w-full border-b"  @keydown="errors.clear('summary')"></textarea>
+                                <textarea v-model="summary" type="text" class="pb-2 italic text-grey-darkest font-light w-full border-b-q" :class="summary.length == 0?'bg-grey-lightest':''" @keydown="errors.clear('summary')"></textarea>
 
                                 <p class="text-xs text-right text-grey-dark my-1">
                                         
@@ -44,7 +44,7 @@
                                 </p>
                         </div>
 
-                        <div class="pt-1">
+                        <div class="px-4 py-2 border-b">
                                 <p class="flex text-xs text-grey-darker pb-2">
                                         <span class="w-1/2">
                                                 Body
@@ -66,36 +66,35 @@
                                 <span class="text-red text-sm" v-if="errors.has('body')" v-text="errors.get('body')"></span>
                                 
                         </div>
-                        
-                
-                        <button 
-                                v-show="title.length > 0 && innerText.length > 1" 
-                                @click="saveModalVisibility=true" 
-                                class="bg-purple hover:bg-green text-white rounded mt-8 py-2 px-4"
-                        >Save</button>
+
                 </div>
 
-                <div class="md:w-1/3 p-6">
-
-                        <!-- <div class="text-grey-dark text-sm">
-                                <p class="py-2 font-normal text-teal-light">       
-                                        <svg class="icon-sm text-teal-light" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M10 0a10 10 0 1 1 0 20 10 10 0 0 1 0-20zM2 10a8 8 0 1 0 16 0 8 8 0 0 0-16 0zm10.54.7L9 14.25l-1.41-1.41L10.4 10 7.6 7.17 9 5.76 13.24 10l-.7.7z"/></svg>
-                                        Scheduled Post
-                                </p>
-                                
-                                <p class="mb-3 text-xs">You may schedule your post to get automatically published in a future date</p>
-
-                                <div class="flex text-xs mb-4 pb-4 border-b">
-                                        <span class="py-1 m-1">
-                                                Publish this post from 
-                                        </span>
-                                        <button class="px-3 py-1 m-1 border border-blue rounded-full text-blue hover:bg-blue hover:text-white">
-                                                 Now 
-                                                 <svg class="icon-sm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                <div class="w-full flex absolute pin-l pin-t md:mt-16 xl:mt-0 px-3 py-1">
+                        <div class="w-1/6 bg-transparent hidden xl:block"></div>
+                        <div class="w-5/6 flex bg-transparent">
+                                <div class="w-2/3 flex flex-no-wrap bg-white py-2">
+                                        <button 
+                                                class="px-4 py-2 mx-1 text-grey-dark border rounded"
+                                                title="Distraction free compose"
+                                                >
+                                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.8 15.8L0 13v7h7l-2.8-2.8 4.34-4.32-1.42-1.42L2.8 15.8zM17.2 4.2L20 7V0h-7l2.8 2.8-4.34 4.32 1.42 1.42L17.2 4.2zm-1.4 13L13 20h7v-7l-2.8 2.8-4.32-4.34-1.42 1.42 4.33 4.33zM4.2 2.8L7 0H0v7l2.8-2.8 4.32 4.34 1.42-1.42L4.2 2.8z"/></svg>
                                         </button>
-                                        
+                                        <button 
+                                                v-show="title.length > 0 && innerText.length > 1" 
+                                                @click="saveModalVisibility=true" 
+                                                class="px-4 py-2 mx-1 text-grey-dark border hover:border-green hover:bg-green hover:text-white rounded"
+                                                title="Save"
+                                        >
+                                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 10v6H7v-6H2l8-8 8 8h-5zM0 18h20v2H0v-2z"/></svg>
+                                        </button>
+
+                                        <p class="px-4 py-3 italic text-grey-dark text-xs" v-text="serverMessages"></p>
                                 </div>
-                        </div> -->
+                        </div>
+                                
+                </div>
+
+                <div class="md:w-1/3 p-6 border-l">     
 
                         <div class="text-grey-dark text-sm">
                                 <p class="py-2 font-normal text-teal-light">       
@@ -169,12 +168,12 @@
                                         </label>
 
                                         <div class="relative">
-                                                <select v-model="category_id" name="category_id" class="block appearance-none w-full bg-grey-lightest border border-grey-lighter text-grey-darker py-2 px-4 pr-8 rounded leading-tight">
+                                                <select v-model="category_id" @change="errors.clear('category_id')" class="block appearance-none w-full bg-grey-lightest border border-grey-lighter text-grey-darker py-2 px-4 pr-8 rounded leading-tight">
                                                         <option disabled>Please select one</option>
                                                         <option value="">None - It is a top level category</option>
-                                                        <!-- <option v-for="category in categories" :value="category.id" v-bind:key="category.id">
+                                                        <option v-for="category in categories" :value="category.id" v-bind:key="category.id">
                                                                 {{ category.name }}
-                                                        </option> -->
+                                                        </option>
                                                 </select>
                                                 <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
                                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -193,7 +192,7 @@
                                         </label>
 
                                         <div class="relative">
-                                                <select v-model="access_level" name="access_level" class="block appearance-none w-full bg-grey-lightest border border-grey-lighter text-grey-darker py-2 px-4 pr-8 rounded leading-tight">
+                                                <select v-model="access_level" @change="errors.clear('access_level')" class="block appearance-none w-full bg-grey-lightest border border-grey-lighter text-grey-darker py-2 px-4 pr-8 rounded leading-tight">
                                                         <option disabled value="">Please select one</option>
                                                         <option value="F">Free</option>
                                                         <option value="M">Member Only</option>
@@ -209,14 +208,14 @@
                         </div>
                         <div class="w-1/2 px-4 border-l">
                                 
-                                <div class="">
+                                <div>
                                         
                                         <label class="flex justify-between uppercase tracking-wide text-grey-darker text-xs mb-2" for="grid-state">
                                                 <span>Meta Description</span>
                                                 <span class="normal-case text-grey cursor-pointer" @click="metadesc=summary">Copy From Summary</span>
                                         </label>
 
-                                        <textarea v-model="metadesc" name="metadesc" placeholder="e.g. Tell Search Engines about this article..." class="block appearance-none w-full bg-grey-lightest border border-grey-lighter text-grey-darker py-2 px-4 pr-8 rounded leading-tight"></textarea>
+                                        <textarea v-model="metadesc" name="metadesc" placeholder="e.g. Tell Search Engines about this article..." @keydown="errors.clear('metadesc')" class="block appearance-none w-full bg-grey-lightest border border-grey-lighter text-grey-darker py-2 px-4 pr-8 rounded leading-tight"></textarea>
 
                                         <p class="text-xs text-red my-1" v-if="errors.has('metadesc')" v-text="errors.get('metadesc')"></p>
                                 </div>
@@ -228,7 +227,7 @@
 
                                         <div class="block appearance-none w-full leading-tight">
                                                 <span class="text-teal text-xs py-2 pr-2 rounded">
-                                                        keyword1
+                                                        keyword
                                                 </span>
                                         </div>
                                 </div>
@@ -259,7 +258,7 @@
                 <template slot="footer">
                         <div class="flex justify-end">
                                 
-                                <button class="bg-purple text-white py-2 px-4 rounded hover:bg-green">Looks Good</button>
+                                <button @click="saveAsFinal" class="bg-purple text-white py-2 px-4 rounded hover:bg-green">Looks Good</button>
                         </div>
                 </template>
         </modal>
@@ -294,6 +293,11 @@
                         publish: 'N',
                         draft: 'Y',
 
+                        /*
+                         * Categories
+                         */ 
+                        categories: [],
+
                         /**
                          * Frontend Editor settings
                          */
@@ -321,23 +325,54 @@
                         autoSaveTimer: null,
                         refreshTimer: null,
                         saveModalVisibility: false,
+                        serverMessages: ''
                 }
         },
-
-
 
         components: {
                 'medium-editor': editor,
                 'modal': modal
         },
 
-
         created() {
 
+                /**
+                 * For any page_id is supplied, the form is preloaded
+                 * with the contents of the page.
+                 */
+                if (this.page_id !== '')
+                {
+                        axios.request({
+                                'url': '/api/pages/' +  this.page_id,
+                                'method': 'get'
+                        })
+                        .then(response => {
+
+                                let data = response.data;
+
+                                this.id = data.id;
+                                this.title = data.title;
+                                this.summary = data.summary;
+                                this.category_id = data.category_id;
+                                this.innerHTML = data.contents.body;
+                                this.metakey = data.metakey;
+                                this.metadesc = data.metadesc;
+                                this.media_url = data.media_url;
+                                this.access_level = data.access_level;
+                                this.publish = data.publish;
+                                this.draft = data.draft;
+                        })
+                        .catch(error => {
+                                console.log(error)
+                                serverMessages = 'Error: ' + error
+                        })
+                }
 
                 this.autoSaveTimer = setInterval(this.autoSave, 30000)
 
                 this.refreshTimer = setInterval(this.refreshMeta, 5000)
+
+                this.loadAllCategories()
 
         },
         
@@ -352,6 +387,9 @@
 
         methods: {
                 
+                /**
+                 * This is the connecting method between vue and medium editor
+                 */
                 applyTextEdit: function (operation) {
                         
                         this.innerText = operation.api.origElements.innerText
@@ -409,10 +447,10 @@
                 },
 
                 /**
-                 * autoSave attempts to save the page after a specific interval
+                 * AutoSave attempts to save the page after a specific interval
                  * provided both the following conditions are met:
                  * 
-                 * (a) The current length of the content is greater than last saved
+                 * (a) The current length of the content is not equal to the last saved
                  *     length of the content. That is, the content has actually 
                  *     undergone changes.
                  * 
@@ -423,26 +461,60 @@
                         
                         let l = this.innerText.length
                         
-                        if (this.saveCharCount < l) {
+                        if (this.saveCharCount !== l) {
 
-                                this.savePage ('Y')
+                                let data = {
+                                        title: this.title,
+                                        summary: this.summary,
+                                        body: this.innerHTML,
+                                        draft: 'Y'
+                                }
+
+                                this.savePage (data)
 
                                 this.saveCharCount = l
                         }
                 },
+
+
+                /**
+                 * SaveAsFinal removes the draft flag and saves 
+                 * the document with all the other required parameters 
+                 * (such as category_id, access_level etc. which were not required 
+                 * for saving as a draft).
+                 * 
+                 */
+                saveAsFinal: function () {
+                        
+                        let data = {
+                                title: this.title,
+                                summary: this.summary,
+                                body: this.innerHTML,
+                                category_id: this.category_id,
+                                metakey: this.metakey,
+                                metadesc: this.metadesc,
+                                publish: this.publish,
+                                media_url: this.media_url,
+                                access_level: this.access_level,
+                                draft: 'N'
+                        }
+
+                        this.savePage (data)
+
+                        this.saveCharCount = this.innerText.length
+                        
+                },
+
+
                 /**
                  * shouldRefresh function slows down the reactivity in order to
-                 * make the front end feel more responsive.
+                 * make the frontend feel more responsive with large contents.
                  * 
                  * The current implementation of the function is based on count
                  * of characters present in the innerText. The function only
                  * returns true as and when character count increases by 10
-                 * percent. 
+                 * percent or decreases by 5 percent.
                  * 
-                 * Alternate approach could be based on random numbers if
-                 * divisible by a specific number etc. Implementation 
-                 * has to be very simple and faster as the function 
-                 * is called on every tick.
                  */
                 shouldRefresh: function () {
 
@@ -462,26 +534,29 @@
                         return false
                 },
 
-                savePage: function (draft) {
 
-                        
+                /**
+                 * saves the page to the server with the given data
+                 */
+                savePage: function (data) {
+
+                        this.serverMessages = 'Saving document to server...'
 
                         axios.request({
-                                'url': '/pages/' +  this.id,
+                                'url': '/admin/pages/' +  this.id,
                                 'method': this.id > 0 ? 'patch' : 'post',
-                                'data': {
-                                        title: this.title,
-                                        summary: this.summary,
-                                        body: this.innerHTML,
-                                        draft: draft
-                                }
+                                'data': data
                         })
                         .then(response => {
 
                                 this.id = response.data.id
 
-                                
-                                //location.href = '/admin/categories'
+                                this.saveModalVisibility = false
+
+                                let self = this
+
+                                setTimeout (() => { self.serverMessages = '' }, 2000);
+
                         })
                         .catch(error => {
 
@@ -489,11 +564,15 @@
 
                                 this.errors.record(error.response.data.errors)
 
-                                console.log(this.errors.get('title'))
-
+                                console.log(error)
                         })
                 },
 
+
+                /**
+                 * Returns current date in MMM DD, YYYY format as
+                 * used in Search Engine search results.
+                 */
                 se_date: function () {
                         let month_names = ["Jan", "Feb", "Mar", 
                                         "Apr", "May", "Jun", "Jul", "Aug", "Sep", 
@@ -507,6 +586,24 @@
                         return month_names[month_index] + ' ' + day + ", " + year + ' - '
                 },
 
+
+                /*
+                 * Populate the available categories for category selection dropdown
+                 */
+                loadAllCategories: function () {
+
+                        axios.get('/api/categories')
+                        .then(response => {
+                                this.categories = response.data.data
+                        }).catch(error => {
+                                serverMessages = 'Failed to load categories'
+                                console.log(error)
+                        })
+                },
+
+                /**
+                 * Keyword frequency analyser
+                 */
                 getKeywords: function () {
 
                         let txt = this.innerText

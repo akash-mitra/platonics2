@@ -27,13 +27,23 @@ class PageController extends Controller
         return [
             'category_id' => 'required|integer',
             'user_id' => 'bail|required|integer|exists:users,id',
-            'title' => 'required|unique:pages,title,' . $id . '|max:100',
+            'title' => 'required|max:100',
             'summary' => 'nullable|max:1048',
             'metakey' => 'nullable|max:255',
-            'metadesc' => 'nullable|max:255',
+            'metadesc' => 'required|max:255',
             'media_url' => 'nullable|max:255',
             'access_level' => 'in:F,M,P|max:1',
 
+            'body' => 'required',
+        ];
+    }
+
+    private function getRulesForDrafts()
+    {
+        return [
+            'user_id' => 'bail|required|integer|exists:users,id',
+            'title' => 'required|max:100',
+            'summary' => 'nullable|max:1048',
             'body' => 'required',
         ];
     }
@@ -99,7 +109,7 @@ class PageController extends Controller
     {
         $request->request->add(['user_id' => Auth::id()]);
 
-        $this->validateUnlessDraft($request);
+        $request->input('draft') != 'Y' ? $request->validate($this->getRules()) : $request->validate($this->getRulesForDrafts());
 
         $input = $request->input();
         $page = new Page($input);
@@ -123,6 +133,10 @@ class PageController extends Controller
     {
         $page = Page::FindOrFail($id);
 
+        if (Auth::check()) {
+            $page->load('contents');
+        }
+
         return response()->json($page);
     }
 
@@ -137,7 +151,7 @@ class PageController extends Controller
     {
         $request->request->add(['user_id' => Auth::id()]);
 
-        $this->validateUnlessDraft($request, $id);
+        $request->input('draft') != 'Y' ? $request->validate($this->getRules()) : $request->validate($this->getRulesForDrafts());
 
         $input = $request->input();
         $page = Page::FindOrFail($id);
@@ -218,16 +232,5 @@ class PageController extends Controller
             'length' => count($comments),
             'data' => $comments
         ]);
-    }
-
-    /**
-     * valdate only when the page is not being
-     * auto-saved as a draft.
-     */
-    private function validateUnlessDraft($request, $id = null)
-    {
-        if ($request->input('draft') != 'Y') {
-            $request->validate($this->getRules($id));
-        }
     }
 }

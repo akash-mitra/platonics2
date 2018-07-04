@@ -1,7 +1,7 @@
 <template>
         <div v-if="show" @click="closeModal" class="absolute pin-t pin-l h-screen w-screen" style="background-color: rgba(0,0,0,0.5)">
                 <div class="container mx-auto h-full flex justify-center items-center">
-                        <div :class="widthClass" @click.stop class="bg-white">
+                        <div :class="widthClass" @click.stop class="bg-white shadow-lg border border-grey-darker">
 
                                 <div class="flex justify-between font-hairline p-6 border-b">
                                         <slot name="header"></slot>

@@ -9,3 +9,16 @@
 @import "tailwindcss/utilities";
 
 /* Add custom utilities here... */
+
+.main-content h3 {
+                margin-top: 2em;
+                margin-bottom: 0.5em;
+                color: #3D4852;
+                font-size: 1.5em;
+                
+        }
+
+.main-content p {
+        font-family: Constantia, Lucida Bright, Lucidabright, Lucida Serif, Lucida, DejaVu Serif, Bitstream Vera Serif, Liberation Serif, Georgia, serif;
+        line-height: 1.5em;
+}

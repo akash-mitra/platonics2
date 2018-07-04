@@ -1,5 +1,4 @@
 <template>
-    
         <div>
                 <h3 class="p-4 border-b">Comments</h3>
 
@@ -13,7 +12,6 @@
 
                         <p class="pt-4" v-text="comment.body"></p>
                         
-
                 </div>
 
                 <div class="w-full p-8">
@@ -50,7 +48,7 @@
                 .then(response => {
                     
                     this.comments = response.data.data;
-
+                    console.log(this.comments)
                     
                 })
         },

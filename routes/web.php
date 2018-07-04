@@ -59,7 +59,7 @@ Route::get('pages/{page}/{slug?}', 'FrontendController@page')->name('frontend.pa
 
 // Below URLs will return JSON as response
 Route::post('admin/pages', 'PageController@store')->name('pages.store');
-Route::put('admin/pages/{page}', 'PageController@update')->name('pages.update');
+Route::patch('admin/pages/{page}', 'PageController@update')->name('pages.update');
 Route::delete('admin/pages/{page}', 'PageController@destroy')->name('pages.destroy');
 Route::put('admin/pages/{page}/publish', 'PageController@publish')->name('pages.publish');
 
