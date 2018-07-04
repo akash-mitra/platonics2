@@ -24,7 +24,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('admin/comments', $comment)
+                ->post('comments', $comment)
                 ->assertStatus(201)
                 ->assertJsonFragment($comment);
     }
@@ -38,7 +38,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/comments/' . $this->comment1->id, $comment)
+                ->patch('comments/' . $this->comment1->id, $comment)
                 ->assertStatus(200)
                 ->assertJsonFragment($comment);
     }
@@ -52,7 +52,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('admin/comments', $comment)
+                ->post('comments', $comment)
                 ->assertStatus(201)
                 ->assertJsonFragment($comment);
     }
@@ -66,7 +66,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/comments/' . $this->comment2->id, $comment)
+                ->patch('comments/' . $this->comment2->id, $comment)
                 ->assertStatus(200)
                 ->assertJsonFragment($comment);;
     }
@@ -92,7 +92,7 @@ class CommentsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->post('admin/comments', $comment)
+                ->post('comments', $comment)
                 ->assertStatus(302);
                 //->assertJsonFragment(['message' => 'The given data was invalid.']);
     }
@@ -105,7 +105,7 @@ class CommentsTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('admin/comments/' . $this->comment1->id, $comment)
+                ->patch('comments/' . $this->comment1->id, $comment)
                 ->assertStatus(302);
     }
 

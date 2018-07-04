@@ -81,7 +81,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/categories/' . $this->category1->id, $category)
+                ->patch('admin/categories/' . $this->category1->id, $category)
                 ->assertStatus(200)
                 ->assertJsonFragment($category);
     }
@@ -178,7 +178,7 @@ class CategoriesTest extends TestDataSetup
                             'draft',
                             'created_at',
                             'updated_at',
-                            'users' => [
+                            'user' => [
                                 'name',
                                 'type',
                                 'slug',
@@ -226,7 +226,7 @@ class CategoriesTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('admin/categories/' . $this->category1->id, $category)
+                ->patch('admin/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
@@ -292,7 +292,7 @@ class CategoriesTest extends TestDataSetup
             'access_level' => 'F'
         ];
 
-        $this->put('admin/categories/' . $this->category1->id, $category)
+        $this->patch('admin/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
@@ -360,7 +360,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->regular1)
-                ->put('admin/categories/' . $this->category1->id, $category)
+                ->patch('admin/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
@@ -429,7 +429,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->author1)
-                ->put('admin/categories/' . $this->category1->id, $category)
+                ->patch('admin/categories/' . $this->category1->id, $category)
                 ->assertStatus(302);
     }
 
@@ -498,7 +498,7 @@ class CategoriesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->editor1)
-                ->put('admin/categories/' . $this->category1->id, $category)
+                ->patch('admin/categories/' . $this->category1->id, $category)
                 ->assertStatus(200);
     }
 

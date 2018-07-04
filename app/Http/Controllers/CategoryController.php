@@ -182,7 +182,7 @@ class CategoryController extends Controller
         $limit = isset($input['n']) ? $input['n'] : 5;
         $category = Category::where('id', $id)->first();
         if (isset($category)) {
-            $pages = Page::with('users', 'category', 'tags')
+            $pages = Page::with('category', 'tags')
                         ->where([['category_id', $category->id],['publish', 'Y']])
                         ->latest('updated_at')
                         ->take($limit)
@@ -194,7 +194,7 @@ class CategoryController extends Controller
             ]);
         }
         else {
-            $pages = Page::with('users', 'category', 'tags')
+            $pages = Page::with('category', 'tags')
                         ->where('publish', 'Y')
                         ->latest('updated_at')
                         ->take($limit)

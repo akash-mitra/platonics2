@@ -153,7 +153,7 @@ class DatabaseSeeder extends Seeder
         Configuration::setConfig($key1, $value1);
 
         $key2 = 'storage';
-        $value2 = '{"type": "local"}';
+        $value2 = ['type' => 'local'];
         Configuration::setConfig($key2, $value2);
 
         // Populate static Permissions table
@@ -296,6 +296,12 @@ class DatabaseSeeder extends Seeder
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'destroy']);
 
         // COMMENT
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'comments', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'comments', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'comments', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'comments', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'comments', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'comments', 'action' => 'update']);
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'home']);
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'store']);
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'update']);

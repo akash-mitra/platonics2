@@ -91,7 +91,7 @@ class TagsTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/tags/' . $this->tag1->id, $tag)
+                ->patch('admin/tags/' . $this->tag1->id, $tag)
                 ->assertStatus(200)
                 ->assertJsonFragment($tag);
     }
@@ -331,7 +331,7 @@ class TagsTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('admin/tags/' . $this->tag1->id, $tag)
+                ->patch('admin/tags/' . $this->tag1->id, $tag)
                 ->assertStatus(302);
     }
 
