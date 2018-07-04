@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use Tests\TestCaseBrowser;
 use Mockery;
 use Socialite;
-
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
@@ -26,96 +25,96 @@ class SocialLoginTest extends TestCaseBrowser
     /**
      * Positive Test Cases: 1
      */
-    
-    public function test_google_login()
-    {
-        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
 
-        $abstractUser
-            ->shouldReceive('getId')
-            ->andReturn(rand())
-            ->shouldReceive('getName')
-            ->andReturn(str_random(10))
-            ->shouldReceive('getEmail')
-            ->andReturn(str_random(10) . '@gmail.com')
-            ->shouldReceive('getAvatar')
-            ->andReturn('https://en.gravatar.com/userimage');
-        
-        $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
-        $provider->shouldReceive('user')->andReturn($abstractUser);
+    // public function test_google_login()
+    // {
+    //     $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
 
-        Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
+    //     $abstractUser
+    //         ->shouldReceive('getId')
+    //         ->andReturn(rand())
+    //         ->shouldReceive('getName')
+    //         ->andReturn(str_random(10))
+    //         ->shouldReceive('getEmail')
+    //         ->andReturn(str_random(10) . '@gmail.com')
+    //         ->shouldReceive('getAvatar')
+    //         ->andReturn('https://en.gravatar.com/userimage');
 
-        $this->visit('/login/google/callback')
-            ->seePageIs('/');
-    }
+    //     $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
+    //     $provider->shouldReceive('user')->andReturn($abstractUser);
 
-    public function test_facebook_login()
-    {
-        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
+    //     Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
 
-        $abstractUser
-            ->shouldReceive('getId')
-            ->andReturn(rand())
-            ->shouldReceive('getName')
-            ->andReturn(str_random(10))
-            ->shouldReceive('getEmail')
-            ->andReturn(str_random(10) . '@gmail.com')
-            ->shouldReceive('getAvatar')
-            ->andReturn('https://en.gravatar.com/userimage');
-        
-        $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
-        $provider->shouldReceive('user')->andReturn($abstractUser);
+    //     $this->visit('/login/google/callback')
+    //         ->seePageIs('/');
+    // }
 
-        Socialite::shouldReceive('driver')->with('facebook')->andReturn($provider);
+    // public function test_facebook_login()
+    // {
+    //     $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
 
-        $this->visit('/login/facebook/callback')
-            ->seePageIs('/');
-    }
+    //     $abstractUser
+    //         ->shouldReceive('getId')
+    //         ->andReturn(rand())
+    //         ->shouldReceive('getName')
+    //         ->andReturn(str_random(10))
+    //         ->shouldReceive('getEmail')
+    //         ->andReturn(str_random(10) . '@gmail.com')
+    //         ->shouldReceive('getAvatar')
+    //         ->andReturn('https://en.gravatar.com/userimage');
 
-    public function test_twitter_login()
-    {
-        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
+    //     $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
+    //     $provider->shouldReceive('user')->andReturn($abstractUser);
 
-        $abstractUser
-            ->shouldReceive('getId')
-            ->andReturn(rand())
-            ->shouldReceive('getName')
-            ->andReturn(str_random(10))
-            ->shouldReceive('getEmail')
-            ->andReturn(str_random(10) . '@gmail.com')
-            ->shouldReceive('getAvatar')
-            ->andReturn('https://en.gravatar.com/userimage');
-        
-        $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
-        $provider->shouldReceive('user')->andReturn($abstractUser);
+    //     Socialite::shouldReceive('driver')->with('facebook')->andReturn($provider);
 
-        Socialite::shouldReceive('driver')->with('twitter')->andReturn($provider);
+    //     $this->visit('/login/facebook/callback')
+    //         ->seePageIs('/');
+    // }
 
-        $this->visit('/login/twitter/callback')
-            ->seePageIs('/');
-    }
+    // public function test_twitter_login()
+    // {
+    //     $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
 
-    public function test_github_login()
-    {
-        $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
+    //     $abstractUser
+    //         ->shouldReceive('getId')
+    //         ->andReturn(rand())
+    //         ->shouldReceive('getName')
+    //         ->andReturn(str_random(10))
+    //         ->shouldReceive('getEmail')
+    //         ->andReturn(str_random(10) . '@gmail.com')
+    //         ->shouldReceive('getAvatar')
+    //         ->andReturn('https://en.gravatar.com/userimage');
 
-        $abstractUser
-            ->shouldReceive('getId')
-            ->andReturn(rand())
-            ->shouldReceive('getName')
-            ->andReturn(str_random(10))
-            ->shouldReceive('getEmail')
-            ->andReturn(str_random(10) . '@gmail.com')
-            ->shouldReceive('getAvatar')
-            ->andReturn('https://en.gravatar.com/userimage');
-        
-        $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
-        $provider->shouldReceive('user')->andReturn($abstractUser);
+    //     $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
+    //     $provider->shouldReceive('user')->andReturn($abstractUser);
 
-        Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
+    //     Socialite::shouldReceive('driver')->with('twitter')->andReturn($provider);
 
-        $this->visit('/login/github/callback')
-            ->seePageIs('/');
-    }
+    //     $this->visit('/login/twitter/callback')
+    //         ->seePageIs('/');
+    // }
+
+    // public function test_github_login()
+    // {
+    //     $abstractUser = Mockery::mock('Laravel\Socialite\Two\User');
+
+    //     $abstractUser
+    //         ->shouldReceive('getId')
+    //         ->andReturn(rand())
+    //         ->shouldReceive('getName')
+    //         ->andReturn(str_random(10))
+    //         ->shouldReceive('getEmail')
+    //         ->andReturn(str_random(10) . '@gmail.com')
+    //         ->shouldReceive('getAvatar')
+    //         ->andReturn('https://en.gravatar.com/userimage');
+
+    //     $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
+    //     $provider->shouldReceive('user')->andReturn($abstractUser);
+
+    //     Socialite::shouldReceive('driver')->with('github')->andReturn($provider);
+
+    //     $this->visit('/login/github/callback')
+    //         ->seePageIs('/');
+    // }
 }

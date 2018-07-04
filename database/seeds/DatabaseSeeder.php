@@ -9,7 +9,7 @@ use App\Content;
 use App\Media;
 use App\Permission;
 use App\GoogleAnalytics;
-
+use App\Configuration;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt($adminPassword),
             'type' => 'Admin',
             'slug' => uniqid(mt_rand(), true),
-            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
+            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
@@ -55,8 +55,6 @@ class DatabaseSeeder extends Seeder
         $userIds = factory(User::class, $noOfRegularUsers)->create([
             'type' => 'Regular'
         ])->pluck('id')->all();
-
-        
 
         // create 20 random tags
         $tags = factory(Tag::class, 20)->create([
@@ -81,6 +79,17 @@ class DatabaseSeeder extends Seeder
                     shuffle($tags);
                     $someTagsForCategory = array_slice($tags, 0, 5);
                     $category->tags()->attach($someTagsForCategory, ['user_id' => 1]);
+
+                    // randomly select 75% of these categories and put
+                    // random number of comments in them
+
+                    if (random_int(1, 4) != 1) {
+                        $comments = factory(Comment::class, random_int(0, 4))->make([
+                            'user_id' => $userIds[random_int(0, count($userIds) - 1)],
+                        ]);
+
+                        $category->comments()->saveMany($comments);
+                    }
 
                     $maxPagePerCategory = 8;
 
@@ -137,246 +146,238 @@ class DatabaseSeeder extends Seeder
             'user_id' => $authorIds[random_int(0, count($authorIds) - 1)]
         ]);
 
-        // Configurations Table
-        DB::table('configurations')->insert([
-            'key' => 'templates',
-            'value' => serialize(json_encode('{"home": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "pages": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "category": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "profile": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "forum": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} }, "forumhome": {body: {class: "}, header: {display: false, class: "}, subheader: {display: false, class: "}, left: {display: false, class: "}, center: {display: false, class: "}, right: {display: false, class: "}, bottom: {display: false, class: "}, footer: {display: false, class: "} } }')),
-            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
-            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        // Seed Default Configurations
+        $key1 = 'templates';
+        $value1 = ['home' => ['body' => ['class' => ''], 'header' => ['display' => true, 'class' => 'flex w-full bg-white border-b'], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => true, 'class' => 'w-full sm:w-3/4'], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => true, 'class' => 'w-full bg-white']], 'pages' => ['body' => ['class' => ''], 'header' => ['display' => true, 'class' => 'flex w-full bg-white border-b'], 'subheader' => ['display' => true, 'class' => 'w-full'], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => true, 'class' => 'w-full sm:w-3/4'], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => true, 'class' => 'w-full']], 'category' => ['body' => ['class' => ''], 'header' => ['display' => true, 'class' => 'flex w-full bg-purple'], 'subheader' => ['display' => true, 'class' => 'w-full'], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => true, 'class' => 'w-full sm:w-3/4'], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => true, 'class' => 'w-full bg-white']], 'profile' => ['body' => ['class' => ''], 'header' => ['display' => false, 'class' => ''], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => false, 'class' => ''], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => false, 'class' => '']], 'forum' => ['body' => ['class' => ''], 'header' => ['display' => false, 'class' => ''], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => false, 'class' => ''], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => false, 'class' => '']], 'forumhome' => ['body' => ['class' => ''], 'header' => ['display' => false, 'class' => ''], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => false, 'class' => ''], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => false, 'class' => '']]];
 
-        DB::table('configurations')->insert([
-            'key' => 'storage',
-            'value' => serialize(json_encode('{"type":"local"}')),
-            'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'), 
-            'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        Configuration::setConfig($key1, $value1);
 
+        $key2 = 'storage';
+        $value2 = '{"type": "local"}';
+        Configuration::setConfig($key2, $value2);
 
         // Populate static Permissions table
-            
+
         // CATEGORY
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'categories', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'categories', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'categories', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'categories', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'categories', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'categories', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'categories', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'categories', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'categories', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'categories', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'categories', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'categories', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'categories', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'categories', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'categories', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'home' ] ); 
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'categories', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'home' ] ); 
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'categories', 'action' => 'destroy' ] );
-        
-        
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'categories', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'categories', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'categories', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'categories', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'categories', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'categories', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'categories', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'categories', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'categories', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'categories', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'categories', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'categories', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'categories', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'categories', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'categories', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'categories', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'categories', 'action' => 'destroy']);
+
         // PAGE
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'pages', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'pages', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'pages', 'action' => 'publish' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'pages', 'action' => 'publish' ] );     
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'tags' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'comments' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'publish' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'pages', 'action' => 'destroy' ] );
-        
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'pages', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'pages', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'pages', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'pages', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'pages', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'pages', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'pages', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'pages', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'pages', 'action' => 'publish']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'pages', 'action' => 'publish']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'tags']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'comments']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'publish']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'pages', 'action' => 'destroy']);
 
         // TAG
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'categories' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'all' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'attach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'detach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'tags', 'action' => 'fullattach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'categories' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'all' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'attach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'detach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'tags', 'action' => 'fullattach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'categories' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'all' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'attach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'detach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'fullattach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'tags', 'action' => 'update' ] );   
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'categories' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'all' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'attach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'detach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'fullattach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'tags', 'action' => 'update' ] ); 
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'categories' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'all' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'attach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'detach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'fullattach' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'update' ] ); 
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'tags', 'action' => 'destroy' ] );
-
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'categories']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'all']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'attach']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'detach']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'tags', 'action' => 'fullattach']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'categories']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'all']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'attach']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'detach']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'tags', 'action' => 'fullattach']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'categories']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'all']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'attach']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'detach']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'fullattach']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'tags', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'categories']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'all']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'attach']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'detach']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'fullattach']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'tags', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'categories']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'all']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'attach']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'detach']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'fullattach']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'destroy']);
 
         // COMMENT
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'comments', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'comments', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'comments', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'comments', 'action' => 'destroy' ] );
-        
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'destroy']);
 
         // MEDIA
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'media', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'media', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'media', 'action' => 'absolute' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'media', 'action' => 'relative' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'media', 'action' => 'optimize' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'media', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'media', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'media', 'action' => 'absolute' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'media', 'action' => 'relative' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'media', 'action' => 'optimize' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'absolute' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'relative' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'optimize' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'media', 'action' => 'update' ] ); 
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'absolute' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'relative' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'optimize' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'media', 'action' => 'update' ] );   
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'absolute' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'relative' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'optimize' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'media', 'action' => 'destroy' ] );
-
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'media', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'media', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'media', 'action' => 'absolute']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'media', 'action' => 'relative']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'media', 'action' => 'optimize']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'media', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'media', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'media', 'action' => 'absolute']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'media', 'action' => 'relative']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'media', 'action' => 'optimize']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'absolute']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'relative']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'optimize']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'media', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'absolute']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'relative']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'optimize']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'media', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'absolute']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'relative']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'optimize']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'media', 'action' => 'destroy']);
 
         // CONFIGURATION
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'configurations', 'action' => 'destroy' ] );
-   
-        
-        // USER
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'users', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'users', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Visitor', 'resource' => 'users', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'users', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'users', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Regular', 'resource' => 'users', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'users', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'users', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Author', 'resource' => 'users', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'users', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'users', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Editor', 'resource' => 'users', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'show' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'index' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'pages' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'home' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'create' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'edit' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'store' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'update' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'type' ] );
-        factory(Permission::class)->create( [ 'type' => 'Admin', 'resource' => 'users', 'action' => 'destroy' ] );
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'configurations', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'configurations', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'configurations', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'configurations', 'action' => 'destroy']);
 
+        // USER
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'users', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'users', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'users', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Visitor', 'resource' => 'users', 'action' => 'draft']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'users', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'users', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'users', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'users', 'action' => 'draft']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'users', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'users', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'users', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'users', 'action' => 'draft']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'users', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'users', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'users', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'users', 'action' => 'draft']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'show']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'index']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'pages']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'draft']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'home']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'create']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'edit']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'type']);
+        factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'users', 'action' => 'destroy']);
     }
 
     // end of run

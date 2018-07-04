@@ -21,6 +21,26 @@ class Media extends Model
         'type', 'size', 'optimized',
     ];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['user_id'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['user'];
+
+    public function getUserAttribute()
+    {
+        return User::where('id', $this->user_id)->first();
+    }
+
+
     // Static Global Variables
     protected static $allowedExtensions = ['jpeg', 'jpg', 'png', 'bmp', 'gif'];
     protected static $maxSize = 10; //megabytes
@@ -36,14 +56,14 @@ class Media extends Model
     private static function setStorageType()
     {
         $storage = Configuration::getConfig('storage');
-        $value = json_decode($storage, true);
+        $value = json_decode($storage['storage']);
 
-        if ($value['type'] == 's31') { 
+        if ($value->type == 's3') { 
             self::$storageType = 's3';
-            \Config::set('filesystems.disks.s3.key', $value['key']);
-            \Config::set('filesystems.disks.s3.secret', $value['secret']);
-            \Config::set('filesystems.disks.s3.region', $value['region']);
-            \Config::set('filesystems.disks.s3.bucket', $value['bucket']);
+            \Config::set('filesystems.disks.s3.key', $value->key);
+            \Config::set('filesystems.disks.s3.secret', $value->secret);
+            \Config::set('filesystems.disks.s3.region', $value->region);
+            \Config::set('filesystems.disks.s3.bucket', $value->bucket);
         }
         return true;
     }

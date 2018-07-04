@@ -8,25 +8,23 @@ use Tests\TestDataSetup;
 class PagesTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 13
+     * Total Test Cases: 14
      */
 
     /**
-     * Positive Test Cases: 9
+     * Positive Test Cases: 10
      */
-    
     public function test_index_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
                 ->get('api/pages')
                 ->assertStatus(200)
-                ->assertJsonStructure([ 
+                ->assertJsonStructure([
                     'length',
                     'data' => [
                         '*' => [
                             'id',
                             'category_id',
-                            'user_id',
                             'title',
                             'summary',
                             'metakey',
@@ -38,6 +36,11 @@ class PagesTest extends TestDataSetup
                             'created_at',
                             'updated_at',
                             'slug',
+                            'metrics' => [
+                                'page_id',
+                                'page_views',
+                                'adsense_revenue',
+                            ],
                             'users' => [
                                 'name',
                                 'type',
@@ -58,11 +61,18 @@ class PagesTest extends TestDataSetup
                             'tags' => [
                                 '*' => [
                                     'id',
-                                    'user_id',
                                     'name',
                                     'description',
                                     'created_at',
                                     'updated_at',
+                                    'user' => [
+                                        'name',
+                                        'type',
+                                        'slug',
+                                        'avatar',
+                                        'created_at',
+                                        'updated_at'
+                                    ],
                                     'pivot' => [
                                         'taggable_id',
                                         'tag_id',
@@ -89,7 +99,6 @@ class PagesTest extends TestDataSetup
                 ->assertJsonStructure([
                     'id',
                     'category_id',
-                    'user_id',
                     'title',
                     'summary',
                     'metakey',
@@ -103,7 +112,7 @@ class PagesTest extends TestDataSetup
                     'slug',
                     'metrics' => [
                         'page_id',
-                        'page_views', 
+                        'page_views',
                         'adsense_revenue'
                     ]
                 ]);
@@ -115,7 +124,8 @@ class PagesTest extends TestDataSetup
             'category_id' => $this->category1->id,
             'title' => 'test page',
             'access_level' => 'F',
-            'body' => 'test page contents body'
+            'body' => 'test page contents body',
+            'metadesc' => 'balbalabal'
         ];
 
         $this->actingAs($this->admin1)
@@ -134,7 +144,8 @@ class PagesTest extends TestDataSetup
             'category_id' => $this->category1->id,
             'title' => 'test page content',
             'access_level' => 'F',
-            'body' => 'test page contents persist body'
+            'body' => 'test page contents persist body',
+            'metadesc' => 'faltu'
         ];
 
         $response = $this->actingAs($this->admin1)
@@ -150,11 +161,12 @@ class PagesTest extends TestDataSetup
             'category_id' => $this->category1->id,
             'title' => 'test page update',
             'access_level' => 'F',
-            'body' => 'test page contents body update'
+            'body' => 'test page contents body update',
+            'metadesc' => 'balbalabal'
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/pages/' . $this->page1->id, $page)
+                ->patch('admin/pages/' . $this->page1->id, $page)
                 ->assertStatus(200)
                 ->assertJsonFragment([
                     'category_id' => $this->category1->id,
@@ -191,6 +203,38 @@ class PagesTest extends TestDataSetup
                 ]);
     }
 
+    public function test_tags_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/tags/pages/2')
+                ->assertStatus(200)
+                ->assertJsonStructure([
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'description',
+                            'created_at',
+                            'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at'
+                            ],
+                            'pivot' => [
+                                'taggable_id',
+                                'tag_id',
+                                'taggable_type'
+                            ]
+                        ]
+                    ]
+                ]);
+    }
+
     public function test_comments_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
@@ -202,24 +246,29 @@ class PagesTest extends TestDataSetup
                         '*' => [
                             'id',
                             'parent_id',
-                            'user_id',
                             'commentable_id',
                             'commentable_type',
                             'body',
                             'vote',
                             'offensive_index',
-                            'created_at', 
-                            'updated_at'
+                            'created_at',
+                            'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at'
+                            ]
                         ]
                     ]
                 ]);
     }
-    
 
     /**
      * Negative Test Cases: 4
      */
-    
     public function test_show_error_invalid_id()
     {
         $this->actingAs($this->admin1)
@@ -239,7 +288,7 @@ class PagesTest extends TestDataSetup
         $this->actingAs($this->admin1)
                 ->post('admin/pages', $page)
                 ->assertStatus(302);
-                //->assertJsonFragment(["message"=> "The given data was invalid."]);
+        //->assertJsonFragment(["message"=> "The given data was invalid."]);
     }
 
     public function test_update_error_invalid_data()
@@ -252,7 +301,7 @@ class PagesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/pages/' . $this->page1->id, $page)
+                ->patch('admin/pages/' . $this->page1->id, $page)
                 ->assertStatus(302);
     }
 

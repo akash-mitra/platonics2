@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
 use App\Tag;
+use App\Category;
+use App\Page;
+use Auth;
 
 class TagController extends Controller
 {
@@ -143,14 +145,13 @@ class TagController extends Controller
     public function attach(Request $request)
     {
         $user_id = Auth::id();
-
         $input = $request->input();
         $tags = $input['tags'];
-        foreach ($tags as $id) {
-            $tag = Tag::FindOrFail($id);
-            $tag->taggables($input['taggable_type'])->attach([$input['taggable_id'] => ['user_id' => $user_id]]);
-        }
-        return response()->json($tag, 201);
+
+        $model = $this->getTaggableModel($input['taggable_type'], $input['taggable_id']);
+        $model->tags()->attach($tags, ['user_id' => $user_id]);
+
+        return response()->json(['status' => 'success']);
     }
 
     /**
@@ -162,10 +163,30 @@ class TagController extends Controller
     public function detach(Request $request)
     {
         $input = $request->input();
-        $tag = Tag::FindOrFail($input['tag_id']);
-        $tag->taggables($input['taggable_type'])->detach($input['taggable_id']);
+        $tag_id = $input['tag_id'];
+
+        $model = $this->getTaggableModel($input['taggable_type'], $input['taggable_id']);
+        $model->tags()->detach($tag_id);
         
-        return response()->json($tag, 200);
+        return response()->json(['status' => 'success']);
+    }
+
+    /**
+     * Attach a taggable object to a tag.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function fullattach(Request $request)
+    {
+        $user_id = Auth::id();
+        $input = $request->input();
+        $tags = $input['tags'];
+
+        $model = $this->getTaggableModel($input['taggable_type'], $input['taggable_id']);
+        $model->tags()->sync(array_fill_keys($tags, ['user_id' => $user_id]));
+
+        return response()->json(['status' => 'success']);
     }
 
     /**
@@ -176,9 +197,8 @@ class TagController extends Controller
      */
     public function categories($name)
     {
-        $tag = Tag::with('categories')->where('name', $name)->firstOrFail();
-        $relations = $tag->getRelations();
-        $categories = $relations['categories'];
+        $tag = Tag::where('name', $name)->firstOrFail();
+        $categories = $tag->categories()->get();
 
         return response()->json([
             'length' => count($categories),
@@ -194,9 +214,8 @@ class TagController extends Controller
      */
     public function pages($name)
     {
-        $tag = Tag::with('pages')->where('name', $name)->firstOrFail();
-        $relations = $tag->getRelations();
-        $pages = $relations['pages'];
+        $tag = Tag::where('name', $name)->firstOrFail();
+        $pages = $tag->pages()->get();
 
         return response()->json([
             'length' => count($pages),
@@ -230,5 +249,23 @@ class TagController extends Controller
                 ]
             ]
         ]);
+    }
+
+    /**
+     * Return the taggables model.
+     *
+     * @param  string  $taggable_type
+     * @param  int     $taggable_id
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    private function getTaggableModel($taggable_type, $taggable_id)
+    {
+        $model = null;
+        if ($taggable_type == 'App\Category')
+            $model = Category::FindOrFail($taggable_id);
+        else
+            $model = Page::FindOrFail($taggable_id);
+        
+        return $model;
     }
 }

@@ -8,11 +8,11 @@ use Tests\TestDataSetup;
 class UsersTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 8
+     * Total Test Cases: 11
      */
 
     /**
-     * Positive Test Cases: 5
+     * Positive Test Cases: 8
      */
     
     public function test_index_returns_expected_structure()
@@ -60,6 +60,36 @@ class UsersTest extends TestDataSetup
                 ]);
     }
 
+    public function test_store_can_persist_data()
+    {
+        $user = [
+            'name' => 'newuser',
+            'email' => 'newuser@gmail.com',
+            'password' => 'helloworld',
+            'type' => 'Regular'
+        ];
+
+        $this->actingAs($this->admin1)
+                ->post('admin/users', $user)
+                ->assertStatus(201)
+                ->assertJsonFragment(['name' => 'newuser']);
+    }
+
+    public function test_update_can_persist_data()
+    {
+        $user = [
+            'name' => 'UpdatedName',
+            'email' => 'xyz@gmail.com',
+            'password' => 'helloworld',
+            'type' => 'Author'
+        ];
+
+        $this->actingAs($this->admin1)
+                ->put('admin/users/' . $this->regular1->id, $user)
+                ->assertStatus(200)
+                ->assertJsonFragment(['name' => 'UpdatedName']);
+    }
+
     public function test_type_can_persist_user_data()
     {
         $user = [
@@ -78,6 +108,57 @@ class UsersTest extends TestDataSetup
                 ->delete('admin/users/5')
                 ->assertStatus(200)
                 ->assertJsonFragment([$this->editor1->name]);
+    }
+
+    public function test_pages_returns_expected_structure()
+    {
+        $this->actingAs($this->admin1)
+                ->get('api/users/' . $this->author1->slug . '/pages')
+                ->assertStatus(200)
+                ->assertJsonStructure([ 
+                    'length',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'category_id',
+                            'user_id',
+                            'title',
+                            'summary',
+                            'metakey',
+                            'metadesc',
+                            'media_url',
+                            'access_level',
+                            'publish',
+                            'draft',
+                            'created_at',
+                            'updated_at',
+                            'category' => [
+                                'id',
+                                'parent_id',
+                                'name',
+                                'description',
+                                'access_level',
+                                'created_at',
+                                'updated_at'
+                            ],
+                            'tags' => [
+                                '*' => [
+                                    'id',
+                                    'user_id',
+                                    'name',
+                                    'description',
+                                    'created_at',
+                                    'updated_at',
+                                    'pivot' => [
+                                        'taggable_id',
+                                        'tag_id',
+                                        'taggable_type'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
     }
 
     

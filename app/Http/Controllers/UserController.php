@@ -26,7 +26,7 @@ class UserController extends Controller
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:6', //|confirmed
             'type' => 'required|in:Admin,Editor,Author,Regular',
         ];
     }
@@ -36,7 +36,7 @@ class UserController extends Controller
      * This route is accessible via web, whereas all the
      * other routes are only accessible via API.
      */
-    public function home()
+    public function adminHome()
     {
         return view('admin.users.home');
     }
@@ -156,7 +156,7 @@ class UserController extends Controller
     }
 
     /**
-     * Display a listing of recent pages under a category.
+     * Display a listing of recent pages under a user.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string                    $slug
@@ -169,8 +169,37 @@ class UserController extends Controller
         $user = User::where('slug', $slug)->first();
         if (isset($user)) {
             $pages = Page::with('category', 'tags')
-                        ->where('user_id', $user->id)
-                        ->orderBy('updated_at', 'desc')
+                        ->where([['user_id', $user->id],['publish', 'Y']])
+                        ->latest('updated_at')
+                        ->take($limit)
+                        ->get();
+            
+            return response()->json([
+                'length' => count($pages),
+                'data' => $pages
+            ]);
+        }
+        else {
+            return response()->json([]);
+        }
+    }
+
+    /**
+     * Display a listing of draft pages under a user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function draft(Request $request, $slug)
+    {
+        $input = $request->input();
+        $limit = isset($input['n']) ? $input['n'] : 5;
+        $user = User::where('slug', $slug)->first();
+        if (isset($user)) {
+            $pages = Page::with('category', 'tags')
+                        ->where([['user_id', $user->id], ['draft', 'Y']])
+                        ->latest('updated_at')
                         ->take($limit)
                         ->get();
             

@@ -17,27 +17,26 @@ class Configuration
 
         if ($existingValue) {
             self::delConfig($keys[0]);
-        }
-        else {
+        } else {
             $existingValue = [];
         }
-        
+
         $val = self::getSubConfig($key, $value, $existingValue);
 
         DB::table('configurations')
                     ->insert([
-                        'key' => $keys[0], 
+                        'key' => $keys[0],
                         'value' => serialize(json_encode($val)),
                         'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                         'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s')
                     ]);
         Cache::forever($keys[0], $val);
-        return ['status' => "success"];        
+
+        return ['status' => 'success'];
     }
 
     public static function getSubConfig($key, $value, $existingValue)
     {
-        
         $keys = explode('.', $key);
         $key = $keys[0];
         array_shift($keys);
@@ -45,16 +44,15 @@ class Configuration
 
         if ($subKey === '') {  // this means key is z, so no more subkey
             // if (array_key_exists($key, $existingValue))
-                $existingValue[$key] = $value;
-            // else 
+            $existingValue[$key] = $value;
+        // else
             //     array_push($existingValue, [$key => $value]);
-
-        }
-        else { // this means key is y, z is subkey 
-            if (array_key_exists($key, $existingValue))
+        } else { // this means key is y, z is subkey
+            if (array_key_exists($key, $existingValue)) {
                 $subValue = $existingValue[$key];
-            else 
+            } else {
                 $subValue = [$key => $value];
+            }
 
             $existingValue[$key] = self::getSubConfig($subKey, $value, $subValue);
         }
@@ -62,19 +60,24 @@ class Configuration
         return $existingValue;
     }
 
-
     /**
      * Gets the configurations values against the given config key.
      */
     public static function getConfig($key)
     {
-        if (self::keyExists($key)) {
-            return Cache::rememberForever($key, function() use($key){
-                $configuration = DB::table('configurations')->where('key', $key)->first();
-                $unserializedValue = json_decode(unserialize($configuration->value), true);
-                return $unserializedValue;
-            });
-        }
+        // if (self::keyExists($key)) {
+        return Cache::rememberForever($key, function () use ($key) {
+            $configuration = DB::table('configurations')->where('key', $key)->first();
+
+            if (empty($configuration)) {
+                abort(404);
+            }
+
+            $unserializedValue = json_decode(unserialize($configuration->value), true);
+
+            return $unserializedValue;
+        });
+        // }
 
         return 'Not Found';
     }
@@ -88,6 +91,7 @@ class Configuration
         foreach ($configurations as $configuration) {
             $configuration->value = json_decode(unserialize($configuration->value), true);
         }
+
         return $configurations;
     }
 
@@ -98,6 +102,7 @@ class Configuration
     {
         if (Cache::get($key)) {
             Cache::forget($key);
+
             return DB::table('configurations')->where('key', $key)->delete();
         }
 
@@ -107,8 +112,8 @@ class Configuration
     /**
      * Checks if the given config key exists.
      */
-    public static function keyExists($key)
-    {
-        return DB::table('configurations')->where('key', $key)->exists();
-    }
+    // public static function keyExists($key)
+    // {
+    //     return DB::table('configurations')->where('key', $key)->exists();
+    // }
 }

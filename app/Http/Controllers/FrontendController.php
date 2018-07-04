@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\Tag;
 use App\User;
 use App\Page;
 use App\Category;
@@ -98,31 +99,34 @@ class FrontendController extends Controller
     /**
      * Display the specified user.
      *
-     * @param  int                       $id
+     * @param  string                    $slug
      * @return \Illuminate\Http\Response
      */
-    public function user($id)
+    public function user($slug)
     {
-        // find out what template needs to be applied
-        // for this page and get the respective style
-        //$template = 'page';
-        //$slots = $this->getTemplateSlots($template);
+        $user = User::with('pages')->where('slug', $slug)->firstOrFail();
 
-        // find out what are the various modules that
-        // need to be published with the main contents
-        //$modules = $this->getModulePositions($template);
-
-        $user = User::with('pages')->where('slug', $id)->first();
-
-        return response()->json($user, 201);
-
-        /*return view('users')
+        return view('users')
                 ->withUser($user)
-                ->withStyles($slots)
-                ->withModules($modules)
-                ->withMenus($this->menus)
-                ->withParameters(['object_id' => $page->id]);
-        */
+                ->withParameters(['object_id' => $user->id]);
+    }
+
+    /**
+     * Display the taggables under a tag name.
+     *
+     * @param  string                    $name
+     * @return \Illuminate\Http\Response
+     */
+    public function tag($name)
+    {
+        $tag = Tag::where('name', $name)->firstOrFail();
+        $categories = $tag->categories()->get();
+        $pages = $tag->pages()->get();
+
+        return view('tags')
+                ->withCategories($categories)
+                ->withPages($pages)
+                ->withParameters(['object_id' => $tag->id]);
     }
 
     /**

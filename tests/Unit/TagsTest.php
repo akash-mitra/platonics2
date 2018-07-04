@@ -8,11 +8,11 @@ use Tests\TestDataSetup;
 class TagsTest extends TestDataSetup
 {
     /**
-     * Total Test Cases: 15
+     * Total Test Cases: 19
      */
 
     /**
-     * Positive Test Cases: 13
+     * Positive Test Cases: 15
      */
     
     public function test_index_returns_expected_structure()
@@ -25,11 +25,18 @@ class TagsTest extends TestDataSetup
                     'data' => [
                         '*' => [
                             'id',
-                            'user_id',
                             'name',
                             'description',
                             'created_at',
-                            'updated_at'
+                            'updated_at',
+                            'user' => [
+                                'name',
+                                'type',
+                                'slug',
+                                'avatar',
+                                'created_at',
+                                'updated_at',
+                            ]
                         ]
                     ]
                 ]);
@@ -48,11 +55,18 @@ class TagsTest extends TestDataSetup
                 ->assertStatus(200)
                 ->assertJsonStructure([
                     'id',
-                    'user_id',
                     'name',
                     'description',
                     'created_at',
-                    'updated_at'
+                    'updated_at',
+                    'user' => [
+                        'name',
+                        'type',
+                        'slug',
+                        'avatar',
+                        'created_at',
+                        'updated_at',
+                    ]
                 ]);
     }
 
@@ -100,8 +114,8 @@ class TagsTest extends TestDataSetup
 
         $this->actingAs($this->admin1)
                 ->post('api/tags/attach', $tag)
-                ->assertStatus(201)
-                ->assertJsonFragment(['id' => $this->tag3->id]);
+                ->assertStatus(200)
+                ->assertJsonFragment(['status' => 'success']);
     }
 
     public function test_detach_can_remove_tags_from_category()
@@ -115,7 +129,7 @@ class TagsTest extends TestDataSetup
         $this->actingAs($this->admin1)
                 ->post('api/tags/detach', $tag)
                 ->assertStatus(200)
-                ->assertJsonFragment(['id' => $this->tag2->id]);
+                ->assertJsonFragment(['status' => 'success']);
     }
 
     public function test_attach_can_add_tags_to_page()
@@ -128,8 +142,8 @@ class TagsTest extends TestDataSetup
 
         $this->actingAs($this->admin1)
                 ->post('api/tags/attach', $tag)
-                ->assertStatus(201)
-                ->assertJsonFragment(['id' => $this->tag3->id]);
+                ->assertStatus(200)
+                ->assertJsonFragment(['status' => 'success']);
     }
 
     public function test_detach_can_remove_tags_from_page()
@@ -143,7 +157,35 @@ class TagsTest extends TestDataSetup
         $this->actingAs($this->admin1)
                 ->post('api/tags/detach', $tag)
                 ->assertStatus(200)
-                ->assertJsonFragment(['id' => $this->tag2->id]);
+                ->assertJsonFragment(['status' => 'success']);
+    }
+
+    public function test_fullattach_can_add_tags_to_category()
+    {
+        $tag = [
+            'tags' => [ $this->tag2->id, $this->tag3->id ],
+            'taggable_id' => $this->category3->id,
+            'taggable_type' => 'App\Category'
+        ];
+
+        $this->actingAs($this->admin1)
+                ->post('api/tags/fullattach', $tag)
+                ->assertStatus(200)
+                ->assertJsonFragment(['status' => 'success']);
+    }
+
+    public function test_fullattach_can_add_tags_to_page()
+    {
+        $tag = [
+            'tags' => [ $this->tag2->id, $this->tag3->id ],
+            'taggable_id' => $this->page3->id,
+            'taggable_type' => 'App\Page'
+        ];
+
+        $this->actingAs($this->admin1)
+                ->post('api/tags/fullattach', $tag)
+                ->assertStatus(200)
+                ->assertJsonFragment(['status' => 'success']);
     }
 
     public function test_categories_returns_expected_structure()
@@ -203,7 +245,7 @@ class TagsTest extends TestDataSetup
                 ]);
     }
 
-    public function test_taggables_returns_expected_structure()
+    public function test_all_taggables_returns_expected_structure()
     {
         $this->actingAs($this->admin1)
                 ->get('api/tags/' . $this->tag1->name . '/all')

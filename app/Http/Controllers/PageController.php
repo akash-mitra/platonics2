@@ -95,7 +95,7 @@ class PageController extends Controller
 
         return response()->json([
             'length' => count($pages),
-            'data' => $pages
+            'data' => $pages->each->append(['slug', 'metrics'])
         ]);
     }
 
@@ -134,7 +134,7 @@ class PageController extends Controller
         $page = Page::FindOrFail($id);
 
         if (Auth::check()) {
-            $page->load('contents');
+            $page->append(['slug', 'metrics'])->load('contents');
         }
 
         return response()->json($page);
