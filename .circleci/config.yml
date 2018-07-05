@@ -25,7 +25,7 @@ jobs:
       #    name: Download NodeJS v9
       #    command: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
 
-      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev 
+      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev jpegoptim optipng pngquant gifsicle
       - run: sudo docker-php-ext-install zip
       - run:
          name: Setup Laravel testing environment variables for CircleCI test
@@ -63,6 +63,7 @@ jobs:
             - ~/.yarn
 
       # prepare the database
+      - run: php artisan key:generate
       - run: touch database/testing.sqlite
       - run: php artisan migrate --env=testing --database=testing --force
 
