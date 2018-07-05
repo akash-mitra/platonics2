@@ -65,7 +65,6 @@ class Configuration
      */
     public static function getConfig($key)
     {
-        // if (self::keyExists($key)) {
         return Cache::rememberForever($key, function () use ($key) {
             $configuration = DB::table('configurations')->where('key', $key)->first();
 
@@ -77,7 +76,6 @@ class Configuration
 
             return $unserializedValue;
         });
-        // }
 
         return 'Not Found';
     }
@@ -108,12 +106,4 @@ class Configuration
 
         return 0;
     }
-
-    /**
-     * Checks if the given config key exists.
-     */
-    // public static function keyExists($key)
-    // {
-    //     return DB::table('configurations')->where('key', $key)->exists();
-    // }
 }

@@ -41,7 +41,7 @@ class PagesTest extends TestDataSetup
                                 'page_views',
                                 'adsense_revenue',
                             ],
-                            'users' => [
+                            'user' => [
                                 'name',
                                 'type',
                                 'slug',
@@ -193,7 +193,7 @@ class PagesTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/pages/' . $this->page1->id . '/publish', $page)
+                ->patch('admin/pages/' . $this->page1->id . '/publish', $page)
                 ->assertStatus(200)
                 ->assertJsonFragment([
                     'category_id' => $this->category1->id,

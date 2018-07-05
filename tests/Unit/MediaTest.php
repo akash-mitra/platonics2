@@ -103,7 +103,7 @@ class MediaTest extends TestDataSetup
         ];
 
         $this->actingAs($this->admin1)
-                ->put('admin/media/' . $this->media1->id, $media)
+                ->patch('admin/media/' . $this->media1->id, $media)
                 ->assertStatus(200)
                 ->assertJsonFragment($media);
     }
@@ -182,7 +182,7 @@ class MediaTest extends TestDataSetup
         ];
         
         $this->actingAs($this->admin1)
-                ->put('admin/media/' . $this->media1->id, $media)
+                ->patch('admin/media/' . $this->media1->id, $media)
                 ->assertStatus(302);
     }
 

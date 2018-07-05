@@ -46,7 +46,7 @@ class ConfigurationTest extends TestDataSetup
                 ->get('admin/configs/' . 'hello')
                 ->assertStatus(200)
                 ->assertJsonFragment([
-                    '{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}'
+                    ['bgcolor' => 'white', 'layout' => '3-columns', 'modules' => ['left' => ['adsense'], 'right' => ['popular', 'related']]]
                 ]);
     }
 

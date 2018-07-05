@@ -131,23 +131,24 @@ class TestDataSetup extends TestCase
     private function generate_configurations()
     {
         $key1 = 'storage';
-        $value1 = '{"type": "local"}';
+        $value1 = ['type' => 'local'];
         Configuration::setConfig($key1, $value1);
+        //Cache::forever($key1, $value1);
 
         $key2 = 'hello';
-        $value2 = '{"bgcolor": "white","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}';
+        $value2 = ['bgcolor' => 'white', 'layout' => '3-columns', 'modules' => ['left' => ['adsense'], 'right' => ['popular', 'related']]];
         Configuration::setConfig($key2, $value2);
-        //Cache::forever($key, $value);
+        //Cache::forever($key2, $value2);
 
         $key3 = 'world';
-        $value3 = '{"bgcolor": "black","layout": "3-columns","modules": {"left": ["adsense"],"right": ["popular", "related"]}}';
+        $value3 = ['bgcolor' => 'black', 'layout' => '3-columns', 'modules' => ['left' => ['adsense'], 'right' => ['popular', 'related']]];
         Configuration::setConfig($key3, $value3);
-        //Cache::forever($key, $value);
+        //Cache::forever($key3, $value3);
 
         $key4 = 'templates';
         $value4 = ['home' => ['body' => ['class' => ''], 'header' => ['display' => true, 'class' => 'flex w-full bg-white border-b'], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => true, 'class' => 'w-full sm:w-3/4'], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => true, 'class' => 'w-full bg-white']], 'pages' => ['body' => ['class' => ''], 'header' => ['display' => true, 'class' => 'flex w-full bg-white border-b'], 'subheader' => ['display' => true, 'class' => 'w-full'], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => true, 'class' => 'w-full sm:w-3/4'], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => true, 'class' => 'w-full']], 'category' => ['body' => ['class' => ''], 'header' => ['display' => true, 'class' => 'flex w-full bg-purple'], 'subheader' => ['display' => true, 'class' => 'w-full'], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => true, 'class' => 'w-full sm:w-3/4'], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => true, 'class' => 'w-full bg-white']], 'profile' => ['body' => ['class' => ''], 'header' => ['display' => false, 'class' => ''], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => false, 'class' => ''], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => false, 'class' => '']], 'forum' => ['body' => ['class' => ''], 'header' => ['display' => false, 'class' => ''], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => false, 'class' => ''], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => false, 'class' => '']], 'forumhome' => ['body' => ['class' => ''], 'header' => ['display' => false, 'class' => ''], 'subheader' => ['display' => false, 'class' => ''], 'left' => ['display' => false, 'class' => ''], 'center' => ['display' => false, 'class' => ''], 'right' => ['display' => false, 'class' => ''], 'bottom' => ['display' => false, 'class' => ''], 'footer' => ['display' => false, 'class' => '']]];
-
         Configuration::setConfig($key4, $value4);
+        //Cache::forever($key4, $value4);
     }
 
     private function generate_permissions()
@@ -292,6 +293,12 @@ class TestDataSetup extends TestCase
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'tags', 'action' => 'destroy']);
 
         // COMMENT
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'comments', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Regular', 'resource' => 'comments', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'comments', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Author', 'resource' => 'comments', 'action' => 'update']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'comments', 'action' => 'store']);
+        factory(Permission::class)->create(['type' => 'Editor', 'resource' => 'comments', 'action' => 'update']);
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'home']);
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'store']);
         factory(Permission::class)->create(['type' => 'Admin', 'resource' => 'comments', 'action' => 'update']);

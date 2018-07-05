@@ -86,7 +86,7 @@ class FrontendController extends Controller
         // need to be published with the main contents
         $modules = $this->getModulePositions($template);
 
-        $page = Page::where('publish', 'Y')->with('category', 'contents', 'users')->FindOrFail($id);
+        $page = Page::where('publish', 'Y')->with('category', 'contents')->FindOrFail($id);
 
         return view('pages')
                 ->withPage($page)

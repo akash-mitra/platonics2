@@ -91,7 +91,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::with('users', 'category', 'tags')->get();
+        $pages = Page::with('category', 'tags')->get();
 
         return response()->json([
             'length' => count($pages),

@@ -35,7 +35,7 @@ Route::get('categories/{category}', 'FrontendController@category')->name('fronte
 
 // Below URLs will return JSON as response
 Route::post('admin/categories', 'CategoryController@store')->name('categories.store');
-Route::put('admin/categories/{category}', 'CategoryController@update')->name('categories.update');
+Route::patch('admin/categories/{category}', 'CategoryController@update')->name('categories.update');
 Route::delete('admin/categories/{category}', 'CategoryController@destroy')->name('categories.destroy');
 
 // Below URLs will return JSON as response and are to be considered for public api endpoints
@@ -61,7 +61,7 @@ Route::get('pages/{page}/{slug?}', 'FrontendController@page')->name('frontend.pa
 Route::post('admin/pages', 'PageController@store')->name('pages.store');
 Route::patch('admin/pages/{page}', 'PageController@update')->name('pages.update');
 Route::delete('admin/pages/{page}', 'PageController@destroy')->name('pages.destroy');
-Route::put('admin/pages/{page}/publish', 'PageController@publish')->name('pages.publish');
+Route::patch('admin/pages/{page}/publish', 'PageController@publish')->name('pages.publish');
 
 // Below are public api endpoints returning JSON as response
 Route::get('api/pages', 'PageController@index')->name('pages.index');
@@ -83,7 +83,7 @@ Route::get('tags/{tagName}', 'FrontendController@tag')->name('frontend.tag');
 
 // Below URLs will return JSON as response
 Route::post('admin/tags', 'TagController@store')->name('tags.store');
-Route::put('admin/tags/{tag}', 'TagController@update')->name('tags.update');
+Route::patch('admin/tags/{tag}', 'TagController@update')->name('tags.update');
 Route::delete('admin/tags/{tag}', 'TagController@destroy')->name('tags.destroy');
 
 // Below are public api endpoints returning JSON as response
@@ -106,9 +106,10 @@ Route::post('api/tags/fullattach', 'TagController@fullattach')->name('tags.fulla
 Route::get('admin/comments', 'CommentController@adminHome')->name('comments.home');
 
 // Below URLs will return JSON as response
-Route::post('admin/comments', 'CommentController@store')->name('comments.store');
-Route::put('admin/comments/{comment}', 'CommentController@update')->name('comments.update');
 Route::delete('admin/comments/{comment}', 'CommentController@destroy')->name('comments.destroy');
+
+Route::post('comments', 'CommentController@store')->name('comments.store');
+Route::patch('comments/{comment}', 'CommentController@update')->name('comments.update');
 
 /*
 |--------------------------------------------------------------------------
@@ -123,7 +124,7 @@ Route::get('admin/media/{media}/edit', 'MediaController@edit')->name('media.edit
 
 // Below URLs will return JSON as response
 Route::post('admin/media', 'MediaController@store')->name('media.store');
-Route::put('admin/media/{media}', 'MediaController@update')->name('media.update');
+Route::patch('admin/media/{media}', 'MediaController@update')->name('media.update');
 Route::delete('admin/media/{media}', 'MediaController@destroy')->name('media.destroy');
 
 // Below are public api endpoints returning JSON as response
@@ -170,7 +171,7 @@ Route::get('api/users/{slug}/pages', 'UserController@pages')->name('users.pages'
 Route::get('api/users/{slug}/draft', 'UserController@draft')->name('users.draft');
 
 //*** DUMMY TEST ***//
-//Route::get('test', function () { return view('test'); });
+Route::get('test', function () { return view('test'); });
 Route::get('admin/templates', function () {
     return view('admin.templates.home');
 });

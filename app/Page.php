@@ -29,7 +29,12 @@ class Page extends Model
      *
      * @var array
      */
-    //protected $appends = ['user']; //'slug', 'metrics'
+    protected $appends = ['user']; //'slug', 'metrics'
+
+    public function getUserAttribute()
+    {
+        return User::where('id', $this->user_id)->first();
+    }
 
     /**
      * Get content of the page
