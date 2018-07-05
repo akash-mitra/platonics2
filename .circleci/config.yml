@@ -30,6 +30,7 @@ jobs:
       - run:
          name: Setup Laravel testing environment variables for CircleCI test
          command: cp .env.example .env
+      - run: export APP_ENV=local
 
       # Download and cache dependencies
 
