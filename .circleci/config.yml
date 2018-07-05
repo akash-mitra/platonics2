@@ -25,7 +25,7 @@ jobs:
       #    name: Download NodeJS v9
       #    command: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
 
-      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev jpegoptim optipng pngquant gifsicle
+      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev jpegoptim optipng pngquant gifsicle php7.1-gd
       - run: sudo docker-php-ext-install zip
       - run:
          name: Setup Laravel testing environment variables for CircleCI test
